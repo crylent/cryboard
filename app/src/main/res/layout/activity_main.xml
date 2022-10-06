@@ -6,6 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <!-- WHITE KEYS -->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -16,111 +33,112 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_c1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_d1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_e1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_f1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_g1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_a1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_b1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_c2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_d2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_e2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_f2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_g2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_a2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_b2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_white"
             android:id="@+id/button_c3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/key_white" />
     </LinearLayout>
 
+    <!-- BLACK KEYS -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
@@ -254,5 +272,45 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.7" />
     </LinearLayout>
+
+    <!-- OCTAVE SWITCHER -->
+    <TextView
+        android:id="@+id/octaveShift"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:text="0"
+        android:textSize="30sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toStartOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/octaveDown"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:padding="0dp"
+        android:text="@string/LeftArrow"
+        android:textSize="30sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/octaveShift"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/octaveUp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_marginEnd="12dp"
+        android:padding="0dp"
+        android:text="@string/RightArrow"
+        android:textSize="30sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/scrollView2"
+        app:layout_constraintStart_toEndOf="@+id/octaveShift" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

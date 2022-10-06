@@ -1,27 +1,31 @@
 package com.example.midicryboard
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.media.AudioManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import cn.sherlock.com.sun.media.sound.SF2Soundbank
 import cn.sherlock.com.sun.media.sound.SoftSynthesizer
 
-class MainActivity : AppCompatActivity() {
+const val DEFAULT_MIDI_OFFSET = 60
+const val MAX_OCTAVE_UP = 3
+const val MAX_OCTAVE_DOWN = -3
 
-    /*private val synth = MidiSystem.getSynthesizer().apply {
-        this?.open()
-    }
-   private val channels = synth?.channels!!*/
+class MainActivity : AppCompatActivity() {
     private val synth = SoftSynthesizer().apply {
         open()
-        //val soundbank = SF2Soundbank(assets.open("sf/Default.sf2"))
-        //loadAllInstruments(soundbank)
     }
     private val midi = synth.channels[0]
-    private var midiOffset = 60
-    private var volume = 80
+    private var octave = 0
+    private val midiOffset
+        get() = DEFAULT_MIDI_OFFSET + octave * 12
+    private var volume = 100
 
     private val buttonIds = arrayListOf(
         R.id.button_c1,
@@ -50,18 +54,20 @@ class MainActivity : AppCompatActivity() {
         R.id.button_b2,
         R.id.button_c3
     )
-    //private val buttons = arrayListOf<androidx.appcompat.widget.AppCompatButton>()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         synth.loadAllInstruments(SF2Soundbank(assets.open("sf/Default.sf2")))
+
+        Toast.makeText(applicationContext, packageManager.hasSystemFeature(PackageManager.FEATURE_AUDIO_LOW_LATENCY).toString(), Toast.LENGTH_LONG).show()
+
+        // Add listeners for keyboard
         buttonIds.forEach {
             findViewById<androidx.appcompat.widget.AppCompatButton>(it).setOnTouchListener { v, event ->
-                //super.onTouchEvent(event)
                 val note = buttonIds.indexOf(it) + midiOffset
-                when (event.action) {
+                when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         v.isPressed = true
                         midi.noteOn(note, volume)
@@ -75,20 +81,20 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
-        /*buttons.forEach {
-            it.setOnTouchListener { v, event ->
-                val note = buttons.indexOf(it) + midiOffset
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        midi.noteOn(note, volume)
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        v.performClick()
-                        midi.noteOff(note)
-                    }
-                }
-                true
-            }
-        }*/
+
+        // Add listeners for octave shifter
+        findViewById<Button>(R.id.octaveDown).setOnClickListener {
+            shiftOctave(-1)
+        }
+        findViewById<Button>(R.id.octaveUp).setOnClickListener {
+            shiftOctave(1)
+        }
+    }
+
+    private fun shiftOctave(shift: Int) {
+        octave += shift
+        if (octave > MAX_OCTAVE_UP) octave = MAX_OCTAVE_UP
+        else if (octave < MAX_OCTAVE_DOWN) octave = MAX_OCTAVE_DOWN
+        findViewById<TextView>(R.id.octaveShift).text = octave.toString()
     }
 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MIDI Cryboard</string>
+    <string name="RightArrow"><![CDATA[>]]></string>
+    <string name="LeftArrow"><![CDATA[<]]></string>
 </resources>

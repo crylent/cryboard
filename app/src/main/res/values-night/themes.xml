@@ -13,12 +13,4 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-
-    <style name="KeyWhite" parent="Widget.AppCompat.Button">
-        <item name="android:backgroundTint">@color/white</item>
-    </style>
-
-    <style name="KeyBlack" parent="Widget.AppCompat.Button">
-        <item name="android:backgroundTint">@color/black</item>
-    </style>
 </resources>
