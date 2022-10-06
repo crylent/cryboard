@@ -1,31 +1,23 @@
 package com.example.midicryboard
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
-import android.media.AudioManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import cn.sherlock.com.sun.media.sound.SF2Soundbank
-import cn.sherlock.com.sun.media.sound.SoftSynthesizer
+import org.billthefarmer.mididriver.MidiDriver
 
 const val DEFAULT_MIDI_OFFSET = 60
-const val MAX_OCTAVE_UP = 3
+const val MAX_OCTAVE_UP = 2
 const val MAX_OCTAVE_DOWN = -3
 
 class MainActivity : AppCompatActivity() {
-    private val synth = SoftSynthesizer().apply {
-        open()
-    }
-    private val midi = synth.channels[0]
+    private val midi = MidiDriver.getInstance()
     private var octave = 0
     private val midiOffset
-        get() = DEFAULT_MIDI_OFFSET + octave * 12
-    private var volume = 100
+        get() = (DEFAULT_MIDI_OFFSET + octave * 12).toByte()
+    private var volume = 100.toByte()
 
     private val buttonIds = arrayListOf(
         R.id.button_c1,
@@ -55,13 +47,27 @@ class MainActivity : AppCompatActivity() {
         R.id.button_c3
     )
 
+    private fun noteEvent(note: Int, action: Int) {
+        val event = ByteArray(3)
+        event[0] = action.toByte()
+        event[1] = note.toByte()
+        event[2] = volume
+        midi.write(event)
+    }
+
+    private fun noteOn(note: Int) {
+        noteEvent(note, 0x90 or 0x00)
+    }
+    private fun noteOff(note: Int) {
+        noteEvent(note, 0x80 or 0x00)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        synth.loadAllInstruments(SF2Soundbank(assets.open("sf/Default.sf2")))
 
-        Toast.makeText(applicationContext, packageManager.hasSystemFeature(PackageManager.FEATURE_AUDIO_LOW_LATENCY).toString(), Toast.LENGTH_LONG).show()
+        midi.start()
 
         // Add listeners for keyboard
         buttonIds.forEach {
@@ -70,12 +76,12 @@ class MainActivity : AppCompatActivity() {
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         v.isPressed = true
-                        midi.noteOn(note, volume)
+                        noteOn(note)
                     }
                     MotionEvent.ACTION_UP -> {
                         v.performClick()
                         v.isPressed = false
-                        midi.noteOff(note)
+                        noteOff(note)
                     }
                 }
                 true

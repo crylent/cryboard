@@ -42,11 +42,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'com.github.bmaupin:javax.sound.midi-for-Android:fix-jitpack-build-SNAPSHOT'
+    //implementation 'com.github.bmaupin:javax.sound.midi-for-Android:fix-jitpack-build-SNAPSHOT'
     // check the latest release version with https://github.com/kshoji/BLE-MIDI-for-Android/releases/latest
     //implementation 'jp.kshoji:ble-midi:0.0.12:@aar'
     // check the latest release version with https://github.com/kshoji/USB-MIDI-Driver/releases/latest
     //implementation 'jp.kshoji:midi-driver:0.1.7:@aar'
 
-    implementation 'com.github.bmaupin:MidiDriver:1.0'
+    //implementation 'com.github.bmaupin:MidiDriver:1.0'
+
+    implementation 'com.github.billthefarmer:mididriver:v1.24'
+
 }
