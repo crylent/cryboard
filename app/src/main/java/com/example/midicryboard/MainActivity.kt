@@ -6,18 +6,15 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
-import org.billthefarmer.mididriver.MidiDriver
 
 const val DEFAULT_MIDI_OFFSET = 60
 const val MAX_OCTAVE_UP = 2
 const val MAX_OCTAVE_DOWN = -3
 
 class MainActivity : AppCompatActivity() {
-    private val midi = MidiDriver.getInstance()
     private var octave = 0
     private val midiOffset
         get() = (DEFAULT_MIDI_OFFSET + octave * 12).toByte()
-    private var volume = 100.toByte()
 
     private val buttonIds = arrayListOf(
         R.id.button_c1,
@@ -47,27 +44,12 @@ class MainActivity : AppCompatActivity() {
         R.id.button_c3
     )
 
-    private fun noteEvent(note: Int, action: Int) {
-        val event = ByteArray(3)
-        event[0] = action.toByte()
-        event[1] = note.toByte()
-        event[2] = volume
-        midi.write(event)
-    }
-
-    private fun noteOn(note: Int) {
-        noteEvent(note, 0x90 or 0x00)
-    }
-    private fun noteOff(note: Int) {
-        noteEvent(note, 0x80 or 0x00)
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        midi.start()
+        Midi.start()
 
         // Add listeners for keyboard
         buttonIds.forEach {
@@ -76,18 +58,19 @@ class MainActivity : AppCompatActivity() {
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         v.isPressed = true
-                        noteOn(note)
+                        Midi.noteOn(note, 0)
                     }
                     MotionEvent.ACTION_UP -> {
                         v.performClick()
                         v.isPressed = false
-                        noteOff(note)
+                        Midi.noteOff(note, 0)
                     }
                 }
                 true
             }
         }
 
+        shiftOctave(0) // For setting text octaveShift
         // Add listeners for octave shifter
         findViewById<Button>(R.id.octaveDown).setOnClickListener {
             shiftOctave(-1)
