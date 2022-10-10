@@ -8,6 +8,10 @@ import kotlin.experimental.or
 object Midi {
     private val driver = MidiDriver.getInstance()
     var volume: Byte = 100
+        set(value) {
+            if (value in 0..100) field = value
+            else throw IllegalArgumentException()
+        }
 
     fun start() {
         driver.start()

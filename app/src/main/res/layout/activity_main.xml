@@ -5,6 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
+    
+    <com.sdsmdg.harjot.crollerTest.Croller
+        android:id="@+id/volumeSlider"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="5dp"
+        android:foregroundGravity="clip_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/trackList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+        app:is_continuous="true"
+        app:label="@string/volume"
+        app:progress_primary_stroke_width="10"
+        app:min="1"
+        app:max="100" />
 
     <!-- OCTAVE SWITCHER -->
     <TextView

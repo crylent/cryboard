@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
+import com.sdsmdg.harjot.crollerTest.Croller
 
 const val DEFAULT_MIDI_OFFSET = 60
 const val MAX_OCTAVE_UP = 2
@@ -87,6 +88,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 true
+            }
+        }
+
+        // Set up volume slider
+        findViewById<Croller>(R.id.volumeSlider).apply {
+            progress = Midi.volume.toInt()
+            setOnProgressChangedListener {
+                Midi.volume = it.toByte()
             }
         }
 
