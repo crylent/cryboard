@@ -1,17 +1,26 @@
-package com.example.midicryboard
+package com.example.midicryboard.activity
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.midicryboard.*
 
 const val DEFAULT_MIDI_OFFSET = 60
 const val MAX_OCTAVE_UP = 2
 const val MAX_OCTAVE_DOWN = -3
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        lateinit var resources: Resources
+    }
+
     private var octave = 0
     private val midiOffset
         get() = (DEFAULT_MIDI_OFFSET + octave * 12).toByte()
@@ -44,26 +53,37 @@ class MainActivity : AppCompatActivity() {
         R.id.button_c3
     )
 
+    private lateinit var tracks: TrackList
+    private lateinit var tracksAdapter: TracksRecyclerAdapter
+
+    private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
+
+    init {
+        Midi.start()
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Companion.resources = resources
 
-        Midi.start()
+        tracks = TrackList()
+        tracksAdapter = TracksRecyclerAdapter(tracks.namesList)
 
         // Add listeners for keyboard
         buttonIds.forEach {
             findViewById<androidx.appcompat.widget.AppCompatButton>(it).setOnTouchListener { v, event ->
-                val note = buttonIds.indexOf(it) + midiOffset
+                val note = (buttonIds.indexOf(it) + midiOffset).toByte()
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         v.isPressed = true
-                        Midi.noteOn(note, 0)
+                        Midi.noteOn(note, tracksAdapter.selectedTrack)
                     }
                     MotionEvent.ACTION_UP -> {
                         v.performClick()
                         v.isPressed = false
-                        Midi.noteOff(note, 0)
+                        Midi.noteOff(note, tracksAdapter.selectedTrack)
                     }
                 }
                 true
@@ -78,6 +98,23 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.octaveUp).setOnClickListener {
             shiftOctave(1)
         }
+
+        // Set up track list
+        findViewById<RecyclerView?>(R.id.trackList).apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = tracksAdapter
+        }
+
+        trackPropertiesLauncher = registerForActivityResult(TrackPropertiesActivityContract()) { result ->
+            result!!.apply {
+                val trackId = getByte(TrackBundle.TRACK_ID)
+                tracks.setTrackInfo(
+                    trackId,
+                    getByte(TrackBundle.INSTRUMENT)
+                )
+                tracksAdapter.updateItem(trackId, tracks.getTrackName(trackId))
+            }
+        }
     }
 
     private fun shiftOctave(shift: Int) {
@@ -85,5 +122,17 @@ class MainActivity : AppCompatActivity() {
         if (octave > MAX_OCTAVE_UP) octave = MAX_OCTAVE_UP
         else if (octave < MAX_OCTAVE_DOWN) octave = MAX_OCTAVE_DOWN
         findViewById<TextView>(R.id.octaveShift).text = octave.toString()
+    }
+
+    fun openTrackProperties(trackId: Byte) {
+        trackPropertiesLauncher.launch(Bundle().apply {
+            putByte(TrackBundle.TRACK_ID, trackId)
+            putByte(TrackBundle.INSTRUMENT, tracks.getInstrumentId(trackId))
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Midi.stop()
     }
 }
