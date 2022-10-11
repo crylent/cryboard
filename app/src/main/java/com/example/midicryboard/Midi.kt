@@ -13,6 +13,8 @@ object Midi {
             else throw IllegalArgumentException()
         }
 
+    private const val NOTE_OFF_VELOCITY: Byte = 0
+
     fun start() {
         driver.start()
     }
@@ -21,7 +23,7 @@ object Midi {
         driver.stop()
     }
 
-    private fun noteEvent(action: Byte, note: Byte, channel: Byte) {
+    private fun noteEvent(action: Byte, note: Byte, channel: Byte, volume: Byte) {
         val event = ByteArray(3)
         event[0] = action or channel
         event[1] = note
@@ -37,10 +39,13 @@ object Midi {
     }
 
     fun noteOn(note: Byte, channel: Byte) {
-        noteEvent(MidiConstants.NOTE_ON, note, channel)
+        noteOn(note, channel, volume)
+    }
+    fun noteOn(note: Byte, channel: Byte, volume: Byte) {
+        noteEvent(MidiConstants.NOTE_ON, note, channel, volume)
     }
     fun noteOff(note: Byte, channel: Byte) {
-        noteEvent(MidiConstants.NOTE_OFF, note, channel)
+        noteEvent(MidiConstants.NOTE_OFF, note, channel, NOTE_OFF_VELOCITY)
     }
 
     fun changeProgram(channel: Byte, program: Byte) {

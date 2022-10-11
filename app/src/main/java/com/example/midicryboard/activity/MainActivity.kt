@@ -4,8 +4,12 @@ import android.annotation.SuppressLint
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private val midiOffset
         get() = (DEFAULT_MIDI_OFFSET + octave * 12).toByte()
 
-    private val buttonIds = arrayListOf(
+    private val keyboardIds = arrayListOf(
         R.id.button_c1,
         R.id.button_cd1,
         R.id.button_d1,
@@ -54,6 +58,8 @@ class MainActivity : AppCompatActivity() {
         R.id.button_c3
     )
 
+    private lateinit var playPauseButton: ImageButton
+
     private lateinit var tracks: TrackList
     private lateinit var tracksAdapter: TracksRecyclerAdapter
 
@@ -73,9 +79,9 @@ class MainActivity : AppCompatActivity() {
         tracksAdapter = TracksRecyclerAdapter(tracks.namesList)
 
         // Add listeners for keyboard
-        buttonIds.forEach {
+        keyboardIds.forEach {
             findViewById<androidx.appcompat.widget.AppCompatButton>(it).setOnTouchListener { v, event ->
-                val note = (buttonIds.indexOf(it) + midiOffset).toByte()
+                val note = (keyboardIds.indexOf(it) + midiOffset).toByte()
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         v.isPressed = true
@@ -108,6 +114,49 @@ class MainActivity : AppCompatActivity() {
             shiftOctave(1)
         }
 
+        // Set up metronome
+        val metronome = Metronome()
+        findViewById<EditText>(R.id.editTempo).apply {
+            stopMetronomeOnFocus(metronome)
+            setEditListener {
+                val tempo = text.toString().toIntOrNull()
+                if (tempo != null && tempo in 30..300) {
+                    metronome.tempo = tempo
+                    clearFocus()
+                    false // hide keyboard
+                }
+                else {
+                    setText(metronome.tempo.toString())
+                    true // don't hide keyboard
+                }
+            }
+        }
+        findViewById<EditText>(R.id.editTimeSignature).apply {
+            stopMetronomeOnFocus(metronome)
+            setEditListener {
+                TimeSignature.fromString(text.toString()).run {
+                    if (this != null) {
+                        metronome.signature = this
+                        clearFocus()
+                        false // hide keyboard
+                    }
+                    else {
+                        setText(metronome.signature.toString())
+                        true // don't hide keyboard
+                    }
+                }
+            }
+        }
+
+        // Set up controls
+        playPauseButton = findViewById<ImageButton>(R.id.playPauseButton).apply {
+            setOnClickListener {
+                if (isActivated) metronome.stop()
+                else metronome.start()
+                isActivated = !isActivated
+            }
+        }
+
         // Set up track list
         findViewById<RecyclerView?>(R.id.trackList).apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -122,6 +171,31 @@ class MainActivity : AppCompatActivity() {
                     getByte(TrackBundle.INSTRUMENT)
                 )
                 tracksAdapter.updateItem(trackId, tracks.getTrackName(trackId))
+            }
+        }
+    }
+
+    private fun EditText.setEditListener(lambda: () -> Boolean) {
+        setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_PREVIOUS) {
+                lambda()
+            }
+            else false
+        }
+        setOnKeyListener { _, keyCode, _ ->
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                lambda()
+                true
+            }
+            else false
+        }
+    }
+
+    private fun EditText.stopMetronomeOnFocus(metronome: Metronome) {
+        setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                metronome.stop()
+                playPauseButton.isActivated = false
             }
         }
     }

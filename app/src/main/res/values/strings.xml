@@ -20,4 +20,6 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="volume">Volume</string>
+    <string name="default_tempo">120</string>
+    <string name="default_time_signature">4/4</string>
 </resources>

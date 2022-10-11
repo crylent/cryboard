@@ -5,14 +5,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
-    
+
+
+    <!-- METRONOME PROPERTIES -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/volumeSlider"
+        app:layout_constraintEnd_toStartOf="@+id/controls"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/editTempo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="0.5"
+            android:hint="@string/default_tempo"
+            android:text="@string/default_tempo"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            app:layout_constraintBottom_toTopOf="@+id/volumeSlider"
+            app:layout_constraintEnd_toStartOf="@+id/editTimeSignature"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/editTimeSignature"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="0.5"
+            android:hint="@string/default_time_signature"
+            android:text="@string/default_time_signature"
+            android:importantForAutofill="no"
+            android:inputType="textShortMessage"
+            android:imeOptions="actionDone"
+            app:layout_constraintBottom_toTopOf="@+id/volumeSlider"
+            app:layout_constraintEnd_toStartOf="@+id/trackList"
+            app:layout_constraintStart_toStartOf="@+id/editTempo" />
+
+    </LinearLayout>
+
+    <!-- VOLUME SLIDER -->
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/volumeSlider"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_margin="5dp"
         android:foregroundGravity="clip_horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/trackList"
+        app:layout_constraintEnd_toStartOf="@+id/controls"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/octaveShift"
         app:is_continuous="true"
@@ -24,13 +68,13 @@
     <!-- OCTAVE SWITCHER -->
     <TextView
         android:id="@+id/octaveShift"
-        android:layout_width="wrap_content"
+        android:layout_width="30dp"
         android:layout_height="50dp"
         android:layout_margin="5dp"
         android:textSize="30sp"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/trackList"
-        app:layout_constraintEnd_toStartOf="@+id/trackList"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard"
+        app:layout_constraintEnd_toStartOf="@+id/controls"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -42,7 +86,7 @@
         android:text="@string/LeftArrow"
         android:textSize="30sp"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard"
         app:layout_constraintEnd_toStartOf="@+id/octaveShift"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -56,26 +100,45 @@
         android:text="@string/RightArrow"
         android:textSize="30sp"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toStartOf="@+id/trackList"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard"
+        app:layout_constraintEnd_toStartOf="@+id/controls"
         app:layout_constraintStart_toEndOf="@+id/octaveShift" />
+
+    <!-- CONTROL BUTTONS -->
+    <LinearLayout
+        android:id="@+id/controls"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/keyboard"
+        app:layout_constraintEnd_toStartOf="@id/trackList">
+
+        <ImageButton
+            android:id="@+id/playPauseButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/play_pause_button"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
 
     <!-- TRACKS -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trackList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        android:layout_marginStart="200dp"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/track">
-    </androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/track" />
 
     <!-- WHITE KEYS -->
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/keyboard"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:orientation="horizontal"
@@ -196,7 +259,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout">
+        app:layout_constraintTop_toTopOf="@+id/keyboard">
 
         <Space
             android:layout_width="0dp"
