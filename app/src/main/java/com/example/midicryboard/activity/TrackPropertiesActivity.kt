@@ -8,7 +8,6 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -64,7 +63,6 @@ class TrackPropertiesActivity : AppCompatActivity() {
     }
 
     private fun saveProperties() {
-        Toast.makeText(this, instrumentsAdapter.selectedInstrument.toString(), Toast.LENGTH_LONG).show()
         setResult(RESULT_OK, Intent().apply {
             putExtra(TrackBundle.OUTPUT, Bundle().apply {
                 putByte(TrackBundle.TRACK_ID, getFromInput(TrackBundle.TRACK_ID))

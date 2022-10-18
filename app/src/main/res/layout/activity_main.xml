@@ -68,7 +68,7 @@
     <!-- OCTAVE SWITCHER -->
     <TextView
         android:id="@+id/octaveShift"
-        android:layout_width="30dp"
+        android:layout_width="40dp"
         android:layout_height="50dp"
         android:layout_margin="5dp"
         android:textSize="30sp"
@@ -109,6 +109,7 @@
         android:id="@+id/controls"
         android:layout_width="60dp"
         android:layout_height="0dp"
+        android:layout_margin="5dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/keyboard"
@@ -117,10 +118,28 @@
         <ImageButton
             android:id="@+id/playPauseButton"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/play_pause_button"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/recordButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/record_button"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/stopButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/stop"
             tools:ignore="ContentDescription" />
     </LinearLayout>
 

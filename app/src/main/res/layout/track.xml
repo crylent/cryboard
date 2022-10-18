@@ -13,7 +13,7 @@
         android:background="@null"
         android:scaleType="fitCenter"
         android:layout_margin="5dp"
-        app:srcCompat="@drawable/record_button"
+        app:srcCompat="@drawable/record_select"
         tools:ignore="ContentDescription" />
 
     <Button

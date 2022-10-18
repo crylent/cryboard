@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
     )
 
     private lateinit var playPauseButton: ImageButton
+    private lateinit var recordButton: ImageButton
+    private lateinit var stopButton: ImageButton
+
+    private var startRecordingOnPlay = false
 
     private lateinit var tracks: TrackList
     private lateinit var tracksAdapter: TracksRecyclerAdapter
@@ -77,25 +81,6 @@ class MainActivity : AppCompatActivity() {
 
         tracks = TrackList()
         tracksAdapter = TracksRecyclerAdapter(tracks.namesList)
-
-        // Add listeners for keyboard
-        keyboardIds.forEach {
-            findViewById<androidx.appcompat.widget.AppCompatButton>(it).setOnTouchListener { v, event ->
-                val note = (keyboardIds.indexOf(it) + midiOffset).toByte()
-                when (event.actionMasked) {
-                    MotionEvent.ACTION_DOWN -> {
-                        v.isPressed = true
-                        Midi.noteOn(note, tracksAdapter.selectedTrack)
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        v.performClick()
-                        v.isPressed = false
-                        Midi.noteOff(note, tracksAdapter.selectedTrack)
-                    }
-                }
-                true
-            }
-        }
 
         // Set up volume slider
         findViewById<Croller>(R.id.volumeSlider).apply {
@@ -122,6 +107,7 @@ class MainActivity : AppCompatActivity() {
                 val tempo = text.toString().toIntOrNull()
                 if (tempo != null && tempo in 30..300) {
                     metronome.tempo = tempo
+                    Midi.updateTempoAndSignature(metronome)
                     clearFocus()
                     false // hide keyboard
                 }
@@ -137,6 +123,7 @@ class MainActivity : AppCompatActivity() {
                 TimeSignature.fromString(text.toString()).run {
                     if (this != null) {
                         metronome.signature = this
+                        Midi.updateTempoAndSignature(metronome)
                         clearFocus()
                         false // hide keyboard
                     }
@@ -151,9 +138,38 @@ class MainActivity : AppCompatActivity() {
         // Set up controls
         playPauseButton = findViewById<ImageButton>(R.id.playPauseButton).apply {
             setOnClickListener {
-                if (isActivated) metronome.stop()
-                else metronome.start()
+                if (isActivated) {
+                    metronome.stop()
+                    Midi.stopPlayback()
+                }
+                else {
+                    metronome.start()
+                    if (startRecordingOnPlay) startRecording()
+                    else Midi.startPlayback()
+                }
                 isActivated = !isActivated
+
+            }
+        }
+        recordButton = findViewById<ImageButton>(R.id.recordButton).apply {
+            setOnClickListener {
+                if (isActivated) {
+                    Midi.stopRecording()
+                    startRecordingOnPlay = false
+                }
+                else {
+                    if (metronome.running) startRecording()
+                    else startRecordingOnPlay = true
+                }
+                isActivated = !isActivated
+            }
+        }
+        stopButton = findViewById<ImageButton>(R.id.stopButton).apply {
+            setOnClickListener {
+                metronome.stop()
+                Midi.stopPlayback()
+                recordButton.isActivated = false
+                playPauseButton.isActivated = false
             }
         }
 
@@ -171,6 +187,30 @@ class MainActivity : AppCompatActivity() {
                     getByte(TrackBundle.INSTRUMENT)
                 )
                 tracksAdapter.updateItem(trackId, tracks.getTrackName(trackId))
+            }
+        }
+
+        // Add listeners for keyboard
+        keyboardIds.forEach {
+            findViewById<androidx.appcompat.widget.AppCompatButton>(it).setOnTouchListener { v, event ->
+                if (startRecordingOnPlay) {
+                    startRecording()
+                    metronome.start()
+                    playPauseButton.isActivated = true
+                }
+                val note = (keyboardIds.indexOf(it) + midiOffset).toByte()
+                when (event.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> {
+                        v.isPressed = true
+                        Midi.noteOn(note, tracksAdapter.selectedTrack)
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        v.performClick()
+                        v.isPressed = false
+                        Midi.noteOff(note, tracksAdapter.selectedTrack)
+                    }
+                }
+                true
             }
         }
     }
@@ -212,6 +252,11 @@ class MainActivity : AppCompatActivity() {
             putByte(TrackBundle.TRACK_ID, trackId)
             putByte(TrackBundle.INSTRUMENT, tracks.getInstrumentId(trackId))
         })
+    }
+
+    private fun startRecording() {
+        startRecordingOnPlay = false // reset it
+        Midi.startRecording()
     }
 
     override fun onDestroy() {

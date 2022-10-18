@@ -28,6 +28,7 @@ class Metronome(var tempo: Int = 120, var signature: TimeSignature = TimeSignatu
     private var beats: Int = 0
 
     fun start() {
+        if (running) stop() // prevent running several timers simultaneously
         val period = (MINUTE / tempo * 4 / signature.duration).toLong()
         onTimer = timer(period = period) {
             Midi.noteOn(if (beats == 0) METRONOME_DOWNBEAT else METRONOME_BEAT, METRONOME_CHANNEL, volume) // new measure
@@ -37,19 +38,26 @@ class Metronome(var tempo: Int = 120, var signature: TimeSignature = TimeSignatu
         offTimer = timer(period = period, initialDelay = BEAT_DURATION) {
             Midi.noteOff(METRONOME_BEAT, METRONOME_CHANNEL)
         }
+        running = true
     }
 
     fun stop() {
-        if (::onTimer.isInitialized) onTimer.cancel()
-        if (::offTimer.isInitialized) offTimer.cancel()
+        if (running) {
+            onTimer.cancel()
+            offTimer.cancel()
+            running = false
+        }
     }
+
+    var running = false
+        private set
 
     companion object {
         private const val MINUTE = 60 * 1000
 
         private const val BEAT_DURATION: Long = 100
 
-        private const val METRONOME_CHANNEL: Byte = 9
+        const val METRONOME_CHANNEL: Byte = 9
         private const val METRONOME_DOWNBEAT: Byte = 35
         private const val METRONOME_BEAT: Byte = 42
     }
