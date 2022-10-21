@@ -2,7 +2,9 @@ package com.example.midicryboard
 
 import org.billthefarmer.mididriver.GeneralMidiConstants
 
-class TrackList: ArrayList<TrackInfo>(8) {
+const val TRACKS_NUMBER = 8
+
+class TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
     fun getTrackName(trackId: Byte) = this[trackId.toInt()].instrument.name
     fun getInstrumentId(trackId: Byte) = this[trackId.toInt()].instrument.id
 

@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tracks: TrackList
     private lateinit var tracksAdapter: TracksRecyclerAdapter
 
+    private lateinit var tracksCanvas: TracksCanvas
+
     private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
 
     init {
@@ -170,6 +172,7 @@ class MainActivity : AppCompatActivity() {
                 Midi.stopPlayback()
                 recordButton.isActivated = false
                 playPauseButton.isActivated = false
+                tracksCanvas.invalidate()
             }
         }
 
@@ -178,7 +181,6 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = tracksAdapter
         }
-
         trackPropertiesLauncher = registerForActivityResult(TrackPropertiesActivityContract()) { result ->
             result!!.apply {
                 val trackId = getByte(TrackBundle.TRACK_ID)
@@ -189,6 +191,7 @@ class MainActivity : AppCompatActivity() {
                 tracksAdapter.updateItem(trackId, tracks.getTrackName(trackId))
             }
         }
+        tracksCanvas = findViewById(R.id.tracksCanvas)
 
         // Add listeners for keyboard
         keyboardIds.forEach {
@@ -256,6 +259,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startRecording() {
         startRecordingOnPlay = false // reset it
+        Midi.clearTrack(tracksAdapter.selectedTrack)
         Midi.startRecording()
     }
 

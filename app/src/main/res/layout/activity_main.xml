@@ -27,10 +27,7 @@
             android:text="@string/default_tempo"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:imeOptions="actionDone"
-            app:layout_constraintBottom_toTopOf="@+id/volumeSlider"
-            app:layout_constraintEnd_toStartOf="@+id/editTimeSignature"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:imeOptions="actionDone" />
 
         <EditText
             android:id="@+id/editTimeSignature"
@@ -42,10 +39,7 @@
             android:text="@string/default_time_signature"
             android:importantForAutofill="no"
             android:inputType="textShortMessage"
-            android:imeOptions="actionDone"
-            app:layout_constraintBottom_toTopOf="@+id/volumeSlider"
-            app:layout_constraintEnd_toStartOf="@+id/trackList"
-            app:layout_constraintStart_toStartOf="@+id/editTempo" />
+            android:imeOptions="actionDone" />
 
     </LinearLayout>
 
@@ -113,7 +107,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/keyboard"
-        app:layout_constraintEnd_toStartOf="@id/trackList">
+        app:layout_constraintEnd_toStartOf="@id/tracksView">
 
         <ImageButton
             android:id="@+id/playPauseButton"
@@ -144,16 +138,45 @@
     </LinearLayout>
 
     <!-- TRACKS -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/trackList"
-        android:layout_width="match_parent"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/tracksView"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="200dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/keyboard"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/track" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/trackList"
+                    android:layout_width="260dp"
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/track" />
+
+                <com.example.midicryboard.TracksCanvas
+                    android:id="@+id/tracksCanvas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </androidx.core.widget.NestedScrollView>
 
     <!-- WHITE KEYS -->
     <LinearLayout
@@ -273,6 +296,7 @@
 
     <!-- BLACK KEYS -->
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:orientation="horizontal"
@@ -286,11 +310,11 @@
             android:layout_weight="0.7" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_cd1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -298,11 +322,11 @@
             android:layout_weight="0.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_dd1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -310,11 +334,11 @@
             android:layout_weight="1.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_fd1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -322,11 +346,11 @@
             android:layout_weight="0.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_gd1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -334,11 +358,11 @@
             android:layout_weight="0.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_ad1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -346,11 +370,11 @@
             android:layout_weight="1.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_cd2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -358,11 +382,11 @@
             android:layout_weight="0.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_dd2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -370,11 +394,11 @@
             android:layout_weight="1.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_fd2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -382,11 +406,11 @@
             android:layout_weight="0.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_gd2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"
@@ -394,11 +418,11 @@
             android:layout_weight="0.4" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@drawable/key_black"
             android:id="@+id/button_ad2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@drawable/key_black" />
 
         <Space
             android:layout_width="0dp"

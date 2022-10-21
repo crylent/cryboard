@@ -10,18 +10,18 @@ import com.leff.midi.event.meta.Tempo
 import org.billthefarmer.mididriver.MidiConstants
 import org.billthefarmer.mididriver.MidiDriver
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.concurrent.timerTask
 import kotlin.experimental.or
 import com.leff.midi.event.meta.TimeSignature as TimeSignatureEvent
 
 object Midi {
-    private val tracks = ArrayList<MidiTrack>(9).apply {
+    private val tracks = mutableListOf<MidiTrack>().apply {
         add(MidiTrack.createTempoTrack())
-        repeat(8) {
+        repeat(TRACKS_NUMBER) {
             add(MidiTrack())
         }
     }
+
     private val driver = MidiDriver.getInstance()
     var volume: Byte = 100
         set(value) {
@@ -58,27 +58,33 @@ object Midi {
     fun startPlayback() {
         playing = true
         playbackTimer = Timer()
-        tracks.subList(1, 8).forEach { track ->
-            val iterator = track.events.iterator()
-            while (iterator.hasNext()) {
-                val event = iterator.next()
-                playbackTimer.schedule(timerTask {
-                    playMidiEvent(event)
-                }, event.tick)
-            }
+        processEvents { _, event ->
+            playbackTimer.schedule(timerTask {
+                playMidiEvent(event)
+            }, event.tick)
         }
         zeroTime = systemTime
     }
     fun stopPlayback() {
         playing = false
         stopRecording()
-        playbackTimer.cancel()
+        if (this::playbackTimer.isInitialized) playbackTimer.cancel()
     }
 
     private fun playMidiEvent(event: MidiEvent) {
         event.apply {
             if (this is NoteOn) noteOn(noteValue.toByte(), channel.toByte(), velocity.toByte())
             else if (this is NoteOff) noteOff(noteValue.toByte(), channel.toByte())
+        }
+    }
+
+    fun processEvents(lambda: (Int, MidiEvent) -> Unit) {
+        tracks.subList(1, TRACKS_NUMBER).forEach { track ->
+            val iterator = track.events.iterator()
+            while (iterator.hasNext()) {
+                val event = iterator.next()
+                lambda(tracks.indexOf(track) - 1, event)
+            }
         }
     }
 
