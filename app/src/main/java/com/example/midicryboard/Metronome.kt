@@ -18,7 +18,17 @@ data class TimeSignature(val beats: Int = 4, val duration: Int = 4) {
     }
 }
 
-class Metronome(var tempo: Int = 120, var signature: TimeSignature = TimeSignature()) {
+object Metronome {
+    private const val MINUTE = 60 * 1000
+
+    private const val BEAT_DURATION: Long = 100
+
+    const val METRONOME_CHANNEL: Byte = 9
+    private const val METRONOME_DOWNBEAT: Byte = 35
+    private const val METRONOME_BEAT: Byte = 42
+
+    var tempo: Int = 120
+    var signature: TimeSignature = TimeSignature()
 
     private lateinit var onTimer: Timer
     private lateinit var offTimer: Timer
@@ -27,9 +37,11 @@ class Metronome(var tempo: Int = 120, var signature: TimeSignature = TimeSignatu
 
     private var beats: Int = 0
 
+    val period
+        get() = (MINUTE / tempo * 4 / signature.duration).toLong()
+
     fun start() {
         if (running) stop() // prevent running several timers simultaneously
-        val period = (MINUTE / tempo * 4 / signature.duration).toLong()
         onTimer = timer(period = period) {
             Midi.noteOn(if (beats == 0) METRONOME_DOWNBEAT else METRONOME_BEAT, METRONOME_CHANNEL, volume) // new measure
             beats++
@@ -51,14 +63,4 @@ class Metronome(var tempo: Int = 120, var signature: TimeSignature = TimeSignatu
 
     var running = false
         private set
-
-    companion object {
-        private const val MINUTE = 60 * 1000
-
-        private const val BEAT_DURATION: Long = 100
-
-        const val METRONOME_CHANNEL: Byte = 9
-        private const val METRONOME_DOWNBEAT: Byte = 35
-        private const val METRONOME_BEAT: Byte = 42
-    }
 }

@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -68,6 +69,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tracksAdapter: TracksRecyclerAdapter
 
     private lateinit var tracksCanvas: TracksCanvas
+    lateinit var tracksScrollView: HorizontalScrollView
+        private set
 
     private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
 
@@ -102,35 +105,34 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Set up metronome
-        val metronome = Metronome()
         findViewById<EditText>(R.id.editTempo).apply {
-            stopMetronomeOnFocus(metronome)
+            stopMetronomeOnFocus()
             setEditListener {
                 val tempo = text.toString().toIntOrNull()
                 if (tempo != null && tempo in 30..300) {
-                    metronome.tempo = tempo
-                    Midi.updateTempoAndSignature(metronome)
+                    Metronome.tempo = tempo
+                    Midi.updateTempoAndSignature()
                     clearFocus()
                     false // hide keyboard
                 }
                 else {
-                    setText(metronome.tempo.toString())
+                    setText(Metronome.tempo.toString())
                     true // don't hide keyboard
                 }
             }
         }
         findViewById<EditText>(R.id.editTimeSignature).apply {
-            stopMetronomeOnFocus(metronome)
+            stopMetronomeOnFocus()
             setEditListener {
                 TimeSignature.fromString(text.toString()).run {
                     if (this != null) {
-                        metronome.signature = this
-                        Midi.updateTempoAndSignature(metronome)
+                        Metronome.signature = this
+                        Midi.updateTempoAndSignature()
                         clearFocus()
                         false // hide keyboard
                     }
                     else {
-                        setText(metronome.signature.toString())
+                        setText(Metronome.signature.toString())
                         true // don't hide keyboard
                     }
                 }
@@ -141,11 +143,11 @@ class MainActivity : AppCompatActivity() {
         playPauseButton = findViewById<ImageButton>(R.id.playPauseButton).apply {
             setOnClickListener {
                 if (isActivated) {
-                    metronome.stop()
-                    Midi.stopPlayback()
+                    Metronome.stop()
+                    Midi.pausePlayback()
                 }
                 else {
-                    metronome.start()
+                    Metronome.start()
                     if (startRecordingOnPlay) startRecording()
                     else Midi.startPlayback()
                 }
@@ -160,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                     startRecordingOnPlay = false
                 }
                 else {
-                    if (metronome.running) startRecording()
+                    if (Metronome.running) startRecording()
                     else startRecordingOnPlay = true
                 }
                 isActivated = !isActivated
@@ -168,11 +170,11 @@ class MainActivity : AppCompatActivity() {
         }
         stopButton = findViewById<ImageButton>(R.id.stopButton).apply {
             setOnClickListener {
-                metronome.stop()
+                Metronome.stop()
                 Midi.stopPlayback()
                 recordButton.isActivated = false
                 playPauseButton.isActivated = false
-                tracksCanvas.invalidate()
+                //tracksCanvas.invalidate()
             }
         }
 
@@ -192,13 +194,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         tracksCanvas = findViewById(R.id.tracksCanvas)
+        tracksScrollView = findViewById(R.id.tracksScrollView)
 
         // Add listeners for keyboard
         keyboardIds.forEach {
             findViewById<androidx.appcompat.widget.AppCompatButton>(it).setOnTouchListener { v, event ->
                 if (startRecordingOnPlay) {
                     startRecording()
-                    metronome.start()
+                    Metronome.start()
                     playPauseButton.isActivated = true
                 }
                 val note = (keyboardIds.indexOf(it) + midiOffset).toByte()
@@ -234,10 +237,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun EditText.stopMetronomeOnFocus(metronome: Metronome) {
+    private fun EditText.stopMetronomeOnFocus() {
         setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                metronome.stop()
+                Metronome.stop()
                 playPauseButton.isActivated = false
             }
         }

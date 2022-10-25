@@ -42,8 +42,17 @@ object Midi {
         get() = System.currentTimeMillis()
 
     private var playing = false
+    private var paused = false
     private var recording = false
     private var zeroTime: Long = 0
+    private var systemTimeWhenPaused: Long = 0
+    private var timeCorrection: Long = 0
+
+    val time
+        get() =
+            if (playing) systemTime - zeroTime - timeCorrection
+            else if (paused) systemTimeWhenPaused - zeroTime - timeCorrection
+            else 0
 
     fun startRecording() {
         recording = true
@@ -56,17 +65,39 @@ object Midi {
     private lateinit var playbackTimer: Timer
 
     fun startPlayback() {
-        playing = true
-        playbackTimer = Timer()
-        processEvents { _, event ->
-            playbackTimer.schedule(timerTask {
-                playMidiEvent(event)
-            }, event.tick)
+        if (paused) {
+            playing = true
+            playbackTimer = Timer()
+            timeCorrection += systemTime - systemTimeWhenPaused
+            processEvents { _, event ->
+                val eventTime = event.tick - time
+                if (eventTime > 0) playbackTimer.schedule(timerTask {
+                    playMidiEvent(event)
+                }, eventTime)
+            }
+            paused = false
         }
-        zeroTime = systemTime
+        else {
+            playing = true
+            playbackTimer = Timer()
+            timeCorrection = 0
+            processEvents { _, event ->
+                playbackTimer.schedule(timerTask {
+                    playMidiEvent(event)
+                }, event.tick)
+            }
+            zeroTime = systemTime
+        }
+    }
+    fun pausePlayback() {
+        playing = false
+        paused = true
+        systemTimeWhenPaused = systemTime
+        playbackTimer.cancel()
     }
     fun stopPlayback() {
         playing = false
+        paused = false
         stopRecording()
         if (this::playbackTimer.isInitialized) playbackTimer.cancel()
     }
@@ -88,24 +119,21 @@ object Midi {
         }
     }
 
-    fun updateTempoAndSignature(metronome: Metronome) {
+    fun updateTempoAndSignature() {
         tracks[0] = MidiTrack().apply {
             insertEvent(TimeSignatureEvent(
                 0, 0,
-                metronome.signature.beats, metronome.signature.duration,
+                Metronome.signature.beats, Metronome.signature.duration,
                 TimeSignatureEvent.DEFAULT_METER, TimeSignatureEvent.DEFAULT_DIVISION
             ))
-            insertEvent(Tempo().apply { bpm = metronome.tempo.toFloat() })
+            insertEvent(Tempo().apply { bpm = Metronome.tempo.toFloat() })
         }
     }
 
     // records MIDI channel event (noteOn/noteOff) if recording is enabled
-    private fun record(channel: Byte, channelEvent: ChannelEvent) {
+    private fun recordIfEnabled(channel: Byte, channelEvent: ChannelEvent) {
         if (recording && channel != Metronome.METRONOME_CHANNEL) tracks[channel + 1].insertEvent(channelEvent)
     }
-
-    private val currTime
-        get() = systemTime - zeroTime
 
     private fun noteEvent(action: Byte, note: Byte, channel: Byte, velocity: Byte) {
         val event = ByteArray(3)
@@ -127,11 +155,11 @@ object Midi {
     }
     fun noteOn(note: Byte, channel: Byte, velocity: Byte) {
         noteEvent(MidiConstants.NOTE_ON, note, channel, velocity)
-        record(channel, NoteOn(currTime, channel.toInt(), note.toInt(), velocity.toInt()))
+        recordIfEnabled(channel, NoteOn(time, channel.toInt(), note.toInt(), velocity.toInt()))
     }
     fun noteOff(note: Byte, channel: Byte) {
         noteEvent(MidiConstants.NOTE_OFF, note, channel, NOTE_OFF_VELOCITY)
-        record(channel, NoteOff(currTime, channel.toInt(), note.toInt(), NOTE_OFF_VELOCITY.toInt()))
+        recordIfEnabled(channel, NoteOff(time, channel.toInt(), note.toInt(), NOTE_OFF_VELOCITY.toInt()))
     }
 
     fun changeProgram(channel: Byte, program: Byte) {
