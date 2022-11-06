@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tracks: TrackList
     private lateinit var tracksAdapter: TracksRecyclerAdapter
+    val selectedTrack
+        get() = tracksAdapter.selectedTrack
 
     private lateinit var tracksCanvas: TracksCanvas
     lateinit var tracksScrollView: HorizontalScrollView
@@ -208,12 +210,12 @@ class MainActivity : AppCompatActivity() {
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         v.isPressed = true
-                        Midi.noteOn(note, tracksAdapter.selectedTrack)
+                        Midi.noteOn(note, selectedTrack)
                     }
                     MotionEvent.ACTION_UP -> {
                         v.performClick()
                         v.isPressed = false
-                        Midi.noteOff(note, tracksAdapter.selectedTrack)
+                        Midi.noteOff(note, selectedTrack)
                     }
                 }
                 true
@@ -262,7 +264,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startRecording() {
         startRecordingOnPlay = false // reset it
-        Midi.clearTrack(tracksAdapter.selectedTrack)
+        Midi.clearTrack(selectedTrack)
         Midi.startRecording()
     }
 

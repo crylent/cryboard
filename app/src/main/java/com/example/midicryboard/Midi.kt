@@ -69,7 +69,7 @@ object Midi {
             playing = true
             playbackTimer = Timer()
             timeCorrection += systemTime - systemTimeWhenPaused
-            processEvents { _, event ->
+            processEvents(ALL_TRACKS) { _, event ->
                 val eventTime = event.tick - time
                 if (eventTime > 0) playbackTimer.schedule(timerTask {
                     playMidiEvent(event)
@@ -81,7 +81,7 @@ object Midi {
             playing = true
             playbackTimer = Timer()
             timeCorrection = 0
-            processEvents { _, event ->
+            processEvents(ALL_TRACKS) { _, event ->
                 playbackTimer.schedule(timerTask {
                     playMidiEvent(event)
                 }, event.tick)
@@ -109,12 +109,19 @@ object Midi {
         }
     }
 
-    fun processEvents(lambda: (Int, MidiEvent) -> Unit) {
-        tracks.subList(1, TRACKS_NUMBER).forEach { track ->
-            val iterator = track.events.iterator()
-            while (iterator.hasNext()) {
-                val event = iterator.next()
-                lambda(tracks.indexOf(track) - 1, event)
+    const val ALL_TRACKS: Byte = -1
+
+    fun processEvents(trackId: Byte, lambda: (Byte, MidiEvent) -> Unit) {
+        if (trackId == ALL_TRACKS) {
+            for (currTrackId in 0 until TRACKS_NUMBER) processEventsOnTrack(currTrackId.toByte(), lambda)
+        }
+        else processEventsOnTrack(trackId, lambda)
+    }
+
+    private fun processEventsOnTrack(trackId: Byte, lambda: (Byte, MidiEvent) -> Unit) {
+        tracks[trackId + 1].events.apply {
+            synchronized(this) {
+                forEach { lambda(trackId, it) }
             }
         }
     }
@@ -132,7 +139,11 @@ object Midi {
 
     // records MIDI channel event (noteOn/noteOff) if recording is enabled
     private fun recordIfEnabled(channel: Byte, channelEvent: ChannelEvent) {
-        if (recording && channel != Metronome.METRONOME_CHANNEL) tracks[channel + 1].insertEvent(channelEvent)
+        if (recording && channel != Metronome.METRONOME_CHANNEL) tracks[channel + 1].apply {
+            synchronized(this.events) {
+                tracks[channel + 1].insertEvent(channelEvent)
+            }
+        }
     }
 
     private fun noteEvent(action: Byte, note: Byte, channel: Byte, velocity: Byte) {
