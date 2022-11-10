@@ -176,7 +176,6 @@ class MainActivity : AppCompatActivity() {
                 Midi.stopPlayback()
                 recordButton.isActivated = false
                 playPauseButton.isActivated = false
-                //tracksCanvas.invalidate()
             }
         }
 

@@ -33,8 +33,10 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     private val regions = MutableList(TRACKS_NUMBER) { Region() }
 
+    private var maxPointerPosition = 0
+
     fun redraw(canvas: Canvas) {
-        var newMinWidth = 0
+        //var newWidth = width
         canvas.apply {
             drawColor(backgroundColor)
 
@@ -48,7 +50,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
                 else selected
             ) { trackId, event ->
                 val eventPos = event.tick * WIDTH_MULTIPLIER
-                if (width + EXTRA_WIDTH < eventPos) newMinWidth = eventPos.toInt() + EXTRA_WIDTH
+                //if (newWidth + EXTRA_WIDTH < eventPos) newWidth = eventPos.toInt() + EXTRA_WIDTH
                 if (event is NoteOn) {
                     if (notesOn == 0) noteOnPos = eventPos
                     notesOn += 1
@@ -81,14 +83,17 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
             // Draw pointer
             val pointerPos = Midi.time * WIDTH_MULTIPLIER
             drawLine(pointerPos, 0f, pointerPos, height.toFloat(), pointer)
+            if (pointerPos > maxPointerPosition) maxPointerPosition = pointerPos.toInt()
 
             activity.apply {
                 runOnUiThread {
+                    val requiredWidth = maxPointerPosition + EXTRA_WIDTH
+                    if (requiredWidth > width)
+                        holder.setFixedSize(requiredWidth, height)
+
                     // Auto scrolling
                     if (pointerPos > AUTOSCROLL_START)
                         tracksScrollView.scrollX = (pointerPos - AUTOSCROLL_START).toInt()
-
-                    if (newMinWidth != 0) minimumWidth = newMinWidth
                 }
             }
         }
@@ -105,13 +110,14 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
     companion object {
         private const val PADDING_X = 20
         private const val WIDTH_MULTIPLIER = 0.05f
-        private const val EXTRA_WIDTH = 200
+        private const val EXTRA_WIDTH = 500
         private const val AUTOSCROLL_START = 500
     }
 
     private lateinit var thread: TracksDrawThread
 
     override fun surfaceCreated(holder: SurfaceHolder) {
+        maxPointerPosition = width - EXTRA_WIDTH
         thread = TracksDrawThread(this).apply {
             start()
         }
