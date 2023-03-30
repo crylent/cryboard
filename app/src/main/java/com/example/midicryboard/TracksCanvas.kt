@@ -3,8 +3,7 @@ package com.example.midicryboard
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.view.SurfaceHolder
-import android.view.SurfaceView
+import android.view.*
 import androidx.core.graphics.plus
 import com.example.midicryboard.activity.MainActivity
 import com.leff.midi.event.NoteOff
@@ -21,9 +20,13 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     init {
         holder.addCallback(this)
+        isClickable = true
+        setOnTouchListener { _, event ->
+            performClick() || detector.onTouchEvent(event)
+        }
     }
 
-    private val activity = context as MainActivity
+    private val activity = if (isInEditMode) null else context as MainActivity
 
     private var fullRedraw = true
 
@@ -36,11 +39,9 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
     private var maxPointerPosition = 0
 
     fun redraw(canvas: Canvas) {
-        //var newWidth = width
         canvas.apply {
             drawColor(backgroundColor)
-
-            val selected = activity.selectedTrack
+            val selected = activity!!.selectedTrack
             regions[selected.toInt()].setEmpty()
             // Draw notes
             var notesOn = 0
@@ -49,8 +50,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
                 if (fullRedraw) Midi.ALL_TRACKS
                 else selected
             ) { trackId, event ->
-                val eventPos = event.tick * WIDTH_MULTIPLIER
-                //if (newWidth + EXTRA_WIDTH < eventPos) newWidth = eventPos.toInt() + EXTRA_WIDTH
+                val eventPos = Midi.ticksToTime(event.tick) * WIDTH_MULTIPLIER
                 if (event is NoteOn) {
                     if (notesOn == 0) noteOnPos = eventPos
                     notesOn += 1
@@ -58,10 +58,10 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
                 else if (event is NoteOff) {
                     notesOn -= 1
                     if (notesOn == 0) {
-                        val x = trackX(trackId)
+                        val y = trackY(trackId)
                         regions[trackId.toInt()] = regions[trackId.toInt()].plus(Rect(
-                            noteOnPos.toInt(), x.first.toInt(),
-                            eventPos.toInt(), x.second.toInt()
+                            noteOnPos.toInt(), y.first.toInt(),
+                            eventPos.toInt(), y.second.toInt()
                         ))
                     }
                 }
@@ -74,7 +74,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
             // Draw bar lines
             var barPos = 0f
-            val barDelta = Metronome.period * Metronome.signature.beats * WIDTH_MULTIPLIER
+            val barDelta = Metronome.period * Metronome.signature.num * WIDTH_MULTIPLIER
             while (barPos < width) {
                 barPos += barDelta
                 drawLine(barPos, 0f, barPos, height.toFloat(), markup)
@@ -102,7 +102,8 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
     private val trackHeight
         get() = height / TRACKS_NUMBER
 
-    private fun trackX(trackId: Byte) = Pair(
+    // Top and bottom of track
+    private fun trackY(trackId: Byte) = Pair(
         (trackHeight * trackId + PADDING_X).toFloat(),
         (trackHeight * (trackId + 1) - PADDING_X).toFloat()
     )
@@ -118,6 +119,10 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         maxPointerPosition = width - EXTRA_WIDTH
+        if (isInEditMode) {
+            holder.unlockCanvasAndPost(null)
+            return
+        }
         thread = TracksDrawThread(this).apply {
             start()
         }
@@ -125,7 +130,18 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
-    override fun surfaceDestroyed(holder: SurfaceHolder) {
-        thread.join()
-    }
+    override fun surfaceDestroyed(holder: SurfaceHolder) {}
+
+    private val detector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            Midi.pointerTime = (e.x / WIDTH_MULTIPLIER).toLong()
+            return true
+        }
+    })
+
+    /*@SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return (detector.onTouchEvent(event) || super.onTouchEvent(event))
+        //return true
+    }*/
 }

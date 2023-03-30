@@ -145,11 +145,11 @@ class MainActivity : AppCompatActivity() {
         playPauseButton = findViewById<ImageButton>(R.id.playPauseButton).apply {
             setOnClickListener {
                 if (isActivated) {
-                    Metronome.stop()
+                    //Metronome.stop()
                     Midi.pausePlayback()
                 }
                 else {
-                    Metronome.start()
+                    //Metronome.start()
                     if (startRecordingOnPlay) startRecording()
                     else Midi.startPlayback()
                 }
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                     startRecordingOnPlay = false
                 }
                 else {
-                    if (Metronome.running) startRecording()
+                    if (Midi.playing) startRecording()
                     else startRecordingOnPlay = true
                 }
                 isActivated = !isActivated
@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity() {
         }
         stopButton = findViewById<ImageButton>(R.id.stopButton).apply {
             setOnClickListener {
-                Metronome.stop()
+                //Metronome.stop()
                 Midi.stopPlayback()
                 recordButton.isActivated = false
                 playPauseButton.isActivated = false
@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity() {
             findViewById<androidx.appcompat.widget.AppCompatButton>(it).setOnTouchListener { v, event ->
                 if (startRecordingOnPlay) {
                     startRecording()
-                    Metronome.start()
+                    //Metronome.start()
                     playPauseButton.isActivated = true
                 }
                 val note = (keyboardIds.indexOf(it) + midiOffset).toByte()
@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity() {
     private fun EditText.stopMetronomeOnFocus() {
         setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                Metronome.stop()
+                //Metronome.stop()
                 playPauseButton.isActivated = false
             }
         }

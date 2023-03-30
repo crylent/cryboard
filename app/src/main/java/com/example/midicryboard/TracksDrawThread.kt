@@ -6,11 +6,12 @@ class TracksDrawThread(private val tracksCanvas: TracksCanvas): Thread() {
 
     override fun run() {
         while (true) {
-            val canvas = holder.lockCanvas()
-            synchronized(holder) {
-                tracksCanvas.redraw(canvas)
+            holder.lockCanvas()?.let {
+                synchronized(holder) {
+                    tracksCanvas.redraw(it)
+                }
+                holder.unlockCanvasAndPost(it)
             }
-            if (canvas != null) holder.unlockCanvasAndPost(canvas)
         }
     }
 }
