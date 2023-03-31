@@ -41,10 +41,11 @@ object Midi {
     private val systemTime
         get() = System.currentTimeMillis()
     private var systemTimeOnStart = 0L
-    var pointerTime = 0L
+    var staticPointerTime = 0L
+    var movingPointerInitTime = 0L
 
     val time
-        get() = pointerTime + if (playing) (systemTime - systemTimeOnStart) else 0
+        get() = movingPointerInitTime + if (playing) (systemTime - systemTimeOnStart) else 0
     private val ticks get() = timeToTicks(time)
 
     var playing = false
@@ -56,6 +57,9 @@ object Midi {
 
     private fun timeToTicks(t: Long) = (t / oneTick).toLong()
     fun ticksToTime(ticks: Long) = (ticks * oneTick).toLong()
+
+    val lengthInTicks get() = tracks.maxOf { it.lengthInTicks }
+    val lengthInMillis get() = ticksToTime(lengthInTicks)
 
     fun startRecording() {
         recording = true
@@ -80,7 +84,7 @@ object Midi {
         playing = true
     }
     fun pausePlayback() {
-        pointerTime = time
+        movingPointerInitTime = time
         playing = false
         if (this::playbackTimer.isInitialized) playbackTimer.cancel()
         Metronome.stop()
@@ -88,7 +92,7 @@ object Midi {
     fun stopPlayback() {
         pausePlayback()
         stopRecording()
-        pointerTime = 0
+        movingPointerInitTime = staticPointerTime
     }
 
     private fun playMidiEvent(event: MidiEvent) {

@@ -3,7 +3,10 @@ package com.example.midicryboard
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.view.*
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.SurfaceHolder
+import android.view.SurfaceView
 import androidx.core.graphics.plus
 import com.example.midicryboard.activity.MainActivity
 import com.leff.midi.event.NoteOff
@@ -12,11 +15,14 @@ import com.leff.midi.event.NoteOn
 class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, attrs), SurfaceHolder.Callback {
     private val p = Paint().apply { color = Color.MAGENTA }
     private val markup = Paint().apply { color = Color.GRAY }
-    private val pointer = Paint().apply { color = Color.RED }
+    private val staticPointer = Paint().apply { color = Color.RED }
+    private val movingPointer = Paint().apply { color = Color.YELLOW }
     private val backgroundColor = when(Theme.getTheme(context)) {
         Theme.DARK -> Color.BLACK
         Theme.LIGHT -> Color.WHITE
     }
+
+    private var minWidth = 0
 
     init {
         holder.addCallback(this)
@@ -36,7 +42,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     private val regions = MutableList(TRACKS_NUMBER) { Region() }
 
-    private var maxPointerPosition = 0
+    private var maxPointerPos = 0
 
     fun redraw(canvas: Canvas) {
         canvas.apply {
@@ -80,20 +86,28 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
                 drawLine(barPos, 0f, barPos, height.toFloat(), markup)
             }
 
-            // Draw pointer
-            val pointerPos = Midi.time * WIDTH_MULTIPLIER
-            drawLine(pointerPos, 0f, pointerPos, height.toFloat(), pointer)
-            if (pointerPos > maxPointerPosition) maxPointerPosition = pointerPos.toInt()
+            // Draw moving pointer (current position)
+            val movingPointerPos = Midi.time * WIDTH_MULTIPLIER
+            drawLine(movingPointerPos, 0f, movingPointerPos, height.toFloat(), movingPointer)
+
+            // Adjust width of canvas
+            if (movingPointerPos > maxPointerPos)
+                maxPointerPos = movingPointerPos.toInt()
+            val adjustedMaxPos = (Midi.lengthInMillis * WIDTH_MULTIPLIER).toInt()
+            if (!Midi.playing && maxPointerPos > adjustedMaxPos)
+                maxPointerPos = adjustedMaxPos
+
+            // Draw static pointer (start position)
+            val staticPointerPos = Midi.staticPointerTime * WIDTH_MULTIPLIER
+            drawLine(staticPointerPos, 0f, staticPointerPos, height.toFloat(), staticPointer)
 
             activity.apply {
                 runOnUiThread {
-                    val requiredWidth = maxPointerPosition + EXTRA_WIDTH
-                    if (requiredWidth > width)
-                        holder.setFixedSize(requiredWidth, height)
+                    holder.setFixedSize((maxPointerPos + EXTRA_WIDTH).coerceAtLeast(minWidth), height)
 
                     // Auto scrolling
-                    if (pointerPos > AUTOSCROLL_START)
-                        tracksScrollView.scrollX = (pointerPos - AUTOSCROLL_START).toInt()
+                    if (Midi.playing && movingPointerPos > AUTOSCROLL_START)
+                        tracksScrollView.scrollX = (movingPointerPos - AUTOSCROLL_START).toInt()
                 }
             }
         }
@@ -118,7 +132,8 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
     private lateinit var thread: TracksDrawThread
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        maxPointerPosition = width - EXTRA_WIDTH
+        minWidth = width
+        maxPointerPos = width - EXTRA_WIDTH
         if (isInEditMode) {
             holder.unlockCanvasAndPost(null)
             return
@@ -134,14 +149,13 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     private val detector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            Midi.pointerTime = (e.x / WIDTH_MULTIPLIER).toLong()
+            Midi.apply {
+                if (playing) return false // do not move pointer when playing
+                val tapTime = (e.x / WIDTH_MULTIPLIER).toLong()
+                staticPointerTime = tapTime - tapTime % Metronome.period
+                movingPointerInitTime = staticPointerTime
+            }
             return true
         }
     })
-
-    /*@SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return (detector.onTouchEvent(event) || super.onTouchEvent(event))
-        //return true
-    }*/
 }
