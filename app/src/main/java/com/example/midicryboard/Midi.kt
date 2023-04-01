@@ -84,6 +84,7 @@ object Midi {
         playing = true
     }
     fun pausePlayback() {
+        allNotesOff()
         movingPointerInitTime = time
         playing = false
         if (this::playbackTimer.isInitialized) playbackTimer.cancel()
@@ -156,16 +157,39 @@ object Midi {
         driver.write(event)
     }
 
+    private val notesOn = Array(TRACKS_NUMBER) { mutableSetOf<Byte>() }
+
     fun noteOn(note: Byte, channel: Byte) {
         noteOn(note, channel, volume)
     }
     fun noteOn(note: Byte, channel: Byte, velocity: Byte) {
         noteEvent(MidiConstants.NOTE_ON, note, channel, velocity)
-        recordIfEnabled(channel, NoteOn(ticks, channel.toInt(), note.toInt(), velocity.toInt()))
+        if (channel != Metronome.METRONOME_CHANNEL) {
+            notesOn[channel.toInt()].add(note)
+            recordIfEnabled(
+                channel,
+                NoteOn(ticks, channel.toInt(), note.toInt(), velocity.toInt())
+            )
+        }
     }
     fun noteOff(note: Byte, channel: Byte) {
         noteEvent(MidiConstants.NOTE_OFF, note, channel, NOTE_OFF_VELOCITY)
-        recordIfEnabled(channel, NoteOff(ticks, channel.toInt(), note.toInt(), NOTE_OFF_VELOCITY.toInt()))
+        if (channel != Metronome.METRONOME_CHANNEL) {
+            notesOn[channel.toInt()].remove(note)
+            recordIfEnabled(
+                channel,
+                NoteOff(ticks, channel.toInt(), note.toInt(), NOTE_OFF_VELOCITY.toInt())
+            )
+        }
+    }
+    fun allNotesOff(channel: Byte) { // all notes off on one channel
+        notesOn[channel.toInt()].forEach {
+            noteOff(it, channel)
+        }
+    }
+    fun allNotesOff() { // all notes off on all channels
+        for (channel in 0 until TRACKS_NUMBER)
+            allNotesOff(channel.toByte())
     }
 
     fun changeProgram(channel: Byte, program: Byte) {

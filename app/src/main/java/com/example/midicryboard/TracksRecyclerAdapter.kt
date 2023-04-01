@@ -18,6 +18,7 @@ class TracksRecyclerAdapter(private val trackNameList: List<String> = listOf()):
                     holder.useTrackButton.isSelected = false
                 }
                 it.isSelected = true
+                Midi.allNotesOff(adapter.selectedTrack)
                 adapter.selectedTrack = adapterPosition.toByte()
                 Log.println(Log.DEBUG, "selectedTrack", adapter.selectedTrack.toString())
             }
