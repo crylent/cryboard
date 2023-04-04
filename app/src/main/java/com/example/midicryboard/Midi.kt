@@ -1,6 +1,7 @@
 package com.example.midicryboard
 
 import android.util.Log
+import com.leff.midi.MidiFile
 import com.leff.midi.MidiTrack
 import com.leff.midi.event.ChannelEvent
 import com.leff.midi.event.MidiEvent
@@ -9,6 +10,7 @@ import com.leff.midi.event.NoteOn
 import com.leff.midi.event.meta.Tempo
 import org.billthefarmer.mididriver.MidiConstants
 import org.billthefarmer.mididriver.MidiDriver
+import java.io.File
 import java.util.*
 import kotlin.concurrent.timerTask
 import kotlin.experimental.or
@@ -53,7 +55,7 @@ object Midi {
     private var recording = false
 
     private val oneTick
-        get() = 1e3 / Metronome.tempo // one MIDI tick in ms
+        get() = Metronome.DEFAULT_TEMPO.toDouble() / Metronome.tempo
 
     private fun timeToTicks(t: Long) = (t / oneTick).toLong()
     fun ticksToTime(ticks: Long) = (ticks * oneTick).toLong()
@@ -120,7 +122,7 @@ object Midi {
         }
     }
 
-    fun updateTempoAndSignature() {
+    fun writeTempoAndSignature() {
         tracks[0] = MidiTrack().apply {
             insertEvent(TimeSignatureEvent(
                 0, 0,
@@ -130,6 +132,21 @@ object Midi {
             insertEvent(Tempo().apply {
                 bpm = Metronome.tempo.toFloat()
             })
+        }
+    }
+
+    private fun readTempoAndSignature() {
+        var tempoDetected = false
+        var signatureDetected = false
+        tracks[0].events.forEach {
+            if (!tempoDetected && it is Tempo) {
+                Metronome.tempo = it.bpm.toInt()
+                tempoDetected = true
+            }
+            else if (!signatureDetected && it is TimeSignatureEvent) {
+                Metronome.signature = TimeSignature(it.numerator, it.realDenominator)
+                signatureDetected = true
+            }
         }
     }
 
@@ -199,5 +216,16 @@ object Midi {
 
     fun clearTrack(channel: Byte) {
         tracks[channel + 1] = MidiTrack()
+    }
+
+    fun writeToFile(file: File) {
+        MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks).writeToFile(file)
+    }
+
+    fun readFromFile(file: File) {
+        MidiFile(file).tracks.forEachIndexed { index, midiTrack ->
+            tracks[index] = midiTrack
+        }
+        readTempoAndSignature()
     }
 }

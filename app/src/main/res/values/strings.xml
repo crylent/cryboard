@@ -22,4 +22,12 @@
     <string name="volume">Volume</string>
     <string name="default_tempo">120</string>
     <string name="default_time_signature">4/4</string>
+    <string name="project_name">Project Name</string>
+    <string name="save">Save</string>
+    <string name="export_midi">Export MIDI</string>
+    <string name="error_no_midi">MIDI not found</string>
+    <string name="error_no_midi_desc">MIDI file related to this project doesn\'t exists or can\'t be opened. Load metadata only?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="error_invalid_project_name">Project name must not be empty or contain invalid characters</string>
 </resources>

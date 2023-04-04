@@ -178,6 +178,45 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <!-- MIDI ACTIONS -->
+    <LinearLayout
+        android:id="@+id/midiActions"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/keyboard"
+        app:layout_constraintEnd_toEndOf="@id/tracksView">
+
+        <ImageButton
+            android:id="@+id/openMidiButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/open_enabled"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/saveMidiButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/save"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/editMidiButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/edit"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
     <!-- WHITE KEYS -->
     <LinearLayout
         android:id="@+id/keyboard"

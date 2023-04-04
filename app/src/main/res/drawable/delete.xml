@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <bitmap android:alpha="0.25" android:src="@drawable/delete_disabled"/>
+    </item>
+    <item android:drawable="@drawable/delete_enabled"/>
+</selector>

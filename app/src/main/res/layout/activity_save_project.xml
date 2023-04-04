@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".activity.SaveProjectActivity">
+
+    <EditText
+        android:id="@+id/projectName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:ems="12"
+        android:hint="@string/project_name"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/saveProjectError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text=""
+        android:visibility="invisible"
+        android:textSize="20sp"
+        android:textColor="#F44"
+        app:layout_constraintEnd_toEndOf="@+id/projectName"
+        app:layout_constraintStart_toStartOf="@+id/projectName"
+        app:layout_constraintTop_toBottomOf="@+id/projectName" />
+
+    <Button
+        android:id="@+id/saveProject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="8"
+        android:text="@string/save"
+        android:textSize="36sp"
+        android:enabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/projectName"
+        app:layout_constraintStart_toStartOf="@+id/projectName"
+        app:layout_constraintTop_toBottomOf="@+id/saveProjectError" />
+
+    <Button
+        android:id="@+id/exportMidi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:ems="8"
+        android:text="@string/export_midi"
+        android:textSize="32sp"
+        android:enabled="false"
+        app:layout_constraintEnd_toEndOf="@+id/projectName"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/projectName"
+        app:layout_constraintTop_toBottomOf="@+id/saveProject" />
+</androidx.constraintlayout.widget.ConstraintLayout>

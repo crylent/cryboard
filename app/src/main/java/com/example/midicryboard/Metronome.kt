@@ -25,7 +25,9 @@ object Metronome {
     private const val METRONOME_DOWNBEAT: Byte = 35
     private const val METRONOME_BEAT: Byte = 42
 
-    var tempo: Int = 120
+    const val DEFAULT_TEMPO = 120
+
+    var tempo: Int = DEFAULT_TEMPO
     var signature: TimeSignature = TimeSignature()
 
     var running = false

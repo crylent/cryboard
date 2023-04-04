@@ -1,21 +1,19 @@
 package com.example.midicryboard.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.HorizontalScrollView
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
+import com.example.midicryboard.contract.TrackPropertiesContract
 import com.sdsmdg.harjot.crollerTest.Croller
 
 const val DEFAULT_MIDI_OFFSET = 60
@@ -59,13 +57,15 @@ class MainActivity : AppCompatActivity() {
         R.id.button_c3
     )
 
+    private lateinit var editTempo: EditText
+    private lateinit var editTimeSignature: EditText
+
     private lateinit var playPauseButton: ImageButton
     private lateinit var recordButton: ImageButton
     private lateinit var stopButton: ImageButton
 
     private var startRecordingOnPlay = false
 
-    private lateinit var tracks: TrackList
     private lateinit var tracksAdapter: TracksRecyclerAdapter
     val selectedTrack
         get() = tracksAdapter.selectedTrack
@@ -80,14 +80,19 @@ class MainActivity : AppCompatActivity() {
         Midi.start()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        updateTempoAndTimeSignature()
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Companion.resources = resources
 
-        tracks = TrackList()
-        tracksAdapter = TracksRecyclerAdapter(tracks.namesList)
+        tracksAdapter = TracksRecyclerAdapter(TrackList.namesList)
+        TrackList.linkRecyclerAdapter(tracksAdapter)
 
         // Set up volume slider
         findViewById<Croller>(R.id.volumeSlider).apply {
@@ -107,13 +112,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Set up metronome
-        findViewById<EditText>(R.id.editTempo).apply {
+        editTempo = findViewById<EditText>(R.id.editTempo).apply {
             stopMetronomeOnFocus()
             setEditListener {
                 val tempo = text.toString().toIntOrNull()
                 if (tempo != null && tempo in 30..300) {
                     Metronome.tempo = tempo
-                    Midi.updateTempoAndSignature()
+                    Midi.writeTempoAndSignature()
                     clearFocus()
                     false // hide keyboard
                 }
@@ -123,13 +128,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        findViewById<EditText>(R.id.editTimeSignature).apply {
+        editTimeSignature = findViewById<EditText>(R.id.editTimeSignature).apply {
             stopMetronomeOnFocus()
             setEditListener {
                 TimeSignature.fromString(text.toString()).run {
                     if (this != null) {
                         Metronome.signature = this
-                        Midi.updateTempoAndSignature()
+                        Midi.writeTempoAndSignature()
                         clearFocus()
                         false // hide keyboard
                     }
@@ -176,19 +181,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Set up MIDI action buttons
+        findViewById<ImageButton>(R.id.saveMidiButton).apply {
+            setOnClickListener {
+                startActivity(Intent(context, SaveProjectActivity::class.java))
+            }
+        }
+        findViewById<ImageButton>(R.id.openMidiButton).apply {
+            setOnClickListener {
+                startActivity(Intent(context, OpenProjectActivity::class.java))
+            }
+        }
+
         // Set up track list
         findViewById<RecyclerView?>(R.id.trackList).apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = tracksAdapter
         }
-        trackPropertiesLauncher = registerForActivityResult(TrackPropertiesActivityContract()) { result ->
+        trackPropertiesLauncher = registerForActivityResult(TrackPropertiesContract()) { result ->
             result!!.apply {
                 val trackId = getByte(TrackBundle.TRACK_ID)
-                tracks.setTrackInfo(
+                TrackList.setTrackInfo(
                     trackId,
                     getByte(TrackBundle.INSTRUMENT)
                 )
-                tracksAdapter.updateItem(trackId, tracks.getTrackName(trackId))
             }
         }
         tracksCanvas = findViewById(R.id.tracksCanvas)
@@ -252,7 +268,7 @@ class MainActivity : AppCompatActivity() {
     fun openTrackProperties(trackId: Byte) {
         trackPropertiesLauncher.launch(Bundle().apply {
             putByte(TrackBundle.TRACK_ID, trackId)
-            putByte(TrackBundle.INSTRUMENT, tracks.getInstrumentId(trackId))
+            putByte(TrackBundle.INSTRUMENT, TrackList.getInstrumentId(trackId))
         })
     }
 
@@ -260,6 +276,11 @@ class MainActivity : AppCompatActivity() {
         startRecordingOnPlay = false // reset it
         Midi.clearTrack(selectedTrack)
         Midi.startRecording()
+    }
+
+    fun updateTempoAndTimeSignature() {
+        editTempo.setText(Metronome.tempo.toString())
+        editTimeSignature.setText(Metronome.signature.toString())
     }
 
     override fun onDestroy() {

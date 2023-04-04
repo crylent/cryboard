@@ -1,13 +1,14 @@
-package com.example.midicryboard
+package com.example.midicryboard.contract
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContract
+import com.example.midicryboard.TrackBundle
 import com.example.midicryboard.activity.*
 
-class TrackPropertiesActivityContract: ActivityResultContract<Bundle, Bundle?>() {
+class TrackPropertiesContract: ActivityResultContract<Bundle, Bundle?>() {
     override fun createIntent(context: Context, input: Bundle) =
         Intent(context, TrackPropertiesActivity::class.java)
             .putExtra(TrackBundle.INPUT, input)

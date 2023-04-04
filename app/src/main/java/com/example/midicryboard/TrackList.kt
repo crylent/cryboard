@@ -4,9 +4,16 @@ import org.billthefarmer.mididriver.GeneralMidiConstants
 
 const val TRACKS_NUMBER = 8
 
-class TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
+object TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
+
+    private lateinit var tracksRecyclerAdapter: TracksRecyclerAdapter
+
+    fun linkRecyclerAdapter(adapter: TracksRecyclerAdapter) {
+        tracksRecyclerAdapter = adapter
+    }
+
     fun getTrackName(trackId: Byte) = this[trackId.toInt()].instrument.name
-    fun getInstrumentId(trackId: Byte) = this[trackId.toInt()].instrument.id
+    fun getInstrumentId(trackId: Byte) = this[trackId.toInt()].instrumentId
 
     val namesList
         get() = this.map { it.instrument.name }
@@ -24,7 +31,8 @@ class TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
     }
 
     private fun createTrackInfo(instrumentId: Byte) = TrackInfo(
-        MidiInstruments.findInstrumentById(instrumentId)
+        instrumentId,
+        TrackInfo.MAX_VOLUME
     )
 
     private fun addInstrument(id: Byte) {
@@ -32,8 +40,26 @@ class TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
         add(createTrackInfo(id))
     }
 
-    fun setTrackInfo(trackId: Byte, instrumentId: Byte) {
-        Midi.changeProgram(trackId, instrumentId)
-        this[trackId.toInt()] = createTrackInfo(instrumentId)
+    fun setTrackInfo(
+        trackId: Byte,
+        instrumentId: Byte = this[trackId.toInt()].instrumentId,
+        volume: Byte = this[trackId.toInt()].volume
+    ) {
+        setTrackInfo(
+            trackId,
+            TrackInfo(instrumentId, volume)
+        )
+    }
+
+    fun setTrackInfo(trackId: Byte, trackInfo: TrackInfo) {
+        Midi.changeProgram(trackId, trackInfo.instrumentId)
+        this[trackId.toInt()] = trackInfo
+        tracksRecyclerAdapter.updateItem(trackId, getTrackName(trackId))
+    }
+
+    fun openProject(project: CryboardProject) {
+        project.tracks.forEachIndexed { index, trackInfo ->
+            setTrackInfo(index.toByte(), trackInfo)
+        }
     }
 }

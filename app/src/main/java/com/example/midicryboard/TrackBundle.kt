@@ -6,4 +6,5 @@ object TrackBundle {
 
     const val TRACK_ID = "TrackId"
     const val INSTRUMENT = "TrackInstrument"
+    const val VOLUME = "TrackVolume"
 }
