@@ -15,13 +15,17 @@ import java.io.ObjectInputStream
 class OpenProjectActivity : AppCompatActivity() {
     private lateinit var nameFilter: EditText
     private lateinit var projectsRecyclerAdapter: ProjectsRecyclerAdapter
-    //private lateinit var projectsList: RecyclerView
+    private lateinit var favouriteButton: FavouriteButton
+    private lateinit var deleteButton: ImageButton
     private lateinit var openButton: ImageButton
+
+    private lateinit var favourites: Favourites
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_open_project)
-        projectsRecyclerAdapter = ProjectsRecyclerAdapter(this@OpenProjectActivity)
+        favourites = Favourites.getInstance(this)
+        projectsRecyclerAdapter = ProjectsRecyclerAdapter(this@OpenProjectActivity, favourites)
         findViewById<RecyclerView>(R.id.projects).apply {
             adapter = projectsRecyclerAdapter
             layoutManager = LinearLayoutManager(this@OpenProjectActivity)
@@ -31,12 +35,15 @@ class OpenProjectActivity : AppCompatActivity() {
                 projectsRecyclerAdapter.updateFilter(it.toString())
             }
         }
-        openButton = findViewById<ImageButton?>(R.id.openProject).apply {
-            isEnabled = false
-        }
+        favouriteButton = findViewById(R.id.favouriteProject)
+        deleteButton = findViewById(R.id.deleteProject)
+        openButton = findViewById(R.id.openProject)
+        setButtonsEnabled(false)
     }
 
-    private fun setButtonsState(enabled: Boolean) {
+    private fun setButtonsEnabled(enabled: Boolean) {
+        favouriteButton.isEnabled = enabled
+        deleteButton.isEnabled = enabled
         openButton.isEnabled = enabled
     }
 
@@ -60,13 +67,16 @@ class OpenProjectActivity : AppCompatActivity() {
             .setNegativeButton(getString(R.string.no)) { _, _ -> }
             .setOnDismissListener {
                 if (denyDismissListener) return@setOnDismissListener
-                setButtonsState(false) // disable buttons
+                setButtonsEnabled(false) // disable buttons
             }
             .show()
     }
 
     private fun previewProject(projectName: String) {
-        setButtonsState(true) // enable buttons
+        favouriteButton.apply {
+            init(favourites, projectName)
+        }
+        setButtonsEnabled(true) // enable buttons
         openButton.setOnClickListener {
             openFile(projectName)
             finish()

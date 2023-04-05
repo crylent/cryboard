@@ -27,7 +27,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/projectNameFilter"
         app:layout_constraintStart_toStartOf="@+id/projectNameFilter"
-        app:layout_constraintTop_toBottomOf="@id/projectNameFilter" />
+        app:layout_constraintTop_toBottomOf="@id/projectNameFilter"
+        tools:listitem="@layout/project"/>
 
     <ImageButton
         android:id="@+id/openProject"
@@ -40,5 +41,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/open"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/deleteProject"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="15dp"
+        android:padding="15dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/openProject"
+        app:srcCompat="@drawable/delete"
+        tools:ignore="ContentDescription" />
+
+    <com.example.midicryboard.FavouriteButton
+        android:id="@+id/favouriteProject"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="15dp"
+        android:padding="15dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/deleteProject"
+        app:srcCompat="@drawable/favourite_mark"
         tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

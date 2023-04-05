@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <com.example.midicryboard.FavouriteButton
         android:id="@+id/favouriteButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
