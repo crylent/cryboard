@@ -200,7 +200,7 @@ object Midi {
         }
     }
     fun allNotesOff(channel: Byte) { // all notes off on one channel
-        notesOn[channel.toInt()].forEach {
+        notesOn[channel.toInt()].toSet().forEach {
             noteOff(it, channel)
         }
     }
