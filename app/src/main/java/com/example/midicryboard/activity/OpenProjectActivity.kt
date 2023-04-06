@@ -1,16 +1,22 @@
 package com.example.midicryboard.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.*
+import com.example.midicryboard.Favourites
+import com.example.midicryboard.Filename
+import com.example.midicryboard.ProjectsRecyclerAdapter
+import com.example.midicryboard.R
 import com.example.midicryboard.button.DeleteButton
 import com.example.midicryboard.button.FavouriteButton
 import com.example.midicryboard.button.OpenButton
+import com.example.midicryboard.button.ShareButton
 import java.io.File
 
 class OpenProjectActivity : AppCompatActivity() {
@@ -19,6 +25,7 @@ class OpenProjectActivity : AppCompatActivity() {
     private lateinit var favouriteButton: FavouriteButton
     private lateinit var deleteButton: DeleteButton
     private lateinit var openButton: OpenButton
+    private lateinit var shareButton: ShareButton
 
     private lateinit var favourites: Favourites
 
@@ -39,19 +46,22 @@ class OpenProjectActivity : AppCompatActivity() {
         favouriteButton = findViewById(R.id.favouriteProject)
         deleteButton = findViewById(R.id.deleteProject)
         openButton = findViewById(R.id.openProject)
+        shareButton = findViewById(R.id.shareProject)
         disableButtons()
     }
 
     private fun enableButtons() {
-        favouriteButton.init(favourites, projectOnPreview!!)
+        favouriteButton.init(projectOnPreview!!, favourites)
         deleteButton.init(projectOnPreview!!)
         openButton.init(projectOnPreview!!)
+        shareButton.init(projectOnPreview!!)
     }
 
     private fun disableButtons() {
         favouriteButton.disable()
         deleteButton.disable()
         openButton.disable()
+        shareButton.disable()
     }
 
     private var midiForPreview: File? = null
@@ -88,5 +98,18 @@ class OpenProjectActivity : AppCompatActivity() {
 
     fun removeProjectFromList(projectName: String) {
         projectsRecyclerAdapter.removeProjectFromList(projectName)
+    }
+
+    fun shareMidi() {
+        Intent(Intent.ACTION_SEND).apply {
+            type = "audio/midi"
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(
+                this@OpenProjectActivity,
+                "$packageName.provider",
+                midiForPreview!!
+            ))
+            startActivity(Intent.createChooser(this, "Share MIDI"))
+        }
     }
 }

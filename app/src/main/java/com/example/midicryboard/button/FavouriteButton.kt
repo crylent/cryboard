@@ -17,7 +17,7 @@ class FavouriteButton @JvmOverloads constructor(
         buttons.remove(this)
     }
 
-    fun init(favourites: Favourites, projectName: String) {
+    fun init(projectName: String, favourites: Favourites) {
         isEnabled = true
         isActivated = favourites.contains(projectName)
         name = projectName

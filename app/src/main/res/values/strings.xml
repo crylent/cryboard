@@ -38,4 +38,8 @@
     <string name="delete_project">Delete</string>
     <string name="delete_project_msg">You are going to delete project metadata and MIDI. After confirmation, it will be impossible to restore any data.</string>
     <string name="delete_project_error">Failed to delete the project</string>
+    <string name="share_or_export">Share/Export</string>
+    <string name="favourite">Favourite</string>
+    <string name="delete">Delete</string>
+    <string name="open">Open Project</string>
 </resources>

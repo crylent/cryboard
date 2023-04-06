@@ -30,42 +30,107 @@
         app:layout_constraintTop_toBottomOf="@id/projectNameFilter"
         tools:listitem="@layout/project"/>
 
-    <com.example.midicryboard.button.OpenButton
-        android:id="@+id/openProject"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:padding="15dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/open"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <com.example.midicryboard.button.DeleteButton
-        android:id="@+id/deleteProject"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="15dp"
-        android:padding="15dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/openProject"
-        app:srcCompat="@drawable/delete"
-        tools:ignore="ContentDescription" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <com.example.midicryboard.button.FavouriteButton
-        android:id="@+id/favouriteProject"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="15dp"
-        android:padding="15dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/deleteProject"
-        app:srcCompat="@drawable/favourite_mark"
-        tools:ignore="ContentDescription" />
+            <FrameLayout>
+
+            </FrameLayout>
+
+            <FrameLayout>
+
+            </FrameLayout>
+
+            <FrameLayout>
+                <com.example.midicryboard.button.ShareButton
+                    android:id="@+id/shareProject"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingBottom="15dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/share"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/share_or_export"/>
+            </FrameLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout>
+                <com.example.midicryboard.button.FavouriteButton
+                    android:id="@+id/favouriteProject"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingBottom="15dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/favourite_mark"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/favourite"/>
+            </FrameLayout>
+
+            <FrameLayout>
+                <com.example.midicryboard.button.DeleteButton
+                    android:id="@+id/deleteProject"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingBottom="15dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/delete"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/delete"/>
+            </FrameLayout>
+
+            <FrameLayout>
+                <com.example.midicryboard.button.OpenButton
+                    android:id="@+id/openProject"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingBottom="15dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/open"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/open"/>
+            </FrameLayout>
+
+        </TableRow>
+    </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

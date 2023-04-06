@@ -73,7 +73,7 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
         holder.apply {
             projectName = files!![position].nameWithoutExtension
             name.text = projectName
-            favourite.init(favourites, projectName)
+            favourite.init(projectName, favourites)
             delete.init(projectName)
         }
     }
