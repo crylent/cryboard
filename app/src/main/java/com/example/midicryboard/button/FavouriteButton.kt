@@ -1,14 +1,12 @@
-package com.example.midicryboard
+package com.example.midicryboard.button
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageButton
+import com.example.midicryboard.Favourites
 
 class FavouriteButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : AppCompatImageButton(context, attrs) {
-    lateinit var name: String
-
+) : ProjectActionButton(context, attrs) {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         buttons.add(this)
@@ -20,14 +18,16 @@ class FavouriteButton @JvmOverloads constructor(
     }
 
     fun init(favourites: Favourites, projectName: String) {
+        isEnabled = true
         isActivated = favourites.contains(projectName)
         name = projectName
         setOnClickListener {
+            if (name == null) return@setOnClickListener
             buttons.forEach {
-                if (it::name.isInitialized && name == it.name) it.isActivated = !it.isActivated
+                if (name == it.name) it.isActivated = !it.isActivated
             }
             if (isActivated)
-                favourites.add(name)
+                favourites.add(name!!)
             else
                 favourites.remove(name)
         }

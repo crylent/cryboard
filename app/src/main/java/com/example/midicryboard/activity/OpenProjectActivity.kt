@@ -3,21 +3,22 @@ package com.example.midicryboard.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
-import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
+import com.example.midicryboard.button.DeleteButton
+import com.example.midicryboard.button.FavouriteButton
+import com.example.midicryboard.button.OpenButton
 import java.io.File
-import java.io.ObjectInputStream
 
 class OpenProjectActivity : AppCompatActivity() {
     private lateinit var nameFilter: EditText
     private lateinit var projectsRecyclerAdapter: ProjectsRecyclerAdapter
     private lateinit var favouriteButton: FavouriteButton
-    private lateinit var deleteButton: ImageButton
-    private lateinit var openButton: ImageButton
+    private lateinit var deleteButton: DeleteButton
+    private lateinit var openButton: OpenButton
 
     private lateinit var favourites: Favourites
 
@@ -38,13 +39,19 @@ class OpenProjectActivity : AppCompatActivity() {
         favouriteButton = findViewById(R.id.favouriteProject)
         deleteButton = findViewById(R.id.deleteProject)
         openButton = findViewById(R.id.openProject)
-        setButtonsEnabled(false)
+        disableButtons()
     }
 
-    private fun setButtonsEnabled(enabled: Boolean) {
-        favouriteButton.isEnabled = enabled
-        deleteButton.isEnabled = enabled
-        openButton.isEnabled = enabled
+    private fun enableButtons() {
+        favouriteButton.init(favourites, projectOnPreview!!)
+        deleteButton.init(projectOnPreview!!)
+        openButton.init(projectOnPreview!!)
+    }
+
+    private fun disableButtons() {
+        favouriteButton.disable()
+        deleteButton.disable()
+        openButton.disable()
     }
 
     private var midiForPreview: File? = null
@@ -55,40 +62,31 @@ class OpenProjectActivity : AppCompatActivity() {
             previewProject(projectName)
             return
         }
-        // MIDI file not found
-        var denyDismissListener = false
+        // MIDI file is missing
         AlertDialog.Builder(this)
-            .setTitle(getString(R.string.error_no_midi))
-            .setMessage(getString(R.string.error_no_midi_desc))
-            .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                denyDismissListener = true
+            .setTitle(R.string.error_no_midi)
+            .setMessage(R.string.error_no_midi_msg)
+            .setPositiveButton(R.string.yes) { _, _ ->
                 previewProject(projectName)
             }
-            .setNegativeButton(getString(R.string.no)) { _, _ -> }
-            .setOnDismissListener {
-                if (denyDismissListener) return@setOnDismissListener
-                setButtonsEnabled(false) // disable buttons
-            }
+            .setNegativeButton(R.string.no) { _, _ -> }
             .show()
     }
 
+    var projectOnPreview: String? = null
+        private set
+
     private fun previewProject(projectName: String) {
-        favouriteButton.apply {
-            init(favourites, projectName)
-        }
-        setButtonsEnabled(true) // enable buttons
-        openButton.setOnClickListener {
-            openFile(projectName)
-            finish()
-        }
+        projectOnPreview = projectName
+        enableButtons()
     }
 
-    private fun openFile(projectName: String) {
-        openFileInput(Filename.metadata(projectName)).use { file ->
-            ObjectInputStream(file).use {
-                TrackList.openProject(it.readObject() as CryboardProject)
-            }
-        }
-        Midi.readFromFile(File(filesDir, Filename.midi(projectName)))
+    fun clearPreview() {
+        projectOnPreview = null
+        disableButtons()
+    }
+
+    fun removeProjectFromList(projectName: String) {
+        projectsRecyclerAdapter.removeProjectFromList(projectName)
     }
 }

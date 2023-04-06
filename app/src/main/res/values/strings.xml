@@ -19,15 +19,23 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+
     <string name="volume">Volume</string>
     <string name="default_tempo">120</string>
     <string name="default_time_signature">4/4</string>
+
     <string name="project_name">Project Name</string>
     <string name="save">Save</string>
     <string name="export_midi">Export MIDI</string>
-    <string name="error_no_midi">MIDI not found</string>
-    <string name="error_no_midi_desc">MIDI file related to this project doesn\'t exists or can\'t be opened. Load metadata only?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+
+    <string name="error_no_midi">MIDI is missing</string>
+    <string name="error_no_midi_msg">MIDI file related to this project doesn\'t exists or can\'t be opened. Load metadata only?</string>
     <string name="error_invalid_project_name">Project name must not be empty or contain invalid characters</string>
+
+    <string name="delete_project">Delete</string>
+    <string name="delete_project_msg">You are going to delete project metadata and MIDI. After confirmation, it will be impossible to restore any data.</string>
+    <string name="delete_project_error">Failed to delete the project</string>
 </resources>

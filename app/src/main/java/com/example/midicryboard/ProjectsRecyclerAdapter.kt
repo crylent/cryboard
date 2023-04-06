@@ -3,18 +3,19 @@ package com.example.midicryboard
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.activity.OpenProjectActivity
+import com.example.midicryboard.button.DeleteButton
+import com.example.midicryboard.button.FavouriteButton
 import java.io.File
 import java.io.FilenameFilter
 
 class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favourites: Favourites):
     RecyclerView.Adapter<ProjectsRecyclerAdapter.ProjectViewHolder>() {
-    class ProjectViewHolder(itemView: View, adapter: ProjectsRecyclerAdapter): RecyclerView.ViewHolder(itemView) {
-        //lateinit var file: File
+    class ProjectViewHolder(itemView: View, private val adapter: ProjectsRecyclerAdapter): RecyclerView.ViewHolder(itemView) {
+        lateinit var projectName: String
 
         val item: LinearLayout = itemView.findViewById<LinearLayout?>(R.id.projectItem).apply {
             setOnClickListener {
@@ -30,7 +31,14 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
 
         val favourite: FavouriteButton = itemView.findViewById(R.id.favouriteButton)
 
-        val delete: ImageButton = itemView.findViewById(R.id.deleteButton)
+        val delete: DeleteButton = itemView.findViewById(R.id.deleteButton)
+
+        fun removeHolder() {
+            adapter.apply {
+                holders.remove(this@ProjectViewHolder)
+                notifyItemRemoved(adapterPosition)
+            }
+        }
     }
 
     fun updateFilter(filter: String) {
@@ -45,6 +53,11 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
 
     private val holders = arrayListOf<ProjectViewHolder>()
 
+    fun removeProjectFromList(projectName: String) {
+        favourites.remove(projectName)
+        holders.find { it.projectName == projectName }?.removeHolder()
+    }
+
     private val dir = context.filesDir
     private val files
         get() = dir.listFiles(ProjectFilter)
@@ -58,11 +71,10 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
 
     override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
         holder.apply {
-            //file = files!![position]
-            val projectName = files!![position].nameWithoutExtension
+            projectName = files!![position].nameWithoutExtension
             name.text = projectName
-            favourite.isActivated = favourites.contains(name.text)
             favourite.init(favourites, projectName)
+            delete.init(projectName)
         }
     }
 

@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@id/projectNameFilter"
         tools:listitem="@layout/project"/>
 
-    <ImageButton
+    <com.example.midicryboard.button.OpenButton
         android:id="@+id/openProject"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -43,7 +43,7 @@
         app:srcCompat="@drawable/open"
         tools:ignore="ContentDescription" />
 
-    <ImageButton
+    <com.example.midicryboard.button.DeleteButton
         android:id="@+id/deleteProject"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -56,7 +56,7 @@
         app:srcCompat="@drawable/delete"
         tools:ignore="ContentDescription" />
 
-    <com.example.midicryboard.FavouriteButton
+    <com.example.midicryboard.button.FavouriteButton
         android:id="@+id/favouriteProject"
         android:layout_width="100dp"
         android:layout_height="100dp"
