@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
 import com.example.midicryboard.contract.TrackPropertiesContract
+import com.example.midilib.MidiLib
 import com.sdsmdg.harjot.crollerTest.Croller
 
 const val DEFAULT_MIDI_OFFSET = 60
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
 
     init {
-        Midi.start()
+        //Midi.start()
     }
 
     override fun onRestart() {
@@ -89,6 +90,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MidiLib.apply {
+            start()
+        }
+
         Companion.resources = resources
 
         tracksAdapter = TracksRecyclerAdapter(TrackList.namesList)
