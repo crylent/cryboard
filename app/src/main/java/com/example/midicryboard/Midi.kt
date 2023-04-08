@@ -1,6 +1,7 @@
 package com.example.midicryboard
 
 import android.util.Log
+import com.example.midilib.MidiLib
 import com.leff.midi.MidiFile
 import com.leff.midi.MidiTrack
 import com.leff.midi.event.ChannelEvent
@@ -180,6 +181,7 @@ object Midi {
         noteOn(note, channel, volume)
     }
     fun noteOn(note: Byte, channel: Byte, velocity: Byte) {
+        MidiLib.noteOn(channel, note, velocity / 127.0f)
         noteEvent(MidiConstants.NOTE_ON, note, channel, velocity)
         if (channel != Metronome.METRONOME_CHANNEL) {
             notesOn[channel.toInt()].add(note)
@@ -190,6 +192,7 @@ object Midi {
         }
     }
     fun noteOff(note: Byte, channel: Byte) {
+        MidiLib.noteOff(channel, note)
         noteEvent(MidiConstants.NOTE_OFF, note, channel, NOTE_OFF_VELOCITY)
         if (channel != Metronome.METRONOME_CHANNEL) {
             notesOn[channel.toInt()].remove(note)

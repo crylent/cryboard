@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MIDI Cryboard"
 include ':app'
+include ':midilib'
