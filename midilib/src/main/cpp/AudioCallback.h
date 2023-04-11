@@ -15,16 +15,10 @@ class AudioCallback : public AudioStreamDataCallback {
 public:
     DataCallbackResult onAudioReady(AudioStream* audioStream, void* audioData, int32_t numFrames);
 
-    AudioCallback(SoundGenerator* generator);
+    AudioCallback(const std::shared_ptr<SoundGenerator>& generator);
 
 private:
-    SoundGenerator* mSoundGenerator;
-
-    static constexpr int sampleRate = 48000;
-    static constexpr float amplitude = 0.5f;
-    static constexpr float frequency = 440;
-    static constexpr double phaseIncrement = frequency * 2 * M_PI / (double) sampleRate;
-    float phase = 0.0;
+    std::shared_ptr<SoundGenerator> mSoundGenerator;
 };
 
 

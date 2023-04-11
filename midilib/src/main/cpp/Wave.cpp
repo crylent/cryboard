@@ -4,7 +4,11 @@
 #include "AudioEngine.h"
 #endif
 
-Wave::Wave(WaveInstrument *instrument, float frequency, float amplitude) {
+#ifndef LOG_H
+#include "log.h"
+#endif
+
+Wave::Wave(const shared_ptr<WaveInstrument>& instrument, float frequency, float amplitude) {
     mInstrument = instrument;
     mFrequency = frequency;
     mAmplitude = amplitude;

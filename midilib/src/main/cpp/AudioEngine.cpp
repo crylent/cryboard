@@ -11,7 +11,7 @@ std::mutex AudioEngine::mLock;
 SharingMode AudioEngine::mSharingMode = SharingMode::Exclusive;
 int32_t AudioEngine::mSampleRate = 48000;
 int32_t AudioEngine::mBufferSize = 256;
-std::vector<Channel*> AudioEngine::mChannels = std::vector<Channel*>();
+std::vector<std::shared_ptr<Channel>> AudioEngine::mChannels = std::vector<std::shared_ptr<Channel>>();
 
 /**
  * Starts audio engine with specified configuration.
@@ -31,12 +31,12 @@ Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate) {
  */
 Result AudioEngine::start() {
     std::lock_guard<std::mutex> lockGuard(mLock);
-    auto* piano = new WavePiano(5, 0.5, 0.0004);
-    auto* piano2 = new WavePiano(0, 0, 0);
+    auto piano = make_shared<WavePiano>(5, 1, 0.0004);
     Channel::setDefaultInstrument(piano);
     initChannels();
     MultiwaveGenerator::init(mBufferSize, mSampleRate);
-    auto* generator = new MultiwaveGenerator();
+    //auto* generator = new MultiwaveGenerator();
+    auto generator = std::make_shared<MultiwaveGenerator>();
     auto* callback = new AudioCallback(generator);
     AudioStreamBuilder builder;
     Result result = builder.setPerformanceMode(PerformanceMode::LowLatency)
@@ -46,6 +46,7 @@ Result AudioEngine::start() {
             ->setChannelCount(ChannelCount::Mono)
             ->setDataCallback(callback)
             ->setSampleRate(mSampleRate)
+            ->setAudioApi(AudioApi::AAudio)
             ->openStream(mStream);
     if (result != Result::OK) {
         LOGE("Error creating audio stream: %s", convertToText(result));
@@ -87,7 +88,7 @@ int32_t AudioEngine::getSampleRate() {
 }
 
 /** @return All channels as <code>std::vector\<Channel*\></code> */
-std::vector<Channel *> AudioEngine::getChannels() {
+std::vector<std::shared_ptr<Channel>> AudioEngine::getChannels() {
     return mChannels;
 }
 
@@ -120,7 +121,7 @@ void AudioEngine::noteOff(int8_t channel, int8_t note) {
 void AudioEngine::initChannels() {
     mChannels.clear();
     for (int8_t i = 0; i < mNumChannels; i++) {
-        auto * channel = new Channel();
+        auto channel = std::make_shared<Channel>();
         mChannels.push_back(channel);
     }
 }
