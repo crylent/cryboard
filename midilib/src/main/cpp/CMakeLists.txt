@@ -32,6 +32,7 @@ add_library( # Sets the name of the library.
             Wave.cpp
             WaveInstrument.cpp
             WavePiano.cpp
+            WaveSynth.cpp
             Channel.cpp
             NoteFrequency.cpp
             log.cpp

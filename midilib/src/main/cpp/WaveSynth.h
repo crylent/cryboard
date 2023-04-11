@@ -1,0 +1,10 @@
+#ifndef MIDI_CRYBOARD_WAVESYNTH_H
+#define MIDI_CRYBOARD_WAVESYNTH_H
+
+
+class WaveSynth {
+
+};
+
+
+#endif //MIDI_CRYBOARD_WAVESYNTH_H

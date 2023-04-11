@@ -1,6 +1,6 @@
 #include "WaveGenerator.h"
 
-WaveGenerator::WaveGenerator(WaveInstrument* instrument) {
+WaveGenerator::WaveGenerator(const shared_ptr<WaveInstrument>& instrument) {
     mInstrument = instrument;
 }
 

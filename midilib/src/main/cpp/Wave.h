@@ -5,19 +5,21 @@
 #include "WaveInstrument.h"
 #endif
 
+using namespace std;
+
 class Wave {
 public:
-    Wave(WaveInstrument* instrument, float frequency, float amplitude);
+    Wave(const shared_ptr<WaveInstrument>& instrument, float frequency, float amplitude);
 
     float nextSample();
 
 private:
-    WaveInstrument* mInstrument{};
+    shared_ptr<WaveInstrument> mInstrument;
     float mPhase = 0;
-    float mFrequency{};
-    float mAmplitude{};
+    float mFrequency;
+    float mAmplitude;
 
-    float mPhaseIncrement{};
+    float mPhaseIncrement;
 };
 
 

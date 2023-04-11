@@ -1,10 +1,12 @@
 #include "AudioCallback.h"
 
+#include <utility>
+
 #ifndef LOG_H
 #include "log.h"
 #endif
 
-AudioCallback::AudioCallback(SoundGenerator* generator) {
+AudioCallback::AudioCallback(const std::shared_ptr<SoundGenerator>& generator) {
     mSoundGenerator = generator;
 }
 

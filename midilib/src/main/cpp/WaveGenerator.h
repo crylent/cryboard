@@ -13,9 +13,11 @@
 #include "WaveInstrument.h"
 #endif
 
+using namespace std;
+
 class WaveGenerator : public SoundGenerator {
 public:
-    WaveGenerator(WaveInstrument* instrument);
+    WaveGenerator(const shared_ptr<WaveInstrument>& instrument);
 
     void fillBuffer(float* buffer) override;
 
@@ -23,7 +25,7 @@ public:
     void setAmplitude(float amplitude);
 
 private:
-    WaveInstrument* mInstrument;
+    shared_ptr<WaveInstrument> mInstrument;
 
     float mPhase = 0;
     float mFrequency = 440;

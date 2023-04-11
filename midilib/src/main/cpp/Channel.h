@@ -13,12 +13,14 @@
 #include <unordered_map>
 #endif
 
+using namespace std;
+
 class Channel {
 public:
     Channel();
 
-    static void setDefaultInstrument(WaveInstrument* instrument);
-    void setInstrument(WaveInstrument* instrument);
+    static void setDefaultInstrument(const shared_ptr<WaveInstrument>& instrument);
+    void setInstrument(const shared_ptr<WaveInstrument>& instrument);
 
     void noteOn(int8_t note, float amplitude);
     void noteOff(int8_t note);
@@ -26,11 +28,12 @@ public:
     float nextSample();
 
 private:
-    static WaveInstrument* mDefaultInstrument;
-    WaveInstrument* mInstrument;
-    std::unordered_map<int8_t, Wave*> mWaves = std::unordered_map<int8_t, Wave*>();
+    static shared_ptr<WaveInstrument> mDefaultInstrument;
+    shared_ptr<WaveInstrument> mInstrument;
+    mutex mLock;
+    unordered_map<int8_t, shared_ptr<Wave>> mWaves = unordered_map<int8_t, shared_ptr<Wave>>();
 
-    Wave * newWave(float frequency, float amplitude);
+    shared_ptr<Wave> newWave(float frequency, float amplitude);
 };
 
 

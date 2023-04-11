@@ -33,7 +33,7 @@ public:
 
     static int32_t getSampleRate();
 
-    static std::vector<Channel*> getChannels();
+    static std::vector<std::shared_ptr<Channel>> getChannels();
     static int8_t getNumChannels();
 
     static void noteOn(int8_t channel, int8_t note, float amplitude);
@@ -47,7 +47,7 @@ private:
     static int32_t mBufferSize;
 
     static const int8_t mNumChannels = 16;
-    static std::vector<Channel*> mChannels;
+    static std::vector<std::shared_ptr<Channel>> mChannels;
 };
 
 #endif //AUDIO_ENGINE_H
