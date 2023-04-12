@@ -19,13 +19,10 @@ private:
     shared_ptr<WaveInstrument> mInstrument;
     float mFrequency;
     float mAmplitude;
-    float mTimeIncrement;
+    double mTimeIncrement;
 
-    float mTime = 0;
-    float mTimeReleased = INFINITY;
-
-    double time_double = 0;
-    double inc_double;
+    double mTime = 0;
+    double mTimeReleased = INFINITY;
 };
 
 

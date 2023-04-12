@@ -1,6 +1,6 @@
 #include "WaveSynth.h"
 
-float WaveSynth::wave(float time, float frequency) {
+float WaveSynth::wave(double time, float frequency) {
     float value = 0;
     for (auto & oscillator : mOscillators) {
         value += oscillator->eval(time, frequency);

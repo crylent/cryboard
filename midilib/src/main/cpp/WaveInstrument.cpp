@@ -1,30 +1,26 @@
 #include "WaveInstrument.h"
 
-#ifndef LOG_H
-#include "log.h"
-#endif
-
-float WaveInstrument::envelope(float time, float timeReleased) const {
+float WaveInstrument::envelope(double time, double timeReleased) const {
     if (time > timeReleased + mRelease) { // final phase
         return NAN;
     }
     if (time > timeReleased) { // release phase
-        float t = mAttack + mDecay - timeReleased;
+        float t = mAttack + mDecay - (float) timeReleased;
         float ampWhenReleased = (t > 0 ? t : 0) / mDecay * (1 - mSustain) + mSustain;
-        return (timeReleased + mRelease - time) / mRelease * ampWhenReleased;
+        return ((float) timeReleased + mRelease - (float) time) / mRelease * ampWhenReleased;
     }
     if (time < mAttack) { // attack phase
-        return 1.0f - (mAttack - time) / mAttack;
+        return 1.0f - (mAttack - (float) time) / mAttack;
     }
     if (time < mAttack + mDecay) { // decay phase
-        return (mAttack + mDecay - time) / mDecay * (1 - mSustain) + mSustain;
+        return (mAttack + mDecay - (float) time) / mDecay * (1 - mSustain) + mSustain;
     }
     return mSustain; // sustain phase
 }
 
-float WaveInstrument::eval(float time, float frequency, float timeReleased) {
-    //float env = envelope(time, timeReleased);
-    return wave(time, frequency);
+float WaveInstrument::eval(double time, float frequency, double timeReleased) {
+    float env = envelope(time, timeReleased);
+    return wave(time, frequency) * env;
 }
 
 /**
