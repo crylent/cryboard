@@ -5,6 +5,12 @@
 #endif
 
 #include "WavePiano.h"
+#include "WaveSynth.h"
+#include "oscillators/SinOscillator.h"
+#include "oscillators/TriangleOscillator.h"
+#include "oscillators/SawtoothOscillator.h"
+#include "oscillators/ReverseSawtoothOscillator.h"
+#include "oscillators/SquareOscillator.h"
 
 std::shared_ptr<oboe::AudioStream> AudioEngine::mStream;
 std::mutex AudioEngine::mLock;
@@ -31,11 +37,21 @@ Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate) {
  */
 Result AudioEngine::start() {
     std::lock_guard<std::mutex> lockGuard(mLock);
-    auto piano = make_shared<WavePiano>(5, 1, 0.0004);
-    Channel::setDefaultInstrument(piano);
+    auto synth = make_shared<WaveSynth>();
+    synth->setDamping(0.0001);
+    /*synth->addOscillator(make_shared<SinOscillator>(-0.25, 0, 3));
+    synth->addOscillator(make_shared<SinOscillator>(0.25, 0, 1));
+    synth->addOscillator(make_shared<SinOscillator>(0.87, M_PI, 1));*/
+    synth->addOscillator(make_shared<TriangleOscillator>(1, 0, 1, 0));
+    //synth->addOscillator(make_shared<SquareOscillator>(1, 0, 1, 0));
+    /*synth->addOscillator(make_shared<SawtoothOscillator>(1 * 0.2, 0, 1, 0));
+    synth->addOscillator(make_shared<SawtoothOscillator>(0.33 * 0.2, 0, 3, 0));
+    synth->addOscillator(make_shared<SawtoothOscillator>(0.2 * 0.2, 0, 5, 0));
+    synth->addOscillator(make_shared<SawtoothOscillator>(0.14 * 0.2, 0, 7, 0));
+    synth->addOscillator(make_shared<SawtoothOscillator>(0.11 * 0.2, 0, 9, 0));*/
+    Channel::setDefaultInstrument(synth);
     initChannels();
     MultiwaveGenerator::init(mBufferSize, mSampleRate);
-    //auto* generator = new MultiwaveGenerator();
     auto generator = std::make_shared<MultiwaveGenerator>();
     auto* callback = new AudioCallback(generator);
     AudioStreamBuilder builder;

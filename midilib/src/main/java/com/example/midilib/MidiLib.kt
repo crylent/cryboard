@@ -1,5 +1,6 @@
 package com.example.midilib
 
+@Suppress("MemberVisibilityCanBePrivate")
 object MidiLib {
     init {
         System.loadLibrary("midilib")
@@ -7,7 +8,7 @@ object MidiLib {
 
     const val DEFAULT_SAMPLE_RATE = 48000
 
-    external fun start(sharedMode: Boolean = false, sampleRate: Int = 48000)
+    external fun start(sharedMode: Boolean = false, sampleRate: Int = DEFAULT_SAMPLE_RATE)
     external fun start()
     external fun stop()
 
