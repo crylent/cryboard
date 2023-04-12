@@ -1,10 +1,32 @@
-#ifndef MIDI_CRYBOARD_WAVESYNTH_H
-#define MIDI_CRYBOARD_WAVESYNTH_H
+#ifndef WAVE_SYNTH_H
+#define WAVE_SYNTH_H
 
+#ifndef WAVE_INSTRUMENT_H
+#include "WaveInstrument.h"
+#endif
 
-class WaveSynth {
+#ifndef OSCILLATOR_H
+#include "oscillators/Oscillator.h"
+#endif
 
+#ifndef _LIBCPP_VECTOR
+#include <vector>
+#endif
+
+using namespace std;
+
+class WaveSynth: public WaveInstrument {
+public:
+    WaveSynth() {};
+
+    void addOscillator(const shared_ptr<Oscillator>& oscillator);
+
+    float wave(float phase) override;
+
+private:
+    vector<shared_ptr<Oscillator>> mOscillators = vector<shared_ptr<Oscillator>>();
 };
 
 
-#endif //MIDI_CRYBOARD_WAVESYNTH_H
+
+#endif //WAVE_SYNTH_H

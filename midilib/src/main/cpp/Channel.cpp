@@ -36,7 +36,6 @@ float Channel::nextSample() {
 void Channel::noteOn(int8_t note, float amplitude) {
     lock_guard<mutex> lockGuard(mLock);
     auto wave = newWave(NoteFrequency::get(note), amplitude);
-    mWaves.erase(note);
     mWaves[note] = wave;
 }
 

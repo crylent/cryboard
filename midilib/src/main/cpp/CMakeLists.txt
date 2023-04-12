@@ -35,6 +35,12 @@ add_library( # Sets the name of the library.
             WaveSynth.cpp
             Channel.cpp
             NoteFrequency.cpp
+            oscillators/Oscillator.cpp
+            oscillators/SinOscillator.cpp
+            oscillators/TriangleOscillator.cpp
+            oscillators/SawtoothOscillator.cpp
+            oscillators/ReverseSawtoothOscillator.cpp
+            oscillators/SquareOscillator.cpp
             log.cpp
         )
 

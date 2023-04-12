@@ -7,6 +7,7 @@
 
 class WaveInstrument {
 public:
+    WaveInstrument() {};
     WaveInstrument(float damping);
 
     float calc(float phase);
@@ -16,8 +17,8 @@ public:
 protected:
     virtual float wave(float phase) = 0;
 
+private:
     float fadeOut(float phase) const;
-
     float mDamping = 0;
 };
 
