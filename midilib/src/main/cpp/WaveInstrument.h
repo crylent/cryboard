@@ -16,13 +16,13 @@ public:
     void setSustain(float sustain);
     void setRelease(float release);
 
-    float eval(float time, float frequency, float timeReleased);
+    float eval(double time, float frequency, double timeReleased);
 
 protected:
-    virtual float wave(float time, float frequency) = 0;
+    virtual float wave(double time, float frequency) = 0;
 
 private:
-    float envelope(float time, float timeReleased) const;
+    float envelope(double time, double timeReleased) const;
 
     float mAttack = 0; // seconds (after noteOn)
     float mDecay = 0; // seconds (after noteOn)
