@@ -13,13 +13,19 @@ public:
 
     float nextSample();
 
+    void release();
+
 private:
     shared_ptr<WaveInstrument> mInstrument;
-    float mPhase = 0;
     float mFrequency;
     float mAmplitude;
+    float mTimeIncrement;
 
-    float mPhaseIncrement;
+    float mTime = 0;
+    float mTimeReleased = INFINITY;
+
+    double time_double = 0;
+    double inc_double;
 };
 
 

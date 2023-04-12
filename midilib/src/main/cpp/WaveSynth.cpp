@@ -1,9 +1,9 @@
 #include "WaveSynth.h"
 
-float WaveSynth::wave(float phase) {
+float WaveSynth::wave(float time, float frequency) {
     float value = 0;
     for (auto & oscillator : mOscillators) {
-        value += oscillator->eval(phase);
+        value += oscillator->eval(time, frequency);
     }
     return value;
 }

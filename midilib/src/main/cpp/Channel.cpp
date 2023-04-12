@@ -28,7 +28,12 @@ float Channel::nextSample() {
     lock_guard<mutex> lockGuard(mLock);
     float sampleValue = 0;
     for (auto & wave : mWaves) {
-        sampleValue += wave.second->nextSample();
+        float waveValue = wave.second->nextSample();
+        if (isnan(waveValue)) {
+            mWaves.erase(wave.first);
+        } else {
+            sampleValue += waveValue;
+        }
     }
     return sampleValue;
 }
@@ -41,7 +46,7 @@ void Channel::noteOn(int8_t note, float amplitude) {
 
 void Channel::noteOff(int8_t note) {
     lock_guard<mutex> lockGuard(mLock);
-    mWaves.erase(note);
+    mWaves[note]->release();
 }
 
 void Channel::setDefaultInstrument(const shared_ptr<WaveInstrument>& instrument) {

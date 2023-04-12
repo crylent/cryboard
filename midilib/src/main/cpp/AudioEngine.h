@@ -9,10 +9,6 @@
 #include "AudioCallback.h"
 #endif
 
-#ifndef WAVE_GENERATOR_H
-#include "WaveGenerator.h"
-#endif
-
 #ifndef MULTIWAVE_GENERATOR_H
 #include "MultiwaveGenerator.h"
 #endif
