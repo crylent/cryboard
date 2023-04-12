@@ -8,7 +8,7 @@
 class SquareOscillator: public Oscillator {
     using Oscillator::Oscillator;
 
-    float calculate(float phase, int8_t overtoneFactor) override;
+    float calculate(float time, float frequency, int8_t overtoneFactor) override;
 };
 
 

@@ -5,8 +5,8 @@
 #include "oboe/Oboe.h"
 #endif
 
-#ifndef WAVE_GENERATOR_H
-#include "WaveGenerator.h"
+#ifndef SOUND_GENERATOR_H
+#include "SoundGenerator.h"
 #endif
 
 using namespace oboe;

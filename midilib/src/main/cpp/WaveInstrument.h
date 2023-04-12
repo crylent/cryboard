@@ -8,18 +8,26 @@
 class WaveInstrument {
 public:
     WaveInstrument() {};
-    WaveInstrument(float damping);
+    WaveInstrument(float attack, float decay, float sustain, float release);
 
-    float calc(float phase);
+    void setEnvelope(float attack, float decay, float sustain, float release);
+    void setAttack(float attack);
+    void setDecay(float decay);
+    void setSustain(float sustain);
+    void setRelease(float release);
 
-    void setDamping(float damping);
+    float eval(float time, float frequency, float timeReleased);
 
 protected:
-    virtual float wave(float phase) = 0;
+    virtual float wave(float time, float frequency) = 0;
 
 private:
-    float fadeOut(float phase) const;
-    float mDamping = 0;
+    float envelope(float time, float timeReleased) const;
+
+    float mAttack = 0; // seconds (after noteOn)
+    float mDecay = 0; // seconds (after noteOn)
+    float mSustain = 0; // from 0.0 to 1.0
+    float mRelease = 0; // seconds (after noteOff)
 };
 
 

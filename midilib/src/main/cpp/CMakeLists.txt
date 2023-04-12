@@ -27,11 +27,9 @@ add_library( # Sets the name of the library.
             AudioEngine.cpp
             AudioCallback.cpp
             SoundGenerator.cpp
-            WaveGenerator.cpp
             MultiwaveGenerator.cpp
             Wave.cpp
             WaveInstrument.cpp
-            WavePiano.cpp
             WaveSynth.cpp
             Channel.cpp
             NoteFrequency.cpp

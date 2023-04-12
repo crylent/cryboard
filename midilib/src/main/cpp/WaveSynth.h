@@ -21,7 +21,7 @@ public:
 
     void addOscillator(const shared_ptr<Oscillator>& oscillator);
 
-    float wave(float phase) override;
+    float wave(float time, float frequency) override;
 
 private:
     vector<shared_ptr<Oscillator>> mOscillators = vector<shared_ptr<Oscillator>>();
