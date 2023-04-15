@@ -8,7 +8,7 @@
 class ReverseSawtoothOscillator: public Oscillator {
     using Oscillator::Oscillator;
 
-    float eval(double time, float frequency) override;
+    float evalVoice(double time, float frequency) override;
 };
 
 
