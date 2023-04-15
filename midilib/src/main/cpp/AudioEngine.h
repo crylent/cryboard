@@ -10,7 +10,7 @@
 #endif
 
 #ifndef MULTIWAVE_GENERATOR_H
-#include "MultiwaveGenerator.h"
+#include "generator/MultiwaveGenerator.h"
 #endif
 
 #ifndef CHANNEL_H

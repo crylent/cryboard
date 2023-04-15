@@ -6,7 +6,7 @@
 #endif
 
 #ifndef OSCILLATOR_H
-#include "oscillators/Oscillator.h"
+#include "../oscillators/Oscillator.h"
 #endif
 
 #ifndef _LIBCPP_VECTOR

@@ -4,7 +4,7 @@
 #include "log.h"
 #endif
 
-#include "WaveSynth.h"
+#include "instrument/WaveSynth.h"
 #include "oscillators/SinOscillator.h"
 #include "oscillators/TriangleOscillator.h"
 #include "oscillators/SawtoothOscillator.h"

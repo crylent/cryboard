@@ -2,7 +2,7 @@
 #define CHANNEL_H
 
 #ifndef WAVE_INSTRUMENT_H
-#include "WaveInstrument.h"
+#include "instrument/WaveInstrument.h"
 #endif
 
 #ifndef WAVE_H

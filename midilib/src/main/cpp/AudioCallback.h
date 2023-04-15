@@ -6,7 +6,7 @@
 #endif
 
 #ifndef SOUND_GENERATOR_H
-#include "SoundGenerator.h"
+#include "generator/SoundGenerator.h"
 #endif
 
 using namespace oboe;

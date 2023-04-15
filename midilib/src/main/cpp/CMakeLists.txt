@@ -22,15 +22,14 @@ add_library( # Sets the name of the library.
             SHARED
 
             # Provides a relative path to your source file(s).
-            midilib.cpp
             jni.cpp
             AudioEngine.cpp
             AudioCallback.cpp
-            SoundGenerator.cpp
-            MultiwaveGenerator.cpp
+            generator/SoundGenerator.cpp
+            generator/MultiwaveGenerator.cpp
             Wave.cpp
-            WaveInstrument.cpp
-            WaveSynth.cpp
+            instrument/WaveInstrument.cpp
+            instrument/WaveSynth.cpp
             Channel.cpp
             NoteFrequency.cpp
             oscillators/Oscillator.cpp
