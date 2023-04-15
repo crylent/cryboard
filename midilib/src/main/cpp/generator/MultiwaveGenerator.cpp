@@ -1,7 +1,7 @@
 #include "MultiwaveGenerator.h"
 
 #ifndef AUDIO_ENGINE_H
-#include "AudioEngine.h"
+#include "../AudioEngine.h"
 #endif
 
 void MultiwaveGenerator::fillBuffer(float *buffer) {
