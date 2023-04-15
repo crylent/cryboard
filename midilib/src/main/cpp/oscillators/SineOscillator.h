@@ -5,7 +5,7 @@
 #include "Oscillator.h"
 #endif
 
-class SinOscillator: public Oscillator {
+class SineOscillator: public Oscillator {
     using Oscillator::Oscillator;
 
     float evalVoice(double time, float frequency) override;
