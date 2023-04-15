@@ -1,5 +1,5 @@
-#ifndef SIN_OSCILLATOR_H
-#define SIN_OSCILLATOR_H
+#ifndef SINE_OSCILLATOR_H
+#define SINE_OSCILLATOR_H
 
 #ifndef OSCILLATOR_H
 #include "Oscillator.h"
@@ -12,4 +12,4 @@ class SineOscillator: public Oscillator {
 };
 
 
-#endif //SIN_OSCILLATOR_H
+#endif //SINE_OSCILLATOR_H
