@@ -37,17 +37,8 @@ Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate) {
 Result AudioEngine::start() {
     std::lock_guard<std::mutex> lockGuard(mLock);
     auto defaultSynth = make_shared<WaveSynth>();
-    defaultSynth->setEnvelope(0, 5, 0, 0);
-    /*synth->addOscillator(make_shared<SinOscillator>(-0.25, 0, 3));
-    synth->addOscillator(make_shared<SinOscillator>(0.25, 0, 1));
-    synth->addOscillator(make_shared<SinOscillator>(0.87, M_PI, 1));*/
-    defaultSynth->addOscillator(make_shared<SawtoothOscillator>(1));
-    //synth->addOscillator(make_shared<SquareOscillator>(1, 0, 1));
-    /*synth->addOscillator(make_shared<TriangleOscillator>(1, 0, 1));
-    synth->addOscillator(make_shared<TriangleOscillator>(0.33, 0, 3));
-    synth->addOscillator(make_shared<TriangleOscillator>(0.2, 0, 5));
-    synth->addOscillator(make_shared<TriangleOscillator>(0.14, 0, 7));
-    synth->addOscillator(make_shared<TriangleOscillator>(0.11, 0, 9));*/
+    defaultSynth->setEnvelope(0.5, 5, 0.1, 0.25);
+    defaultSynth->addOscillator(make_shared<SawtoothOscillator>(1, 0, 1, 8, 0.005));
     Channel::setDefaultInstrument(defaultSynth);
     initChannels();
     MultiwaveGenerator::init(mBufferSize, mSampleRate);

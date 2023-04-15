@@ -4,6 +4,6 @@
 #include "oboe/Oboe.h"
 #endif
 
-float SinOscillator::eval(double time, float frequency) {
-    return mAmplitude * sinf(calcPhase(time, frequency));
+float SinOscillator::evalVoice(double time, float frequency) {
+    return sinf(calcPhase(time, frequency));
 }

@@ -1,6 +1,6 @@
 #include "SawtoothOscillator.h"
 
-float SawtoothOscillator::eval(double time, float frequency) {
+float SawtoothOscillator::evalVoice(double time, float frequency) {
     float p = calcPhase(time, frequency);
-    return mAmplitude * float(p / M_PI);
+    return float(p / M_PI);
 }
