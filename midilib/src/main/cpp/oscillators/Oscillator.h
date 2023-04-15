@@ -7,18 +7,20 @@
 
 class Oscillator {
 public:
-    virtual float calculate(double time, float frequency, int8_t overtoneFactor) = 0;
-    float eval(double time, float frequency);
+    virtual float eval(double time, float frequency) = 0;
 
-    Oscillator(float amplitude, float phase, float freqFactor, int8_t overtones);
+    Oscillator(float amplitude, float phase = 0, float freqFactor = 1);
+
+    void setAmplitude(float amplitude);
+    void setPhase(float phase);
+    void setFreqFactor(float freqFactor);
 
 protected:
     float mAmplitude = 1;
     float mPhase = 0;
     float mFreqFactor = 1;
-    int8_t mOvertones = 0;
 
-    float calcPhase(double time, float frequency, int8_t overtoneFactor) const;
+    float calcPhase(double time, float frequency) const;
 };
 
 

@@ -25,10 +25,10 @@ float WaveInstrument::eval(double time, float frequency, double timeReleased) {
 
 /**
  * Constructs new WaveInstrument with provided parameters for ADSR envelope generator.
- * @param attack Time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
- * @param decay Time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
- * @param sustain Level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
- * @param release Time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
+ * @param attack time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
+ * @param decay time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
+ * @param sustain level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
+ * @param release time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
 WaveInstrument::WaveInstrument(float attack, float decay, float sustain, float release) {
@@ -37,10 +37,10 @@ WaveInstrument::WaveInstrument(float attack, float decay, float sustain, float r
 
 /**
  * Sets all parameters for ADSR envelope generator.
- * @param attack Time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
- * @param decay Time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
- * @param sustain Level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
- * @param release Time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
+ * @param attack time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
+ * @param decay time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
+ * @param sustain level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
+ * @param release time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
 void WaveInstrument::setEnvelope(float attack, float decay, float sustain, float release) {
@@ -52,7 +52,7 @@ void WaveInstrument::setEnvelope(float attack, float decay, float sustain, float
 
 /**
  * Sets <b>attack</b> value for ADSR envelope generator.
- * @param attack Time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
+ * @param attack time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
 void WaveInstrument::setAttack(float attack) {
@@ -63,7 +63,7 @@ void WaveInstrument::setAttack(float attack) {
 }
 /**
  * Sets <b>decay</b> value for ADSR envelope generator.
- * @param decay Time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
+ * @param decay time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
 void WaveInstrument::setDecay(float decay) {
@@ -75,7 +75,7 @@ void WaveInstrument::setDecay(float decay) {
 
 /**
  * Sets <b>sustain</b> value for ADSR envelope generator.
- * @param sustain Level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
+ * @param sustain level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
 void WaveInstrument::setSustain(float sustain) {
@@ -87,7 +87,7 @@ void WaveInstrument::setSustain(float sustain) {
 
 /**
  * Sets <b>release</b> value for ADSR envelope generator.
- * @param release Time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
+ * @param release time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
 void WaveInstrument::setRelease(float release) {

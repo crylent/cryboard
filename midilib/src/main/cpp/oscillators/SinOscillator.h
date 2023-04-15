@@ -8,7 +8,7 @@
 class SinOscillator: public Oscillator {
     using Oscillator::Oscillator;
 
-    float calculate(double time, float frequency, int8_t overtoneFactor) override;
+    float eval(double time, float frequency) override;
 };
 
 
