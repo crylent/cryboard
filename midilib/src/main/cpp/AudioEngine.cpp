@@ -5,7 +5,7 @@
 #endif
 
 #include "instrument/WaveSynth.h"
-#include "oscillators/SinOscillator.h"
+#include "oscillators/SineOscillator.h"
 #include "oscillators/TriangleOscillator.h"
 #include "oscillators/SawtoothOscillator.h"
 #include "oscillators/ReverseSawtoothOscillator.h"
