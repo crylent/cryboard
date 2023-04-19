@@ -4,67 +4,88 @@
 #include "log.h"
 #endif
 
+#ifndef WAVE_SYNTH_H
 #include "instrument/WaveSynth.h"
-#include "oscillators/SineOscillator.h"
-#include "oscillators/TriangleOscillator.h"
+#endif
+
+#ifndef SAWTOOTH_OSCILLATOR_H
 #include "oscillators/SawtoothOscillator.h"
-#include "oscillators/ReverseSawtoothOscillator.h"
-#include "oscillators/SquareOscillator.h"
+#endif
+
+#include "soundfx/Limiter.h"
 
 std::shared_ptr<oboe::AudioStream> AudioEngine::mStream;
 std::mutex AudioEngine::mLock;
 SharingMode AudioEngine::mSharingMode = SharingMode::Exclusive;
-int32_t AudioEngine::mSampleRate = 48000;
-int32_t AudioEngine::mBufferSize = 256;
+int32_t AudioEngine::mSampleRate = AUTO_DEFINITION;
+int32_t AudioEngine::mBufferSize = AUTO_DEFINITION;
+double AudioEngine::mTimeIncrement;
 std::vector<std::shared_ptr<Channel>> AudioEngine::mChannels = std::vector<std::shared_ptr<Channel>>();
 
 /**
  * Starts audio engine with specified configuration.
- * @param sharingMode <a href="https://bit.ly/3KIM1fB"><i>Exclusive</i> or <i>Shared</i></a>
- * @param sampleRate The most common <a href="https://bit.ly/3nVpoM6">sample rates</a> are 44100 and 48000.
+ * @param sharingMode <a href="https://bit.ly/3KIM1fB"><i>exclusive</i> or <i>shared</i></a>
+ * @param sampleRate the most common <a href="https://bit.ly/3nVpoM6">sample rates</a> are 44100 and 48000
+ * @param bufferSize Default is 256. Using larger buffers might guard against such glitches, but a large buffer also introduces longer audio latency.
  * @return <code>Result::OK</code> if started successfully, <code>Result::{some_error}</code> otherwise.
  */
-Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate) {
+Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate, int32_t bufferSize) {
     mSharingMode = sharingMode;
     mSampleRate = sampleRate;
+    mBufferSize = bufferSize;
     return start();
 }
 
 /**
- * Starts audio engine in <b>exclusive</b> sharing mode and with <b>48000</b> sample rate.
+ * Starts audio engine in <i>exclusive</i> <b>sharing mode</b>. <b>Sample rate</b> and <b>buffer size</b> are auto-defined.
  * @return <code>Result::OK</code> if started successfully, <code>Result::{some_error}</code> otherwise.
  */
 Result AudioEngine::start() {
     std::lock_guard<std::mutex> lockGuard(mLock);
     auto defaultSynth = make_shared<WaveSynth>();
-    defaultSynth->setEnvelope(0.5, 5, 0.1, 0.25);
+    defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
     defaultSynth->addOscillator(make_shared<SawtoothOscillator>(1, 0, 1, 8, 0.005));
     Channel::setDefaultInstrument(defaultSynth);
     initChannels();
-    MultiwaveGenerator::init(mBufferSize, mSampleRate);
-    auto generator = std::make_shared<MultiwaveGenerator>();
+    auto generator = make_shared<MultiwaveGenerator>();
     auto* callback = new AudioCallback(generator);
+
     AudioStreamBuilder builder;
-    Result result = builder.setPerformanceMode(PerformanceMode::LowLatency)
+    builder.setPerformanceMode(PerformanceMode::LowLatency)
             ->setSharingMode(mSharingMode)
             ->setDirection(Direction::Output)
             ->setFormat(AudioFormat::Float)
             ->setChannelCount(ChannelCount::Mono)
-            ->setDataCallback(callback)
-            ->setSampleRate(mSampleRate)
-            ->setAudioApi(AudioApi::AAudio)
-            ->openStream(mStream);
+            ->setDataCallback(callback);
+    if (mSampleRate != AUTO_DEFINITION)
+        builder.setSampleRate(mSampleRate);
+    if (mBufferSize != AUTO_DEFINITION)
+        builder.setFramesPerDataCallback(mBufferSize);
+
+    Result result = builder.openStream(mStream);
     if (result != Result::OK) {
         LOGE("Error creating audio stream: %s", convertToText(result));
         return result;
     }
-    LOGI("Audio stream started successfully");
+    LOGI("Audio stream: created");
+
+    if (mSampleRate == AUTO_DEFINITION)
+        mSampleRate = mStream->getSampleRate();
+    if (mBufferSize == AUTO_DEFINITION)
+        mBufferSize = mStream->getFramesPerBurst();
+    LOGI("Sample rate: %d", mSampleRate);
+    LOGI("Buffer size: %d", mBufferSize);
+
+    mTimeIncrement = 1.0 / mSampleRate;
+
+    //generator->addEffect(make_shared<Limiter>());
+
     result = mStream->requestStart();
-    mBufferSize = mStream->getFramesPerBurst();
     if (result != Result::OK) {
         LOGE("Error starting audio stream: %s", convertToText(result));
         return result;
     }
+    LOGI("Audio stream: started");
     return result;
 }
 
@@ -88,12 +109,23 @@ Result AudioEngine::stop() {
     return result;
 }
 
-/** @return Current <a href="https://bit.ly/3nVpoM6">sample rate</a> */
+/**
+ * @return Current <a href="https://bit.ly/3nVpoM6">sample rate</a>
+ */
 int32_t AudioEngine::getSampleRate() {
     return mSampleRate;
 }
 
-/** @return All channels as <code>std::vector\<Channel*\></code> */
+/**
+ * @return Current buffer size
+ */
+int32_t AudioEngine::getBufferSize() {
+    return mBufferSize;
+}
+
+/**
+ * @return All channels as <code>std::vector\<Channel*\></code>
+ */
 std::vector<std::shared_ptr<Channel>> AudioEngine::getChannels() {
     return mChannels;
 }
@@ -132,7 +164,16 @@ void AudioEngine::initChannels() {
     }
 }
 
-/** Returns number of channels. But it's always 16. */
+/**
+ * @return Number of channels. It's always 16.
+ */
 int8_t AudioEngine::getNumChannels() {
     return mNumChannels;
+}
+
+/**
+ * @return Time increment (in seconds) corresponding to current sample rate.
+ */
+double AudioEngine::getTimeIncrement() {
+    return mTimeIncrement;
 }

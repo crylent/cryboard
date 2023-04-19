@@ -38,6 +38,8 @@ add_library( # Sets the name of the library.
             oscillators/SawtoothOscillator.cpp
             oscillators/ReverseSawtoothOscillator.cpp
             oscillators/SquareOscillator.cpp
+            soundfx/SoundFX.cpp
+            soundfx/Limiter.cpp
             log.cpp
         )
 

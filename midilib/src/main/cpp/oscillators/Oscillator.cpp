@@ -12,6 +12,7 @@ Oscillator::Oscillator(float amplitude, float phase, float freqFactor, uint8_t u
 }
 
 float Oscillator::eval(double time, float frequency) {
+    if (!mEnabled) return 0;
     if (mUnisonVoices == 1) {
         return mAmplitude * evalVoice(time, frequency);
     }
@@ -25,7 +26,7 @@ float Oscillator::eval(double time, float frequency) {
 }
 
 float Oscillator::calcPhase(double time, float frequency) const {
-    return float(remainder(time * frequency * mFreqFactor * 2 * M_PI + mPhase, 2 * M_PI) - M_PI);
+    return (float) remainder(time * frequency * mFreqFactor * 2 * M_PI + mPhase, 2 * M_PI);
 }
 
 /**
@@ -77,4 +78,12 @@ void Oscillator::setDetune(uint8_t unisonVoices, float detune) {
 void Oscillator::clearDetune() {
     mUnisonVoices = 1;
     mDetune = 0;
+}
+
+void Oscillator::enable() {
+    mEnabled = true;
+}
+
+void Oscillator::disable() {
+    mEnabled = false;
 }

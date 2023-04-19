@@ -8,7 +8,7 @@ Wave::Wave(const shared_ptr<WaveInstrument>& instrument, float frequency, float 
     mInstrument = instrument;
     mFrequency = frequency;
     mAmplitude = amplitude;
-    mTimeIncrement = 1.0 / AudioEngine::getSampleRate();
+    mTimeIncrement = AudioEngine::getTimeIncrement();
 }
 
 float Wave::nextSample() {
