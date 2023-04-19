@@ -26,6 +26,7 @@ private:
 
     float mGain = mLimit / mThreshold;
 
+    float mPeak = 0;
     float mReduction = 1;
 };
 
