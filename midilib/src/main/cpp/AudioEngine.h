@@ -19,15 +19,19 @@
 
 using namespace oboe;
 
+#define AUTO_DEFINITION -1
+
 class AudioEngine {
 public:
-    static Result start(SharingMode sharingMode, int32_t sampleRate);
+    static Result start(SharingMode sharingMode, int32_t sampleRate = AUTO_DEFINITION, int32_t bufferSize = AUTO_DEFINITION);
     static Result start();
     static Result stop();
 
     static void initChannels();
 
     static int32_t getSampleRate();
+    static int32_t getBufferSize();
+    static double getTimeIncrement();
 
     static std::vector<std::shared_ptr<Channel>> getChannels();
     static int8_t getNumChannels();
@@ -40,6 +44,7 @@ private:
     static std::mutex mLock;
     static SharingMode mSharingMode;
     static int32_t mSampleRate;
+    static double mTimeIncrement;
     static int32_t mBufferSize;
 
     static const int8_t mNumChannels = 16;

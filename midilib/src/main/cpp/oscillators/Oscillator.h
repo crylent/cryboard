@@ -17,6 +17,9 @@ public:
     void setDetune(uint8_t unisonVoices, float detune);
     void clearDetune();
 
+    void enable();
+    void disable();
+
 protected:
     virtual float evalVoice(double time, float frequency) = 0;
     float calcPhase(double time, float frequency) const;
@@ -28,7 +31,8 @@ private:
 
     uint8_t mUnisonVoices = 1;
     float mDetune = 0;
-};
 
+    bool mEnabled = true;
+};
 
 #endif //OSCILLATOR_H

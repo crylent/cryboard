@@ -6,14 +6,14 @@
 #include "log.h"
 #endif
 
-AudioCallback::AudioCallback(const std::shared_ptr<SoundGenerator>& generator) {
+AudioCallback::AudioCallback(const shared_ptr<SoundGenerator>& generator) {
     mSoundGenerator = generator;
 }
 
-
-DataCallbackResult
-AudioCallback::onAudioReady(AudioStream *audioStream, void *audioData, int32_t numFrames) {
+DataCallbackResult AudioCallback::onAudioReady(
+        AudioStream *audioStream, void *audioData, int32_t numFrames
+        ) {
     auto* floatData = static_cast<float*>(audioData);
-    mSoundGenerator->fillBuffer(floatData);
+    mSoundGenerator->fillBuffer(floatData, numFrames);
     return DataCallbackResult::Continue;
 }

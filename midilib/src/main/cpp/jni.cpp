@@ -3,6 +3,30 @@
 
 #include "jni.h"
 
+#ifndef WAVE_SYNTH_H
+#include "instrument/WaveSynth.h"
+#endif
+
+#ifndef SINE_OSCILLATOR_H
+#include "oscillators/SineOscillator.h"
+#endif
+
+#ifndef TRIANGLE_OSCILLATOR_H
+#include "oscillators/TriangleOscillator.h"
+#endif
+
+#ifndef SQUARE_OSCILLATOR_H
+#include "oscillators/SquareOscillator.h"
+#endif
+
+#ifndef SAWTOOTH_OSCILLATOR_H
+#include "oscillators/SawtoothOscillator.h"
+#endif
+
+#ifndef REVERSE_SAWTOOTH_OSCILLATOR_H
+#include "oscillators/ReverseSawtoothOscillator.h"
+#endif
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_midilib_MidiLib_start__(JNIEnv *env, jobject thiz) {
@@ -33,6 +57,81 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_midilib_MidiLib_noteOff(JNIEnv *env, jobject thiz, jbyte channel, jbyte note) {
     AudioEngine::noteOff(channel, note);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte channel,
+                                               jobject instrument) {
+    jclass instCls = env->GetObjectClass(instrument);
+    jfieldID idOscillators = env->GetFieldID(
+            instCls, "oscillators", "Ljava/util/List;"
+    );
+    jobject oscillators = env->GetObjectField(instrument, idOscillators);
+
+    jclass listCls = env->FindClass("java/util/List");
+    jmethodID listGetId = env->GetMethodID(listCls, "get", "(I)Ljava/lang/Object;");
+    jmethodID listSizeId = env->GetMethodID(listCls, "size", "()I");
+
+    jclass oscCls = env->FindClass("com/example/midilib/Oscillator");
+    jfieldID idShape = env->GetFieldID(oscCls, "shape", "Lcom/example/midilib/Oscillator$Shape;");
+    jfieldID idAmplitude = env->GetFieldID(oscCls, "amplitude", "F");
+    jfieldID idPhase = env->GetFieldID(oscCls, "phase", "F");
+    jfieldID idFreqFactor = env->GetFieldID(oscCls, "frequencyFactor", "F");
+    jfieldID idUnisonVoices = env->GetFieldID(oscCls, "unisonVoices", "I");
+    jfieldID idDetune = env->GetFieldID(oscCls, "detune", "F");
+
+    jclass shapeCls = env->FindClass("com/example/midilib/Oscillator$Shape");
+    jmethodID idShapeOrdinal = env->GetMethodID(shapeCls, "ordinal", "()I");
+
+    jfieldID idAttack = env->GetFieldID(instCls, "attack", "F");
+    jfloat attack = env->GetFloatField(instrument, idAttack);
+
+    jfieldID idDecay = env->GetFieldID(instCls, "decay", "F");
+    jfloat decay = env->GetFloatField(instrument, idDecay);
+
+    jfieldID idSustain = env->GetFieldID(instCls, "sustain", "F");
+    jfloat sustain = env->GetFloatField(instrument, idSustain);
+
+    jfieldID idRelease = env->GetFieldID(instCls, "release", "F");
+    jfloat release = env->GetFloatField(instrument, idRelease);
+
+    auto synth = make_shared<WaveSynth>(attack, decay, sustain, release);
+
+    auto oscillatorsCount = static_cast<int>(env->CallIntMethod(oscillators, listSizeId));
+    for (int i = 0; i < oscillatorsCount; i++) {
+        jobject oscillator = env->CallObjectMethod(oscillators, listGetId, i);
+        jobject shape = env->GetObjectField(oscillator, idShape);
+        auto shapeOrdinal = static_cast<int>(env->CallIntMethod(shape, idShapeOrdinal));
+        auto amplitude = static_cast<float>(env->GetFloatField(oscillator, idAmplitude));
+        auto phase = static_cast<float>(env->GetFloatField(oscillator, idPhase));
+        auto freqFactor = static_cast<float>(env->GetFloatField(oscillator, idFreqFactor));
+        auto unisonVoices = static_cast<float>(env->GetIntField(oscillator, idUnisonVoices));
+        auto detune = static_cast<float>(env->GetFloatField(oscillator, idDetune));
+
+        shared_ptr<Oscillator> osc;
+        switch (shapeOrdinal) {
+            case 0: // SINE
+                osc = make_shared<SineOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                break;
+            case 1: // TRIANGLE
+                osc = make_shared<TriangleOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                break;
+            case 2: // SQUARE
+                osc = make_shared<SquareOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                break;
+            case 3: // SAW
+                osc = make_shared<SawtoothOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                break;
+            case 4: // REVERSE SAW
+                osc = make_shared<ReverseSawtoothOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                break;
+            default:
+                break;
+        }
+        synth->addOscillator(osc);
+    }
+    AudioEngine::getChannels()[channel]->setInstrument(synth);
 }
 
 #pragma clang diagnostic pop

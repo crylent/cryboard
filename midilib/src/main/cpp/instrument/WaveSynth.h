@@ -17,9 +17,12 @@ using namespace std;
 
 class WaveSynth: public WaveInstrument {
 public:
-    WaveSynth() {};
+    using WaveInstrument::WaveInstrument;
 
     void addOscillator(const shared_ptr<Oscillator>& oscillator);
+    shared_ptr<Oscillator> getOscillatorByIndex(uint8_t index);
+    void enableOscillator(uint8_t index);
+    void disableOscillator(uint8_t index);
 
     float wave(double time, float frequency) override;
 

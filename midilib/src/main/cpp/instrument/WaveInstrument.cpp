@@ -80,7 +80,7 @@ void WaveInstrument::setDecay(float decay) {
  */
 void WaveInstrument::setSustain(float sustain) {
     if (sustain < 0 || sustain > 1) {
-        throw std::invalid_argument("Sustain value must be in the range of 0 to 1");
+        throw std::invalid_argument("Sustain value must be in the range of 0.0 to 1.0");
     }
     mSustain = sustain;
 }
