@@ -36,6 +36,9 @@ Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate, int32_t b
     return start();
 }
 
+#define ADJUST_DETUNE(osc, func) osc->adjustDetune([] (const shared_ptr<Detune>& detune) { detune->func; })
+#define ADJUST_DEFINE(synth, osc, func) ADJUST_DETUNE((synth)->getOscillatorByIndex(osc), func)
+
 /**
  * Starts audio engine in <i>exclusive</i> <b>sharing mode</b>. <b>Sample rate</b> and <b>buffer size</b> are auto-defined.
  * @return <code>Result::OK</code> if started successfully, <code>Result::{some_error}</code> otherwise.
@@ -44,7 +47,9 @@ Result AudioEngine::start() {
     std::lock_guard<std::mutex> lockGuard(mLock);
     auto defaultSynth = make_shared<WaveSynth>();
     defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
-    defaultSynth->addOscillator(make_shared<SawtoothOscillator>(1, 0, 1, 8, 0.005));
+    defaultSynth->addOscillator(make_shared<SawtoothOscillator>(1, 0, 1));
+    //defaultSynth->getOscillatorByIndex(0)->setDetune(2, 0.005);
+
     Channel::setDefaultInstrument(defaultSynth);
     initChannels();
     auto generator = make_shared<MultiwaveGenerator>();
@@ -78,7 +83,7 @@ Result AudioEngine::start() {
 
     mTimeIncrement = 1.0 / mSampleRate;
 
-    //generator->addEffect(make_shared<Limiter>());
+    generator->addEffect(make_shared<Limiter>());
 
     result = mStream->requestStart();
     if (result != Result::OK) {

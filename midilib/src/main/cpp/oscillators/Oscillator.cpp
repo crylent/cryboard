@@ -1,28 +1,17 @@
 #include "Oscillator.h"
 
-#ifndef _LIBCPP_STDEXCEPT
-#include <stdexcept>
-#endif
-
-Oscillator::Oscillator(float amplitude, float phase, float freqFactor, uint8_t unisonVoices, float detune) {
+Oscillator::Oscillator(float amplitude, float phase, float freqFactor) {
     setAmplitude(amplitude);
     setPhase(phase);
     setFreqFactor(freqFactor);
-    setDetune(unisonVoices, detune);
 }
 
 float Oscillator::eval(double time, float frequency) {
     if (!mEnabled) return 0;
-    if (mUnisonVoices == 1) {
+    if (!mDetune) {
         return mAmplitude * evalVoice(time, frequency);
     }
-    float minFrequency = frequency * (1 - mDetune);
-    float delta = frequency * (2 * mDetune) / float(mUnisonVoices - 1);
-    float sum = 0;
-    for (uint8_t i = 0; i < mUnisonVoices; i++) {
-        sum += evalVoice(time, minFrequency + float(i) * delta);
-    }
-    return mAmplitude * sum / float(mUnisonVoices);
+    return mAmplitude * mDetune->process(time, frequency);
 }
 
 float Oscillator::calcPhase(double time, float frequency) const {
@@ -39,7 +28,7 @@ void Oscillator::setAmplitude(float amplitude) {
 
 /**
  * Sets the phase shift.
- * @param phase either in the range from 0 to 2π, or from -π to π
+ * @param phase radians, either in the range from 0 to 2π, or from -π to π
  */
 void Oscillator::setPhase(float phase) {
     mPhase = phase;
@@ -51,39 +40,57 @@ void Oscillator::setPhase(float phase) {
  */
 void Oscillator::setFreqFactor(float freqFactor) {
     if (freqFactor <= 0) {
-        throw std::invalid_argument("Frequency factor must be positive number");
+        throw invalid_argument("Frequency factor must be positive number");
     }
     mFreqFactor = freqFactor;
 }
 
 /**
- * Enables <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">detune</a>.
- * @param unisonVoices number of voices
+ * Constructs new <code>Detune</code> object and assigns it to the oscillator.
+ * @param unisonVoices number of unison voices, 2 or more
  * @param detune maximum divergence from the original frequency (from 0.0 <i>non-inclusive</i> to 1.0 <i>non-inclusive</i>)
+ * @return created <code>Detune</code> object
+ * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
  */
-void Oscillator::setDetune(uint8_t unisonVoices, float detune) {
-    if (unisonVoices == 0) {
-        throw std::invalid_argument("Unison voices must be positive number");
+shared_ptr<Detune> Oscillator::setDetune(uint8_t unisonVoices, float detune) {
+    mDetune = make_shared<Detune>(shared_from_this(), unisonVoices, detune);
+    return mDetune;
+}
+
+/**
+ * Assigns the given <code>Detune</code> object to the oscillator.
+ * @param detune shared pointer to <code>Detune</code> object
+ * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
+ */
+void Oscillator::setDetune(const shared_ptr<Detune>& detune) {
+    if (!detune->checkOwnership(shared_from_this())) {
+        throw invalid_argument("The given Detune object does not belongs to this oscillator");
     }
-    if (detune <= 0 || detune >= 1) {
-        throw std::invalid_argument("Detune must be in the range from 0.0 non-inclusive to 1.0 non-inclusive");
-    }
-    mUnisonVoices = unisonVoices;
     mDetune = detune;
 }
 
 /**
- * Disables <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">detune</a>.
+ * @return oscillator's <code>Detune</code> object, <code>nullptr</code> if detune is not enabled
+ * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
  */
-void Oscillator::clearDetune() {
-    mUnisonVoices = 1;
-    mDetune = 0;
+shared_ptr<Detune> Oscillator::getDetune() {
+    return mDetune;
 }
 
+/**
+ * Disables <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">detune</a>.
+ * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
+ */
+void Oscillator::clearDetune() {
+    mDetune = nullptr;
+}
+
+/** Enables oscillator. */
 void Oscillator::enable() {
     mEnabled = true;
 }
 
+/** Disables oscillator. */
 void Oscillator::disable() {
     mEnabled = false;
 }
