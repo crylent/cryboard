@@ -33,6 +33,7 @@ add_library( # Sets the name of the library.
             Channel.cpp
             NoteFrequency.cpp
             oscillators/Oscillator.cpp
+            oscillators/Detune.cpp
             oscillators/SineOscillator.cpp
             oscillators/TriangleOscillator.cpp
             oscillators/SawtoothOscillator.cpp

@@ -112,19 +112,19 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
         shared_ptr<Oscillator> osc;
         switch (shapeOrdinal) {
             case 0: // SINE
-                osc = make_shared<SineOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                osc = make_shared<SineOscillator>(amplitude, phase, freqFactor);
                 break;
             case 1: // TRIANGLE
-                osc = make_shared<TriangleOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                osc = make_shared<TriangleOscillator>(amplitude, phase, freqFactor);
                 break;
             case 2: // SQUARE
-                osc = make_shared<SquareOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                osc = make_shared<SquareOscillator>(amplitude, phase, freqFactor);
                 break;
             case 3: // SAW
-                osc = make_shared<SawtoothOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                osc = make_shared<SawtoothOscillator>(amplitude, phase, freqFactor);
                 break;
             case 4: // REVERSE SAW
-                osc = make_shared<ReverseSawtoothOscillator>(amplitude, phase, freqFactor, unisonVoices, detune);
+                osc = make_shared<ReverseSawtoothOscillator>(amplitude, phase, freqFactor);
                 break;
             default:
                 break;
