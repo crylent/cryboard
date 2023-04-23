@@ -17,6 +17,7 @@
 #include "Channel.h"
 #endif
 
+using namespace std;
 using namespace oboe;
 
 #define AUTO_DEFINITION -1
@@ -33,22 +34,22 @@ public:
     static int32_t getBufferSize();
     static double getTimeIncrement();
 
-    static std::vector<std::shared_ptr<Channel>> getChannels();
+    static vector<unique_ptr<Channel>>& getChannels();
     static int8_t getNumChannels();
 
     static void noteOn(int8_t channel, int8_t note, float amplitude);
     static void noteOff(int8_t channel, int8_t note);
 
 private:
-    static std::shared_ptr<oboe::AudioStream> mStream;
-    static std::mutex mLock;
+    static shared_ptr<oboe::AudioStream> mStream;
+    static mutex mLock;
     static SharingMode mSharingMode;
     static int32_t mSampleRate;
     static double mTimeIncrement;
     static int32_t mBufferSize;
 
     static const int8_t mNumChannels = 16;
-    static std::vector<std::shared_ptr<Channel>> mChannels;
+    static vector<unique_ptr<Channel>> mChannels;
 };
 
 #endif //AUDIO_ENGINE_H

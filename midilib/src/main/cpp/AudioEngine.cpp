@@ -14,13 +14,13 @@
 
 #include "soundfx/Limiter.h"
 
-std::shared_ptr<oboe::AudioStream> AudioEngine::mStream;
-std::mutex AudioEngine::mLock;
+shared_ptr<oboe::AudioStream> AudioEngine::mStream;
+mutex AudioEngine::mLock;
 SharingMode AudioEngine::mSharingMode = SharingMode::Exclusive;
 int32_t AudioEngine::mSampleRate = AUTO_DEFINITION;
 int32_t AudioEngine::mBufferSize = AUTO_DEFINITION;
 double AudioEngine::mTimeIncrement;
-std::vector<std::shared_ptr<Channel>> AudioEngine::mChannels = std::vector<std::shared_ptr<Channel>>();
+vector<unique_ptr<Channel>> AudioEngine::mChannels = vector<unique_ptr<Channel>>();
 
 /**
  * Starts audio engine with specified configuration.
@@ -36,24 +36,22 @@ Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate, int32_t b
     return start();
 }
 
-#define ADJUST_DETUNE(osc, func) osc->adjustDetune([] (const shared_ptr<Detune>& detune) { detune->func; })
-#define ADJUST_DEFINE(synth, osc, func) ADJUST_DETUNE((synth)->getOscillatorByIndex(osc), func)
-
 /**
  * Starts audio engine in <i>exclusive</i> <b>sharing mode</b>. <b>Sample rate</b> and <b>buffer size</b> are auto-defined.
  * @return <code>Result::OK</code> if started successfully, <code>Result::{some_error}</code> otherwise.
  */
 Result AudioEngine::start() {
-    std::lock_guard<std::mutex> lockGuard(mLock);
+    lock_guard<mutex> lockGuard(mLock);
     auto defaultSynth = make_shared<WaveSynth>();
     defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
-    defaultSynth->addOscillator(make_shared<SawtoothOscillator>(1, 0, 1));
-    //defaultSynth->getOscillatorByIndex(0)->setDetune(2, 0.005);
+    defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
+    defaultSynth->getOscillatorByIndex(0).setDetune(2, 0.005);
 
     Channel::setDefaultInstrument(defaultSynth);
     initChannels();
-    auto generator = make_shared<MultiwaveGenerator>();
-    auto* callback = new AudioCallback(generator);
+    auto generator = make_unique<MultiwaveGenerator>();
+    generator->addEffect(make_unique<Limiter>());
+    auto* callback = new AudioCallback(move(generator));
 
     AudioStreamBuilder builder;
     builder.setPerformanceMode(PerformanceMode::LowLatency)
@@ -83,8 +81,6 @@ Result AudioEngine::start() {
 
     mTimeIncrement = 1.0 / mSampleRate;
 
-    generator->addEffect(make_shared<Limiter>());
-
     result = mStream->requestStart();
     if (result != Result::OK) {
         LOGE("Error starting audio stream: %s", convertToText(result));
@@ -99,7 +95,7 @@ Result AudioEngine::start() {
  * @return <code>Result::OK</code> if successful, <code>Result::{some_error}</code> otherwise.
  */
 Result AudioEngine::stop() {
-    std::lock_guard<std::mutex> lockGuard(mLock);
+    lock_guard<mutex> lockGuard(mLock);
     Result result = Result::OK;
     if (mStream) {
         result = mStream->stop();
@@ -131,7 +127,7 @@ int32_t AudioEngine::getBufferSize() {
 /**
  * @return All channels as <code>std::vector\<Channel*\></code>
  */
-std::vector<std::shared_ptr<Channel>> AudioEngine::getChannels() {
+vector<unique_ptr<Channel>>& AudioEngine::getChannels() {
     return mChannels;
 }
 
@@ -143,7 +139,7 @@ std::vector<std::shared_ptr<Channel>> AudioEngine::getChannels() {
  */
 void AudioEngine::noteOn(int8_t channel, int8_t note, float amplitude) {
     if (note < 0) {
-        throw std::invalid_argument("Note must be non-negative number. For example, 0 is C0, 57 is A4, 127 is G10.");
+        throw invalid_argument("Note must be non-negative number. For example, 0 is C0, 57 is A4, 127 is G10.");
     }
     mChannels[channel]->noteOn(note, amplitude);
 }
@@ -155,7 +151,7 @@ void AudioEngine::noteOn(int8_t channel, int8_t note, float amplitude) {
  */
 void AudioEngine::noteOff(int8_t channel, int8_t note) {
     if (note < 0) {
-        throw std::invalid_argument("Note must be non-negative number. For example, 0 is C0, 57 is A4, 127 is G10.");
+        throw invalid_argument("Note must be non-negative number. For example, 0 is C0, 57 is A4, 127 is G10.");
     }
     mChannels[channel]->noteOff(note);
 }
@@ -163,9 +159,9 @@ void AudioEngine::noteOff(int8_t channel, int8_t note) {
 /** Initializes all channels with default instrument. */
 void AudioEngine::initChannels() {
     mChannels.clear();
+    mChannels.reserve(mNumChannels);
     for (int8_t i = 0; i < mNumChannels; i++) {
-        auto channel = std::make_shared<Channel>();
-        mChannels.push_back(channel);
+        mChannels.push_back(make_unique<Channel>());
     }
 }
 

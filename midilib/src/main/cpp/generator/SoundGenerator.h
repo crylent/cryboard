@@ -17,15 +17,17 @@ using namespace std;
 
 class SoundGenerator {
 public:
+    virtual ~SoundGenerator() = default;
+
     virtual void fillBuffer(float* buffer, int32_t numFrames) = 0;
 
     float applyFX(float sample);
 
-    void addEffect(const shared_ptr<SoundFX>& fx);
+    void addEffect(unique_ptr<SoundFX> fx);
     void clearEffects();
 
 private:
-    vector<shared_ptr<SoundFX>> mEffects;
+    vector<unique_ptr<SoundFX>> mEffects;
 };
 
 

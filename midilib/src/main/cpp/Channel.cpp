@@ -15,13 +15,12 @@ Channel::Channel() {
     }
 }
 
-void Channel::setInstrument(const shared_ptr<WaveInstrument>& instrument) {
-    mInstrument = instrument;
+void Channel::setInstrument(shared_ptr<WaveInstrument> instrument) {
+    mInstrument = move(instrument);
 }
 
-shared_ptr<Wave> Channel::newWave(float frequency, float amplitude) {
-    auto wave = make_shared<Wave>(mInstrument, frequency, amplitude);
-    return wave;
+void Channel::setDefaultInstrument(shared_ptr<WaveInstrument> instrument) {
+    mDefaultInstrument = move(instrument);
 }
 
 float Channel::nextSample() {
@@ -40,15 +39,12 @@ float Channel::nextSample() {
 
 void Channel::noteOn(int8_t note, float amplitude) {
     lock_guard<mutex> lockGuard(mLock);
-    auto wave = newWave(NoteFrequency::get(note), amplitude);
-    mWaves[note] = wave;
+    float frequency = NoteFrequency::get(note);
+    auto wave = make_unique<Wave>(mInstrument, frequency, amplitude);
+    mWaves[note] = move(wave);
 }
 
 void Channel::noteOff(int8_t note) {
     lock_guard<mutex> lockGuard(mLock);
     mWaves[note]->release();
-}
-
-void Channel::setDefaultInstrument(const shared_ptr<WaveInstrument>& instrument) {
-    mDefaultInstrument = instrument;
 }

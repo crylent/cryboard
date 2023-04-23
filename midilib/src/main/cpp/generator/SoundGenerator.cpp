@@ -7,8 +7,8 @@ float SoundGenerator::applyFX(float sample) {
     return sample;
 }
 
-void SoundGenerator::addEffect(const shared_ptr<SoundFX>& fx) {
-    mEffects.push_back(fx);
+void SoundGenerator::addEffect(unique_ptr<SoundFX> fx) {
+    mEffects.push_back(move(fx));
 }
 
 void SoundGenerator::clearEffects() {
