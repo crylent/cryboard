@@ -58,6 +58,16 @@ Detune& Oscillator::setDetune(uint8_t unisonVoices, float detune) {
 }
 
 /**
+ * Constructs new <code>Detune</code> object with default configuration and assigns it to the oscillator.
+ * @return created <code>Detune</code> object
+ * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
+ */
+Detune& Oscillator::setDetune() {
+    mDetune = make_unique<Detune>(*this);
+    return *mDetune;
+}
+
+/**
  * @return oscillator's <code>Detune</code> object, <code>nullptr</code> if detune is not enabled
  * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
  */

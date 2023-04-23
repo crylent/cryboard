@@ -11,13 +11,14 @@ class Oscillator;
 
 class Detune {
 public:
+    Detune(Oscillator& owner) : mOwner(owner) {};
     Detune(Oscillator& owner, uint8_t unisonVoices, float detune);
 
     float process(double time, float frequency);
 
-    void setUnisonVoices(uint8_t unisonVoices);
-    void setDetune(float detune);
-    void setPhaseShift(uint8_t voice, float shift);
+    Detune& setUnisonVoices(uint8_t unisonVoices);
+    Detune& setDetune(float detune);
+    Detune& setPhaseShift(uint8_t voice, float shift);
     float getPhaseShift(uint8_t voice);
 
 private:
