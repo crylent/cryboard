@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class Oscillator : enable_shared_from_this<Oscillator> {
+class Oscillator {
 public:
     float eval(double time, float frequency);
     virtual float evalVoice(double time, float frequency) = 0;
@@ -28,9 +28,8 @@ public:
 
     shared_ptr<float> a;
 
-    shared_ptr<Detune> setDetune(uint8_t unisonVoices, float detune);
-    void setDetune(const shared_ptr<Detune>& detune);
-    shared_ptr<Detune> getDetune();
+    Detune& setDetune(uint8_t unisonVoices, float detune);
+    Detune& getDetune();
     void clearDetune();
 
 protected:
@@ -41,7 +40,7 @@ private:
     float mPhase = 0;
     float mFreqFactor = 1;
 
-    shared_ptr<Detune> mDetune = nullptr;
+    unique_ptr<Detune> mDetune = nullptr;
 
     bool mEnabled = true;
 };

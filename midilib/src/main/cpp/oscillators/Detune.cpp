@@ -10,8 +10,7 @@
  * @param unisonVoices number of unison voices, 2 or more
  * @param detune maximum divergence from the original frequency (from 0.0 <i>non-inclusive</i> to 1.0 <i>non-inclusive</i>)
  */
-Detune::Detune(const shared_ptr<class Oscillator>& owner, uint8_t unisonVoices, float detune) {
-    mOwner = weak_ptr<Oscillator>(owner);
+Detune::Detune(Oscillator& owner, uint8_t unisonVoices, float detune) : mOwner(owner) {
     mPhases = vector<float>(mUnisonVoices);
     setUnisonVoices(unisonVoices);
     setDetune(detune);
@@ -22,7 +21,7 @@ float Detune::process(double time, float frequency) {
     float delta = frequency * (2 * mDetune) / float(mUnisonVoices - 1);
     float sum = 0;
     for (uint8_t i = 0; i < mUnisonVoices; i++) {
-        sum += mOwner.lock()->evalVoice(time, minFrequency + float(i) * delta);
+        sum += mOwner.evalVoice(time, minFrequency + float(i) * delta);
     }
     return sum / float(mUnisonVoices);
 }
@@ -63,10 +62,10 @@ void Detune::setPhaseShift(uint8_t voice, float shift) {
     mPhases[voice] = shift;
 }
 
+/**
+ * @param voice number of voice, from 0 to (unisonVoices - 1)
+ * @return phase shift in radians
+ */
 float Detune::getPhaseShift(uint8_t voice) {
     return mPhases[voice];
-}
-
-bool Detune::checkOwnership(const shared_ptr<class Oscillator>& oscillator) {
-    return mOwner.lock() == oscillator;
 }

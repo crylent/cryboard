@@ -109,27 +109,27 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
         auto unisonVoices = static_cast<float>(env->GetIntField(oscillator, idUnisonVoices));
         auto detune = static_cast<float>(env->GetFloatField(oscillator, idDetune));
 
-        shared_ptr<Oscillator> osc;
+        unique_ptr<Oscillator> osc;
         switch (shapeOrdinal) {
             case 0: // SINE
-                osc = make_shared<SineOscillator>(amplitude, phase, freqFactor);
+                osc = make_unique<SineOscillator>(amplitude, phase, freqFactor);
                 break;
             case 1: // TRIANGLE
-                osc = make_shared<TriangleOscillator>(amplitude, phase, freqFactor);
+                osc = make_unique<TriangleOscillator>(amplitude, phase, freqFactor);
                 break;
             case 2: // SQUARE
-                osc = make_shared<SquareOscillator>(amplitude, phase, freqFactor);
+                osc = make_unique<SquareOscillator>(amplitude, phase, freqFactor);
                 break;
             case 3: // SAW
-                osc = make_shared<SawtoothOscillator>(amplitude, phase, freqFactor);
+                osc = make_unique<SawtoothOscillator>(amplitude, phase, freqFactor);
                 break;
             case 4: // REVERSE SAW
-                osc = make_shared<ReverseSawtoothOscillator>(amplitude, phase, freqFactor);
+                osc = make_unique<ReverseSawtoothOscillator>(amplitude, phase, freqFactor);
                 break;
             default:
                 break;
         }
-        synth->addOscillator(osc);
+        synth->addOscillator(move(osc));
     }
     AudioEngine::getChannels()[channel]->setInstrument(synth);
 }

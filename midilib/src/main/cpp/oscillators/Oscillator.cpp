@@ -52,29 +52,17 @@ void Oscillator::setFreqFactor(float freqFactor) {
  * @return created <code>Detune</code> object
  * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
  */
-shared_ptr<Detune> Oscillator::setDetune(uint8_t unisonVoices, float detune) {
-    mDetune = make_shared<Detune>(shared_from_this(), unisonVoices, detune);
-    return mDetune;
-}
-
-/**
- * Assigns the given <code>Detune</code> object to the oscillator.
- * @param detune shared pointer to <code>Detune</code> object
- * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
- */
-void Oscillator::setDetune(const shared_ptr<Detune>& detune) {
-    if (!detune->checkOwnership(shared_from_this())) {
-        throw invalid_argument("The given Detune object does not belongs to this oscillator");
-    }
-    mDetune = detune;
+Detune& Oscillator::setDetune(uint8_t unisonVoices, float detune) {
+    mDetune = make_unique<Detune>(*this, unisonVoices, detune);
+    return *mDetune;
 }
 
 /**
  * @return oscillator's <code>Detune</code> object, <code>nullptr</code> if detune is not enabled
  * @see <a href="https://samplechilli.com/what-is-synth-detune-and-why-use-it/">Detune</a>
  */
-shared_ptr<Detune> Oscillator::getDetune() {
-    return mDetune;
+Detune& Oscillator::getDetune() {
+    return *mDetune;
 }
 
 /**

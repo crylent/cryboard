@@ -6,8 +6,8 @@
 #include "log.h"
 #endif
 
-AudioCallback::AudioCallback(const shared_ptr<SoundGenerator>& generator) {
-    mSoundGenerator = generator;
+AudioCallback::AudioCallback(unique_ptr<SoundGenerator> generator) {
+    mSoundGenerator = move(generator);
 }
 
 DataCallbackResult AudioCallback::onAudioReady(

@@ -19,8 +19,8 @@ class Channel {
 public:
     Channel();
 
-    static void setDefaultInstrument(const shared_ptr<WaveInstrument>& instrument);
-    void setInstrument(const shared_ptr<WaveInstrument>& instrument);
+    static void setDefaultInstrument(shared_ptr<WaveInstrument> instrument);
+    void setInstrument(shared_ptr<WaveInstrument> instrument);
 
     void noteOn(int8_t note, float amplitude);
     void noteOff(int8_t note);
@@ -31,9 +31,7 @@ private:
     static shared_ptr<WaveInstrument> mDefaultInstrument;
     shared_ptr<WaveInstrument> mInstrument;
     mutex mLock;
-    unordered_map<int8_t, shared_ptr<Wave>> mWaves = unordered_map<int8_t, shared_ptr<Wave>>();
-
-    shared_ptr<Wave> newWave(float frequency, float amplitude);
+    unordered_map<int8_t, unique_ptr<Wave>> mWaves = unordered_map<int8_t, unique_ptr<Wave>>();
 };
 
 

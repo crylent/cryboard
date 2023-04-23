@@ -8,12 +8,12 @@ float WaveSynth::wave(double time, float frequency) {
     return value;
 }
 
-void WaveSynth::addOscillator(const shared_ptr<Oscillator> &oscillator) {
-    mOscillators.push_back(oscillator);
+void WaveSynth::addOscillator(unique_ptr<Oscillator> oscillator) {
+    mOscillators.push_back(move(oscillator));
 }
 
-shared_ptr<Oscillator> WaveSynth::getOscillatorByIndex(uint8_t index) {
-    return mOscillators[index];
+Oscillator& WaveSynth::getOscillatorByIndex(uint8_t index) {
+    return *mOscillators[index];
 }
 
 void WaveSynth::enableOscillator(uint8_t index) {
