@@ -14,8 +14,8 @@ float Oscillator::eval(double time, float frequency) {
     return mAmplitude * mDetune->process(time, frequency);
 }
 
-float Oscillator::calcPhase(double time, float frequency) const {
-    return (float) remainder(time * frequency * mFreqFactor * 2 * M_PI + mPhase, 2 * M_PI);
+float Oscillator::calcPhase(double time, float frequency, float extraPhase) const {
+    return (float) remainder(time * frequency * mFreqFactor * 2 * M_PI + mPhase + extraPhase, 2 * M_PI);
 }
 
 /**

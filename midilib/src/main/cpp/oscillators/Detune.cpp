@@ -54,7 +54,7 @@ void Detune::setDetune(float detune) {
 }
 
 /**
- * Sets phase shift for voice with the given number.
+ * Sets phase shift for voice with the given number. Phase shift does not affect sound much, but can make it smoother or shift peaks.
  * @param voice number of voice, from 0 to (unisonVoices - 1)
  * @param shift radians, either in the range from 0 to 2π, or from -π to π
  */
