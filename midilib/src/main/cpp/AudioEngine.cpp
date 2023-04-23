@@ -45,7 +45,7 @@ Result AudioEngine::start() {
     auto defaultSynth = make_shared<WaveSynth>();
     defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
     defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
-    defaultSynth->getOscillatorByIndex(0).setDetune(5, 0.005);
+    defaultSynth->getOscillatorByIndex(0).setDetune();
 
     Channel::setDefaultInstrument(defaultSynth);
     initChannels();
@@ -87,6 +87,7 @@ Result AudioEngine::start() {
         return result;
     }
     LOGI("Audio stream: started");
+
     return result;
 }
 

@@ -46,5 +46,8 @@ void Channel::noteOn(int8_t note, float amplitude) {
 
 void Channel::noteOff(int8_t note) {
     lock_guard<mutex> lockGuard(mLock);
-    mWaves[note]->release();
+    auto wave = mWaves.find(note);
+    if (wave != mWaves.end()) {
+        wave->second->release();
+    }
 }
