@@ -78,11 +78,15 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
     jfieldID idAmplitude = env->GetFieldID(oscCls, "amplitude", "F");
     jfieldID idPhase = env->GetFieldID(oscCls, "phase", "F");
     jfieldID idFreqFactor = env->GetFieldID(oscCls, "frequencyFactor", "F");
-    jfieldID idUnisonVoices = env->GetFieldID(oscCls, "unisonVoices", "I");
-    jfieldID idDetune = env->GetFieldID(oscCls, "detune", "F");
+    jfieldID idDetuneObj = env->GetFieldID(oscCls, "detune", "Lcom/example/midilib/Oscillator$Detune;");
 
     jclass shapeCls = env->FindClass("com/example/midilib/Oscillator$Shape");
     jmethodID idShapeOrdinal = env->GetMethodID(shapeCls, "ordinal", "()I");
+
+    jclass detuneCls = env->FindClass("com/example/midilib/Oscillator$Detune");
+    jfieldID idUnisonVoices = env->GetFieldID(detuneCls, "unisonVoices", "I");
+    jfieldID idDetuneValue = env->GetFieldID(detuneCls, "detune", "F");
+    jmethodID idGetPhase = env->GetMethodID(detuneCls, "getPhaseShift", "(I)F");
 
     jfieldID idAttack = env->GetFieldID(instCls, "attack", "F");
     jfloat attack = env->GetFloatField(instrument, idAttack);
@@ -106,8 +110,6 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
         auto amplitude = static_cast<float>(env->GetFloatField(oscillator, idAmplitude));
         auto phase = static_cast<float>(env->GetFloatField(oscillator, idPhase));
         auto freqFactor = static_cast<float>(env->GetFloatField(oscillator, idFreqFactor));
-        auto unisonVoices = static_cast<float>(env->GetIntField(oscillator, idUnisonVoices));
-        auto detune = static_cast<float>(env->GetFloatField(oscillator, idDetune));
 
         unique_ptr<Oscillator> osc;
         switch (shapeOrdinal) {
@@ -129,6 +131,18 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
             default:
                 break;
         }
+
+        jobject detuneObj = env->GetObjectField(oscillator, idDetuneObj);
+        if (detuneObj) {
+            auto unisonVoices = static_cast<int>(env->GetIntField(detuneObj, idUnisonVoices));
+            auto detuneValue = static_cast<float>(env->GetFloatField(detuneObj, idDetuneValue));
+            auto detune = osc->setDetune(unisonVoices, detuneValue);
+            for (int voice = 0; voice < unisonVoices; voice++) {
+                auto phaseShift = env->CallFloatMethod(detuneObj, idGetPhase, voice);
+                detune.setPhaseShift(voice, phaseShift);
+            }
+        }
+
         synth->addOscillator(move(osc));
     }
     AudioEngine::getChannels()[channel]->setInstrument(synth);
