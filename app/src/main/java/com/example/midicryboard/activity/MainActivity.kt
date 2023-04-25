@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
 import com.example.midicryboard.contract.TrackPropertiesContract
 import com.example.midilib.MidiLib
+import com.example.midilib.soundfx.Limiter
 import com.sdsmdg.harjot.crollerTest.Croller
 
 const val DEFAULT_MIDI_OFFSET = 60
@@ -77,10 +78,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
 
-    init {
-        //Midi.start()
-    }
-
     override fun onRestart() {
         super.onRestart()
         updateTempoAndTimeSignature()
@@ -93,6 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         MidiLib.apply {
             start()
+            addEffect(MASTER, Limiter())
         }
 
         Companion.resources = resources

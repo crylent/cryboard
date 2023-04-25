@@ -20,6 +20,7 @@ SharingMode AudioEngine::mSharingMode = SharingMode::Exclusive;
 int32_t AudioEngine::mSampleRate = AUTO_DEFINITION;
 int32_t AudioEngine::mBufferSize = AUTO_DEFINITION;
 double AudioEngine::mTimeIncrement;
+shared_ptr<FXList> AudioEngine::mMasterEffects;
 vector<unique_ptr<Channel>> AudioEngine::mChannels = vector<unique_ptr<Channel>>();
 
 /**
@@ -50,7 +51,7 @@ Result AudioEngine::start() {
     Channel::setDefaultInstrument(defaultSynth);
     initChannels();
     auto generator = make_unique<MultiwaveGenerator>();
-    generator->addEffect(make_unique<Limiter>());
+    mMasterEffects = generator->getEffects();
     auto* callback = new AudioCallback(move(generator));
 
     AudioStreamBuilder builder;
@@ -178,4 +179,8 @@ int8_t AudioEngine::getNumChannels() {
  */
 double AudioEngine::getTimeIncrement() {
     return mTimeIncrement;
+}
+
+FXList &AudioEngine::getMasterFX() {
+    return *mMasterEffects;
 }

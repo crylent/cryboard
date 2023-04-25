@@ -3,6 +3,10 @@
 
 #include "jni.h"
 
+#ifndef _LIBCPP_MAP
+#include <map>
+#endif
+
 #ifndef WAVE_SYNTH_H
 #include "instrument/WaveSynth.h"
 #endif
@@ -26,6 +30,12 @@
 #ifndef REVERSE_SAWTOOTH_OSCILLATOR_H
 #include "oscillators/ReverseSawtoothOscillator.h"
 #endif
+
+#ifndef LIMITER_H
+#include "soundfx/Limiter.h"
+#endif
+
+#define JSTR(env, string) env->NewStringUTF(string)
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -147,5 +157,92 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
     }
     AudioEngine::getChannels()[channel]->setInstrument(synth);
 }
+
+#define GET_PARAM(env, name) auto (name) = static_cast<float>((env)->CallFloatMethod(fx, idGetParameter, JSTR((env), #name)))
+
+extern "C"
+JNIEXPORT jbyte JNICALL
+Java_com_example_midilib_MidiLib_addEffect(JNIEnv *env, jobject thiz, jbyte channel,
+                                           jobject fx) {
+    jclass fxCls = env->GetObjectClass(fx);
+    jmethodID idGetId = env->GetMethodID(fxCls, "getId", "()I");
+    auto fxId = static_cast<int>(env->CallIntMethod(fx, idGetId));
+    jmethodID idGetParameter = env->GetMethodID(fxCls, "getParameter",
+                                                "(Ljava/lang/String;)F");
+
+    unique_ptr<SoundFX> effect;
+    switch (fxId) { // NOLINT(hicpp-multiway-paths-covered)
+        case 1: { // Limiter
+            GET_PARAM(env, threshold);
+            GET_PARAM(env, limit);
+            GET_PARAM(env, attack);
+            GET_PARAM(env, release);
+            effect = make_unique<Limiter>(threshold, limit, attack, release);
+            break;
+        }
+        default: // Unexpected effect ID
+            throw exception();
+    }
+
+    uint8_t i;
+    if (channel == -1) { // Master
+        FXList& masterFx = AudioEngine::getMasterFX();
+        i = masterFx.addEffect(move(effect));
+    } else {
+        throw exception(); // Not implemented
+    }
+    return static_cast<jbyte>(i);
+}
+
+FXList& getFXList(int8_t channel) {
+    if (channel == -1) { // Master
+        return AudioEngine::getMasterFX();
+    } else {
+        throw exception(); // Not implemented
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_MidiLib_clearEffects(JNIEnv *env, jobject thiz, jbyte channel) {
+    FXList& fxList = getFXList(channel);
+    fxList.clearEffects();
+}
+
+#define THRESHOLD 1
+#define LIMIT 2
+#define ATTACK 3
+#define RELEASE 4
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_MidiLib_editEffect(JNIEnv *env, jobject thiz, jbyte channel, jbyte i,
+                                            jstring param, jfloat value) {
+    FXList& fxList = getFXList(channel);
+    auto& effect = fxList.getEffect(i);
+    auto _param = env->GetStringUTFChars(param, nullptr);
+
+    map<string, int> mapping;
+    mapping["threshold"] = THRESHOLD;
+    mapping["limit"] = LIMIT;
+    mapping["attack"] = ATTACK;
+    mapping["release"] = RELEASE;
+
+    try {
+        auto& limiter = dynamic_cast<Limiter&>(effect);
+        switch (mapping[_param]) {
+            case THRESHOLD: limiter.setThreshold(value); break;
+            case LIMIT: limiter.setLimit(value); break;
+            case ATTACK: limiter.setAttack(value); break;
+            case RELEASE: limiter.setRelease(value); break;
+            default: break;
+        }
+    } catch (bad_cast& e) {}
+}
+
+#undef THRESHOLD
+#undef LIMIT
+#undef ATTACK
+#undef RELEASE
 
 #pragma clang diagnostic pop

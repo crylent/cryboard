@@ -1,14 +1,17 @@
 package com.example.midilib
 
+import com.example.midilib.soundfx.SoundFX
+
 @Suppress("MemberVisibilityCanBePrivate")
 object MidiLib {
     init {
         System.loadLibrary("midilib")
     }
 
-    const val DEFAULT_SAMPLE_RATE = 48000
+    const val AUTO_DEFINITION = -1
+    const val MASTER: Byte = -1
 
-    external fun start(sharedMode: Boolean = false, sampleRate: Int = DEFAULT_SAMPLE_RATE)
+    external fun start(sharedMode: Boolean = false, sampleRate: Int = AUTO_DEFINITION)
     external fun start()
     external fun stop()
 
@@ -16,4 +19,8 @@ object MidiLib {
     external fun noteOff(channel: Byte, note: Byte)
 
     external fun setInstrument(channel: Byte, instrument: Synthesizer)
+
+    external fun addEffect(channel: Byte, fx: SoundFX): Byte
+    external fun editEffect(channel: Byte, i: Byte, param: String, value: Float)
+    external fun clearEffects(channel: Byte)
 }

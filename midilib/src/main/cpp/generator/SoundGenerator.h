@@ -9,8 +9,8 @@
 #include "../soundfx/SoundFX.h"
 #endif
 
-#ifndef _LIBCPP_VECTOR
-#include <vector>
+#ifndef FX_LIST_H
+#include "../FXList.h"
 #endif
 
 using namespace std;
@@ -22,12 +22,10 @@ public:
     virtual void fillBuffer(float* buffer, int32_t numFrames) = 0;
 
     float applyFX(float sample);
-
-    void addEffect(unique_ptr<SoundFX> fx);
-    void clearEffects();
+    shared_ptr<FXList> getEffects();
 
 private:
-    vector<unique_ptr<SoundFX>> mEffects;
+    shared_ptr<FXList> mEffects = make_unique<FXList>();
 };
 
 

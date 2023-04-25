@@ -8,13 +8,13 @@
 class Limiter: public SoundFX {
 public:
     Limiter();
-    Limiter(float threshold, float limit, float release = 0.05);
-    Limiter(float threshold, float limit, float attack, float release);
+    Limiter(float threshold, float limit, double release = 0.05);
+    Limiter(float threshold, float limit, double attack, double release);
 
     void setThreshold(float threshold);
     void setLimit(float limit);
-    void setAttack(float attack);
-    void setRelease(float release);
+    void setAttack(double attack);
+    void setRelease(double release);
 
     float process(float sample) override;
 

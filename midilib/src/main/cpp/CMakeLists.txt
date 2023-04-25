@@ -41,6 +41,7 @@ add_library( # Sets the name of the library.
             oscillators/SquareOscillator.cpp
             soundfx/SoundFX.cpp
             soundfx/Limiter.cpp
+            FXList.cpp
             log.cpp
         )
 
