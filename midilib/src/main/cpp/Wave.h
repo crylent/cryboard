@@ -9,7 +9,7 @@ using namespace std;
 
 class Wave {
 public:
-    Wave(const shared_ptr<WaveInstrument>& instrument, float frequency, float amplitude);
+    Wave(shared_ptr<WaveInstrument> instrument, float frequency, float amplitude);
 
     float nextSample();
 
