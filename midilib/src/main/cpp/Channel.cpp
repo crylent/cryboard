@@ -16,11 +16,11 @@ Channel::Channel() {
 }
 
 void Channel::setInstrument(shared_ptr<WaveInstrument> instrument) {
-    mInstrument = instrument; // NOLINT(performance-unnecessary-value-param)
+    mInstrument = move(instrument);
 }
 
 void Channel::setDefaultInstrument(shared_ptr<WaveInstrument> instrument) {
-    mDefaultInstrument = instrument; // NOLINT(performance-unnecessary-value-param)
+    mDefaultInstrument = move(instrument);
 }
 
 float Channel::nextSample() {

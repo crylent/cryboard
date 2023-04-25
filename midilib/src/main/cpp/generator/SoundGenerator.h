@@ -25,7 +25,7 @@ public:
     shared_ptr<FXList> getEffects();
 
 private:
-    shared_ptr<FXList> mEffects = make_unique<FXList>();
+    shared_ptr<FXList> mEffects = make_shared<FXList>();
 };
 
 

@@ -1,11 +1,13 @@
 #include "Wave.h"
 
+#include <utility>
+
 #ifndef AUDIO_ENGINE_H
 #include "AudioEngine.h"
 #endif
 
-Wave::Wave(const shared_ptr<WaveInstrument>& instrument, float frequency, float amplitude) {
-    mInstrument = instrument;
+Wave::Wave(shared_ptr<WaveInstrument> instrument, float frequency, float amplitude) {
+    mInstrument = std::move(instrument);
     mFrequency = frequency;
     mAmplitude = amplitude;
     mTimeIncrement = AudioEngine::getTimeIncrement();
