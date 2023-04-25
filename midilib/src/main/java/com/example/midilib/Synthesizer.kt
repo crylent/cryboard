@@ -1,7 +1,7 @@
 package com.example.midilib
 
 data class Synthesizer(
-    val oscillators: List<Oscillator>,
+    val oscillators: MutableList<Oscillator>,
     var attack: Float,
     var decay: Float,
     var sustain: Float,
