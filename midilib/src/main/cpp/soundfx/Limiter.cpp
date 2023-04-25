@@ -40,7 +40,7 @@ Limiter::Limiter() = default;
  * @see <a href="https://www.meldaproduction.com/tutorials/text/limiters">Limiters Tutorial</a>
  * @see <a href="https://www.izotope.com/en/learn/an-introduction-to-limiters-and-how-to-use-them.html">How to Use Limiters</a>
  */
-Limiter::Limiter(float threshold, float limit, float release) {
+Limiter::Limiter(float threshold, float limit, double release) {
     setThreshold(threshold);
     setLimit(limit);
     setRelease(release);
@@ -60,7 +60,7 @@ Limiter::Limiter(float threshold, float limit, float release) {
  * @see <a href="https://www.meldaproduction.com/tutorials/text/limiters">Limiters Tutorial</a>
  * @see <a href="https://www.izotope.com/en/learn/an-introduction-to-limiters-and-how-to-use-them.html">How to Use Limiters</a>
  */
-Limiter::Limiter(float threshold, float limit, float attack, float release) {
+Limiter::Limiter(float threshold, float limit, double attack, double release) {
     setThreshold(threshold);
     setLimit(limit);
     setAttack(attack);
@@ -104,7 +104,7 @@ void Limiter::setLimit(float limit) {
  * @see <a href="https://www.meldaproduction.com/tutorials/text/limiters">Limiters Tutorial</a>
  * @see <a href="https://www.izotope.com/en/learn/an-introduction-to-limiters-and-how-to-use-them.html">How to Use Limiters</a>
  */
-void Limiter::setAttack(float attack) {
+void Limiter::setAttack(double attack) {
     if (attack < 0) {
         throw std::invalid_argument("Attack time must be positive number");
     }
@@ -118,7 +118,7 @@ void Limiter::setAttack(float attack) {
  * @see <a href="https://www.meldaproduction.com/tutorials/text/limiters">Limiters Tutorial</a>
  * @see <a href="https://www.izotope.com/en/learn/an-introduction-to-limiters-and-how-to-use-them.html">How to Use Limiters</a>
  */
-void Limiter::setRelease(float release) {
+void Limiter::setRelease(double release) {
     if (release < 0) {
         throw std::invalid_argument("Release time must be positive number");
     }

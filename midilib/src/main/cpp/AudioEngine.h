@@ -34,6 +34,8 @@ public:
     static int32_t getBufferSize();
     static double getTimeIncrement();
 
+    static FXList& getMasterFX();
+
     static vector<unique_ptr<Channel>>& getChannels();
     static int8_t getNumChannels();
 
@@ -47,6 +49,8 @@ private:
     static int32_t mSampleRate;
     static double mTimeIncrement;
     static int32_t mBufferSize;
+
+    static shared_ptr<FXList> mMasterEffects;
 
     static const int8_t mNumChannels = 16;
     static vector<unique_ptr<Channel>> mChannels;

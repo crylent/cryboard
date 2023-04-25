@@ -18,7 +18,7 @@ public:
     AudioCallback(unique_ptr<SoundGenerator> generator);
 
 private:
-    unique_ptr<SoundGenerator> mSoundGenerator;
+    shared_ptr<SoundGenerator> mSoundGenerator;
 };
 
 
