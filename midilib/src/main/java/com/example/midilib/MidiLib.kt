@@ -20,7 +20,10 @@ object MidiLib {
 
     external fun setInstrument(channel: Byte, instrument: Synthesizer)
 
-    external fun addEffect(channel: Byte, fx: SoundFX): Byte
+    fun addEffect(channel: Byte, fx: SoundFX) = addEffectExternal(channel, fx).also {
+        fx.linkToChannel(channel, it)
+    }
+    private external fun addEffectExternal(channel: Byte, fx: SoundFX): Byte
     external fun editEffect(channel: Byte, i: Byte, param: String, value: Float)
     external fun clearEffects(channel: Byte)
 }

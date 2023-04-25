@@ -162,8 +162,8 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
 
 extern "C"
 JNIEXPORT jbyte JNICALL
-Java_com_example_midilib_MidiLib_addEffect(JNIEnv *env, jobject thiz, jbyte channel,
-                                           jobject fx) {
+Java_com_example_midilib_MidiLib_addEffectExternal(JNIEnv *env, jobject thiz, jbyte channel,
+                                                   jobject fx) {
     jclass fxCls = env->GetObjectClass(fx);
     jmethodID idGetId = env->GetMethodID(fxCls, "getId", "()I");
     auto fxId = static_cast<int>(env->CallIntMethod(fx, idGetId));
