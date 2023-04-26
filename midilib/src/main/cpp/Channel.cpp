@@ -1,10 +1,6 @@
 #include "Channel.h"
-
 #include <utility>
-
-#ifndef NOTE_FREQUENCY_H
 #include "NoteFrequency.h"
-#endif
 
 shared_ptr<WaveInstrument> Channel::mDefaultInstrument = nullptr;
 

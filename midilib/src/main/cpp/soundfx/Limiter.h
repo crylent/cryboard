@@ -1,9 +1,7 @@
 #ifndef LIMITER_H
 #define LIMITER_H
 
-#ifndef SOUNDFX_H
 #include "SoundFX.h"
-#endif
 
 class Limiter: public SoundFX {
 public:

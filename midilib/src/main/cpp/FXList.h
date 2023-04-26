@@ -1,17 +1,9 @@
 #ifndef FX_LIST_H
 #define FX_LIST_H
 
-#ifndef SOUNDFX_H
 #include "soundfx/SoundFX.h"
-#endif
-
-#ifndef _LIBCPP_MEMORY
 #include <memory>
-#endif
-
-#ifndef _LIBCPP_VECTOR
 #include <vector>
-#endif
 
 using namespace std;
 

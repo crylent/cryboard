@@ -1,13 +1,8 @@
 #ifndef OSCILLATOR_H
 #define OSCILLATOR_H
 
-#ifndef _LIBCPP_CMATH
 #include <cmath>
-#endif
-
-#ifndef DETUNE_H
 #include "Detune.h"
-#endif
 
 using namespace std;
 

@@ -1,9 +1,9 @@
 #ifndef SOUNDFX_H
 #define SOUNDFX_H
 
-#ifndef _LIBCPP_STDEXCEPT
 #include <stdexcept>
-#endif
+
+using namespace std;
 
 class SoundFX {
 public:

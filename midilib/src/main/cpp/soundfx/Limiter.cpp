@@ -1,8 +1,5 @@
 #include "Limiter.h"
-
-#ifndef _LIBCPP_CMATH
 #include <cmath>
-#endif
 
 float Limiter::process(float sample) {
     float sampleAbs = abs(sample);
@@ -76,7 +73,7 @@ Limiter::Limiter(float threshold, float limit, double attack, double release) {
  */
 void Limiter::setThreshold(float threshold) {
     if (threshold <= 0 || threshold > 1) {
-        throw std::invalid_argument("Threshold level must be in the range of 0.0 (non-inclusive) to 1.0");
+        throw invalid_argument("Threshold level must be in the range of 0.0 (non-inclusive) to 1.0");
     }
     mThreshold = threshold;
     mGain = mLimit / threshold;
@@ -91,7 +88,7 @@ void Limiter::setThreshold(float threshold) {
  */
 void Limiter::setLimit(float limit) {
     if (limit <= 0 || limit > 1) {
-        throw std::invalid_argument("Limit level must be in the range of 0.0 (non-inclusive) to 1.0");
+        throw invalid_argument("Limit level must be in the range of 0.0 (non-inclusive) to 1.0");
     }
     mLimit = limit;
     mGain = limit / mThreshold;
@@ -106,7 +103,7 @@ void Limiter::setLimit(float limit) {
  */
 void Limiter::setAttack(double attack) {
     if (attack < 0) {
-        throw std::invalid_argument("Attack time must be positive number");
+        throw invalid_argument("Attack time must be positive number");
     }
     mAttack = attack;
 }
@@ -120,7 +117,7 @@ void Limiter::setAttack(double attack) {
  */
 void Limiter::setRelease(double release) {
     if (release < 0) {
-        throw std::invalid_argument("Release time must be positive number");
+        throw invalid_argument("Release time must be positive number");
     }
     mRelease = release;
 }

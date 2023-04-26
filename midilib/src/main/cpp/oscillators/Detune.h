@@ -1,9 +1,7 @@
 #ifndef DETUNE_H
 #define DETUNE_H
 
-#ifndef _LIBCPP_VECTOR
 #include <vector>
-#endif
 
 using namespace std;
 

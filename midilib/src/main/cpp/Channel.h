@@ -1,17 +1,9 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
-#ifndef WAVE_INSTRUMENT_H
 #include "instrument/WaveInstrument.h"
-#endif
-
-#ifndef WAVE_H
 #include "Wave.h"
-#endif
-
-#ifndef _LIBCPP_UNORDERED_MAP
 #include <unordered_map>
-#endif
 
 using namespace std;
 
