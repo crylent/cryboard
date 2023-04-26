@@ -3,7 +3,7 @@ package com.example.midilib
 import com.example.midilib.soundfx.SoundFX
 
 @Suppress("MemberVisibilityCanBePrivate")
-object MidiLib {
+object AudioEngine {
     init {
         System.loadLibrary("midilib")
     }
@@ -17,6 +17,7 @@ object MidiLib {
 
     external fun noteOn(channel: Byte, note: Byte, amplitude: Float)
     external fun noteOff(channel: Byte, note: Byte)
+    external fun allNotesOff(channel: Byte)
 
     external fun setInstrument(channel: Byte, instrument: Synthesizer)
 

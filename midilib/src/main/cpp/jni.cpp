@@ -39,18 +39,18 @@
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_start__(JNIEnv *env, jobject thiz) {
+Java_com_example_midilib_AudioEngine_start__(JNIEnv *env, jobject thiz) {
     AudioEngine::start();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_stop(JNIEnv *env, jobject thiz) {
+Java_com_example_midilib_AudioEngine_stop(JNIEnv *env, jobject thiz) {
     AudioEngine::stop();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_start__ZI(JNIEnv *env, jobject thiz, jboolean shared_mode,
-                                           jint sample_rate) {
+Java_com_example_midilib_AudioEngine_start__ZI(JNIEnv *env, jobject thiz, jboolean shared_mode,
+                                               jint sample_rate) {
     if (shared_mode) {
         AudioEngine::start(oboe::SharingMode::Shared, sample_rate);
     } else {
@@ -59,20 +59,20 @@ Java_com_example_midilib_MidiLib_start__ZI(JNIEnv *env, jobject thiz, jboolean s
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_noteOn(JNIEnv *env, jobject thiz, jbyte channel, jbyte note, jfloat amplitude) {
+Java_com_example_midilib_AudioEngine_noteOn(JNIEnv *env, jobject thiz, jbyte channel, jbyte note, jfloat amplitude) {
     AudioEngine::noteOn(channel, note, amplitude);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_noteOff(JNIEnv *env, jobject thiz, jbyte channel, jbyte note) {
+Java_com_example_midilib_AudioEngine_noteOff(JNIEnv *env, jobject thiz, jbyte channel, jbyte note) {
     AudioEngine::noteOff(channel, note);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte channel,
-                                               jobject instrument) {
+Java_com_example_midilib_AudioEngine_setInstrument(JNIEnv *env, jobject thiz, jbyte channel,
+                                                   jobject instrument) {
     jclass instCls = env->GetObjectClass(instrument);
     jfieldID idOscillators = env->GetFieldID(
             instCls, "oscillators", "Ljava/util/List;"
@@ -162,8 +162,8 @@ Java_com_example_midilib_MidiLib_setInstrument(JNIEnv *env, jobject thiz, jbyte 
 
 extern "C"
 JNIEXPORT jbyte JNICALL
-Java_com_example_midilib_MidiLib_addEffectExternal(JNIEnv *env, jobject thiz, jbyte channel,
-                                                   jobject fx) {
+Java_com_example_midilib_AudioEngine_addEffectExternal(JNIEnv *env, jobject thiz, jbyte channel,
+                                                       jobject fx) {
     jclass fxCls = env->GetObjectClass(fx);
     jmethodID idGetId = env->GetMethodID(fxCls, "getId", "()I");
     auto fxId = static_cast<int>(env->CallIntMethod(fx, idGetId));
@@ -204,7 +204,7 @@ FXList& getFXList(int8_t channel) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_clearEffects(JNIEnv *env, jobject thiz, jbyte channel) {
+Java_com_example_midilib_AudioEngine_clearEffects(JNIEnv *env, jobject thiz, jbyte channel) {
     FXList& fxList = getFXList(channel);
     fxList.clearEffects();
 }
@@ -216,8 +216,8 @@ Java_com_example_midilib_MidiLib_clearEffects(JNIEnv *env, jobject thiz, jbyte c
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_MidiLib_editEffect(JNIEnv *env, jobject thiz, jbyte channel, jbyte i,
-                                            jstring param, jfloat value) {
+Java_com_example_midilib_AudioEngine_editEffect(JNIEnv *env, jobject thiz, jbyte channel, jbyte i,
+                                                jstring param, jfloat value) {
     FXList& fxList = getFXList(channel);
     auto& effect = fxList.getEffect(i);
     auto _param = env->GetStringUTFChars(param, nullptr);
@@ -244,5 +244,11 @@ Java_com_example_midilib_MidiLib_editEffect(JNIEnv *env, jobject thiz, jbyte cha
 #undef LIMIT
 #undef ATTACK
 #undef RELEASE
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_AudioEngine_allNotesOff(JNIEnv *env, jobject thiz, jbyte channel) {
+    AudioEngine::allNotesOff(channel);
+}
 
 #pragma clang diagnostic pop
