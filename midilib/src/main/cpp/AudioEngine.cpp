@@ -1,17 +1,7 @@
 #include "AudioEngine.h"
-
-#ifndef LOG_H
 #include "log.h"
-#endif
-
-#ifndef WAVE_SYNTH_H
 #include "instrument/WaveSynth.h"
-#endif
-
-#ifndef SAWTOOTH_OSCILLATOR_H
 #include "oscillators/SawtoothOscillator.h"
-#endif
-
 #include "soundfx/Limiter.h"
 
 shared_ptr<oboe::AudioStream> AudioEngine::mStream;

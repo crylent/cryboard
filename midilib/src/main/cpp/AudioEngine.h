@@ -1,21 +1,10 @@
 #ifndef AUDIO_ENGINE_H
 #define AUDIO_ENGINE_H
 
-#ifndef OBOE_H
 #include "oboe/Oboe.h"
-#endif
-
-#ifndef AUDIO_CALLBACK_H
 #include "AudioCallback.h"
-#endif
-
-#ifndef MULTIWAVE_GENERATOR_H
 #include "player/WavePlayer.h"
-#endif
-
-#ifndef CHANNEL_H
 #include "Channel.h"
-#endif
 
 using namespace std;
 using namespace oboe;

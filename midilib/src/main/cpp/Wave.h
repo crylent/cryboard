@@ -1,9 +1,7 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#ifndef WAVE_INSTRUMENT_H
 #include "instrument/WaveInstrument.h"
-#endif
 
 using namespace std;
 

@@ -1,8 +1,5 @@
 #include "Detune.h"
-
-#ifndef OSCILLATOR_H
 #include "Oscillator.h"
-#endif
 
 /**
  * Constructs new Detune object.

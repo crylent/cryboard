@@ -1,9 +1,7 @@
 #ifndef NOTE_FREQUENCY_H
 #define NOTE_FREQUENCY_H
 
-#ifndef OBOE_H
 #include "oboe/Oboe.h"
-#endif
 
 class NoteFrequency {
 public:

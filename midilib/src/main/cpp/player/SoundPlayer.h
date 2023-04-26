@@ -1,17 +1,9 @@
 #ifndef SOUND_PLAYER_H
 #define SOUND_PLAYER_H
 
-#ifndef OBOE_H
 #include "oboe/Oboe.h"
-#endif
-
-#ifndef SOUNDFX_H
 #include "../soundfx/SoundFX.h"
-#endif
-
-#ifndef FX_LIST_H
 #include "../FXList.h"
-#endif
 
 using namespace std;
 

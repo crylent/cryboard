@@ -1,9 +1,7 @@
 #ifndef ASSET_PLAYER_H
 #define ASSET_PLAYER_H
 
-#ifndef SOUND_PLAYER_H
 #include "SoundPlayer.h"
-#endif
 
 class AssetPlayer : public SoundPlayer {
 public:

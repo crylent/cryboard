@@ -2,38 +2,14 @@
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
 
 #include "jni.h"
-
-#ifndef _LIBCPP_MAP
 #include <map>
-#endif
-
-#ifndef WAVE_SYNTH_H
 #include "instrument/WaveSynth.h"
-#endif
-
-#ifndef SINE_OSCILLATOR_H
 #include "oscillators/SineOscillator.h"
-#endif
-
-#ifndef TRIANGLE_OSCILLATOR_H
 #include "oscillators/TriangleOscillator.h"
-#endif
-
-#ifndef SQUARE_OSCILLATOR_H
 #include "oscillators/SquareOscillator.h"
-#endif
-
-#ifndef SAWTOOTH_OSCILLATOR_H
 #include "oscillators/SawtoothOscillator.h"
-#endif
-
-#ifndef REVERSE_SAWTOOTH_OSCILLATOR_H
 #include "oscillators/ReverseSawtoothOscillator.h"
-#endif
-
-#ifndef LIMITER_H
 #include "soundfx/Limiter.h"
-#endif
 
 #define JSTR(env, string) env->NewStringUTF(string)
 

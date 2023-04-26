@@ -1,10 +1,7 @@
 #include "Wave.h"
 
 #include <utility>
-
-#ifndef AUDIO_ENGINE_H
 #include "AudioEngine.h"
-#endif
 
 Wave::Wave(shared_ptr<WaveInstrument> instrument, float frequency, float amplitude) {
     mInstrument = std::move(instrument);
