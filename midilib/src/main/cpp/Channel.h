@@ -24,6 +24,7 @@ public:
 
     void noteOn(int8_t note, float amplitude);
     void noteOff(int8_t note);
+    void allNotesOff();
 
     float nextSample();
 

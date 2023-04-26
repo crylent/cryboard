@@ -1,7 +1,8 @@
 package com.example.midicryboard
 
 import android.util.Log
-import com.example.midilib.MidiLib
+import com.example.midilib.AudioEngine
+import com.example.midilib.soundfx.Limiter
 import com.leff.midi.MidiFile
 import com.leff.midi.MidiTrack
 import com.leff.midi.event.ChannelEvent
@@ -25,7 +26,7 @@ object Midi {
         }
     }
 
-    private val driver = MidiDriver.getInstance()
+    //private val driver = MidiDriver.getInstance()
     var volume: Byte = 100
         set(value) {
             if (value in 0..127) field = value
@@ -35,10 +36,15 @@ object Midi {
     private const val NOTE_OFF_VELOCITY: Byte = 0
 
     fun start() {
-        driver.start()
+        //driver.start()
+        AudioEngine.apply {
+            start()
+            addEffect(AudioEngine.MASTER, Limiter())
+        }
     }
     fun stop() {
-        driver.stop()
+        //driver.stop()
+        AudioEngine.stop()
     }
 
     private val systemTime
@@ -160,7 +166,7 @@ object Midi {
         }
     }
 
-    private fun noteEvent(action: Byte, note: Byte, channel: Byte, velocity: Byte) {
+    /*private fun noteEvent(action: Byte, note: Byte, channel: Byte, velocity: Byte) {
         val event = ByteArray(3)
         event[0] = action or channel
         event[1] = note
@@ -173,7 +179,7 @@ object Midi {
         event[0] = action or channel
         event[1] = arg
         driver.write(event)
-    }
+    }*/
 
     private val notesOn = Array(TRACKS_NUMBER) { mutableSetOf<Byte>() }
 
@@ -181,8 +187,8 @@ object Midi {
         noteOn(note, channel, volume)
     }
     fun noteOn(note: Byte, channel: Byte, velocity: Byte) {
-        MidiLib.noteOn(channel, note, velocity / 127.0f)
-        noteEvent(MidiConstants.NOTE_ON, note, channel, velocity)
+        AudioEngine.noteOn(channel, note, velocity / 127.0f)
+        //noteEvent(MidiConstants.NOTE_ON, note, channel, velocity)
         if (channel != Metronome.METRONOME_CHANNEL) {
             notesOn[channel.toInt()].add(note)
             recordIfEnabled(
@@ -192,8 +198,8 @@ object Midi {
         }
     }
     fun noteOff(note: Byte, channel: Byte) {
-        MidiLib.noteOff(channel, note)
-        noteEvent(MidiConstants.NOTE_OFF, note, channel, NOTE_OFF_VELOCITY)
+        AudioEngine.noteOff(channel, note)
+        //noteEvent(MidiConstants.NOTE_OFF, note, channel, NOTE_OFF_VELOCITY)
         if (channel != Metronome.METRONOME_CHANNEL) {
             notesOn[channel.toInt()].remove(note)
             recordIfEnabled(
@@ -203,9 +209,16 @@ object Midi {
         }
     }
     fun allNotesOff(channel: Byte) { // all notes off on one channel
-        notesOn[channel.toInt()].toSet().forEach {
-            noteOff(it, channel)
+        AudioEngine.allNotesOff(channel)
+        if (channel != Metronome.METRONOME_CHANNEL) {
+            notesOn[channel.toInt()].toSet().forEach {
+                recordIfEnabled(
+                    channel,
+                    NoteOff(ticks, channel.toInt(), it.toInt(), NOTE_OFF_VELOCITY.toInt())
+                )
+            }
         }
+        notesOn[channel.toInt()].clear()
     }
     fun allNotesOff() { // all notes off on all channels
         for (channel in 0 until TRACKS_NUMBER)
@@ -213,7 +226,8 @@ object Midi {
     }
 
     fun changeProgram(channel: Byte, program: Byte) {
-        midiEvent(MidiConstants.PROGRAM_CHANGE, program, channel)
+        //midiEvent(MidiConstants.PROGRAM_CHANGE, program, channel)
+        //AudioEngine.setInstrument(channel, program);
         Log.println(Log.DEBUG, "ChangeProgram", "$channel $program")
     }
 

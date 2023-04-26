@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
 import com.example.midicryboard.contract.TrackPropertiesContract
-import com.example.midilib.MidiLib
+import com.example.midilib.AudioEngine
 import com.example.midilib.soundfx.Limiter
 import com.sdsmdg.harjot.crollerTest.Croller
 
@@ -88,10 +88,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        MidiLib.apply {
-            start()
-            addEffect(MASTER, Limiter())
-        }
+        Midi.start()
 
         Companion.resources = resources
 

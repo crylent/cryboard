@@ -41,6 +41,7 @@ public:
 
     static void noteOn(int8_t channel, int8_t note, float amplitude);
     static void noteOff(int8_t channel, int8_t note);
+    static void allNotesOff(int8_t channel);
 
 private:
     static shared_ptr<oboe::AudioStream> mStream;

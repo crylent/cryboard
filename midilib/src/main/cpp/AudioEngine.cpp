@@ -184,3 +184,7 @@ double AudioEngine::getTimeIncrement() {
 FXList &AudioEngine::getMasterFX() {
     return *mMasterEffects;
 }
+
+void AudioEngine::allNotesOff(int8_t channel) {
+    mChannels[channel]->allNotesOff();
+}

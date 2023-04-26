@@ -1,6 +1,6 @@
 package com.example.midilib.soundfx
 
-import com.example.midilib.MidiLib
+import com.example.midilib.AudioEngine
 
 abstract class SoundFX {
     abstract fun getId(): Int
@@ -18,7 +18,7 @@ abstract class SoundFX {
 
     protected fun updateParameter(param: String, value: Float) {
         if (fxChannel != null && fxPosition != null) {
-            MidiLib.editEffect(fxChannel!!, fxPosition!!, param, value)
+            AudioEngine.editEffect(fxChannel!!, fxPosition!!, param, value)
         }
     }
 

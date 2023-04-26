@@ -51,3 +51,10 @@ void Channel::noteOff(int8_t note) {
         wave->second->release();
     }
 }
+
+void Channel::allNotesOff() {
+    lock_guard<mutex> lockGuard(mLock);
+    for (auto & wave : mWaves) {
+        wave.second->release();
+    }
+}

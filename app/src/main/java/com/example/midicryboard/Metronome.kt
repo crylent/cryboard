@@ -1,5 +1,6 @@
 package com.example.midicryboard
 
+import android.util.Log
 import java.util.*
 import kotlin.concurrent.timerTask
 
@@ -53,14 +54,15 @@ object Metronome {
     }
 
     private fun beat(timer: Timer) {
+        val beat = if (beats == 0) METRONOME_DOWNBEAT else METRONOME_BEAT
         Midi.noteOn(
-            if (beats == 0) METRONOME_DOWNBEAT else METRONOME_BEAT,
+            beat,
             METRONOME_CHANNEL,
             volume
         )
         beats = (beats + 1) % signature.num
         timer.schedule(timerTask {
-            Midi.noteOff(METRONOME_BEAT, METRONOME_CHANNEL)
+            Midi.noteOff(beat, METRONOME_CHANNEL)
         }, BEAT_DURATION)
     }
 }
