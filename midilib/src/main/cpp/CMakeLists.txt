@@ -15,35 +15,40 @@ project("midilib")
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-add_library( # Sets the name of the library.
-            midilib
+add_library(
+        # Sets the name of the library.
+        midilib
 
-            # Sets the library as a shared library.
-            SHARED
+        # Sets the library as a shared library.
+        SHARED
 
-            # Provides a relative path to your source file(s).
-            jni.cpp
-            AudioEngine.cpp
-            AudioCallback.cpp
+        # Provides a relative path to your source file(s).
+        jni.cpp
+        AudioEngine.cpp
+        AudioCallback.cpp
         player/SoundPlayer.cpp
         player/WavePlayer.cpp
-            Wave.cpp
-            instrument/WaveInstrument.cpp
-            instrument/WaveSynth.cpp
-            Channel.cpp
-            NoteFrequency.cpp
-            oscillators/Oscillator.cpp
-            oscillators/Detune.cpp
-            oscillators/SineOscillator.cpp
-            oscillators/TriangleOscillator.cpp
-            oscillators/SawtoothOscillator.cpp
-            oscillators/ReverseSawtoothOscillator.cpp
-            oscillators/SquareOscillator.cpp
-            soundfx/SoundFX.cpp
-            soundfx/Limiter.cpp
-            FXList.cpp
-            log.cpp
-        )
+        player/AssetPlayer.cpp
+        Wave.cpp
+        instrument/WaveInstrument.cpp
+        instrument/WaveSynth.cpp
+        Channel.cpp
+        NoteFrequency.cpp
+        oscillators/Oscillator.cpp
+        oscillators/Detune.cpp
+        oscillators/SineOscillator.cpp
+        oscillators/TriangleOscillator.cpp
+        oscillators/SawtoothOscillator.cpp
+        oscillators/ReverseSawtoothOscillator.cpp
+        oscillators/SquareOscillator.cpp
+        soundfx/SoundFX.cpp
+        soundfx/Limiter.cpp
+        FXList.cpp
+        log.cpp
+
+        # Includes third party library
+        third_party/AudioFile.h
+    )
 
 
 # Searches for a specified prebuilt library and stores the path as a
