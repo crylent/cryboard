@@ -25,8 +25,8 @@ add_library( # Sets the name of the library.
             jni.cpp
             AudioEngine.cpp
             AudioCallback.cpp
-            generator/SoundGenerator.cpp
-            generator/MultiwaveGenerator.cpp
+        player/SoundPlayer.cpp
+        player/WavePlayer.cpp
             Wave.cpp
             instrument/WaveInstrument.cpp
             instrument/WaveSynth.cpp
