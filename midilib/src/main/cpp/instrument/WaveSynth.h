@@ -9,10 +9,6 @@
 #include "../oscillators/Oscillator.h"
 #endif
 
-#ifndef _LIBCPP_VECTOR
-#include <vector>
-#endif
-
 using namespace std;
 
 class WaveSynth: public WaveInstrument {

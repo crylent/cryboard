@@ -50,7 +50,7 @@ Result AudioEngine::start() {
 
     Channel::setDefaultInstrument(defaultSynth);
     initChannels();
-    auto generator = make_unique<MultiwaveGenerator>();
+    auto generator = make_unique<WavePlayer>();
     mMasterEffects = generator->getEffects();
     auto* callback = new AudioCallback(move(generator));
 

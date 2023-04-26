@@ -1,11 +1,11 @@
 #ifndef MULTIWAVE_GENERATOR_H
 #define MULTIWAVE_GENERATOR_H
 
-#ifndef SOUND_GENERATOR_H
-#include "SoundGenerator.h"
+#ifndef SOUND_PLAYER_H
+#include "SoundPlayer.h"
 #endif
 
-class MultiwaveGenerator : public SoundGenerator {
+class WavePlayer : public SoundPlayer {
 public:
     void fillBuffer(float* buffer, int32_t numFrames) override;
 };

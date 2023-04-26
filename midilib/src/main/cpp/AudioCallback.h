@@ -5,8 +5,8 @@
 #include "oboe/Oboe.h"
 #endif
 
-#ifndef SOUND_GENERATOR_H
-#include "generator/SoundGenerator.h"
+#ifndef SOUND_PLAYER_H
+#include "player/SoundPlayer.h"
 #endif
 
 using namespace oboe;
@@ -15,10 +15,10 @@ class AudioCallback : public AudioStreamDataCallback {
 public:
     DataCallbackResult onAudioReady(AudioStream* audioStream, void* audioData, int32_t numFrames);
 
-    AudioCallback(unique_ptr<SoundGenerator> generator);
+    AudioCallback(unique_ptr<SoundPlayer> generator);
 
 private:
-    shared_ptr<SoundGenerator> mSoundGenerator;
+    shared_ptr<SoundPlayer> mSoundGenerator;
 };
 
 

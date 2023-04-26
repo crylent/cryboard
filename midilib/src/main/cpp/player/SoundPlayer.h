@@ -1,5 +1,5 @@
-#ifndef SOUND_GENERATOR_H
-#define SOUND_GENERATOR_H
+#ifndef SOUND_PLAYER_H
+#define SOUND_PLAYER_H
 
 #ifndef OBOE_H
 #include "oboe/Oboe.h"
@@ -15,9 +15,9 @@
 
 using namespace std;
 
-class SoundGenerator {
+class SoundPlayer {
 public:
-    virtual ~SoundGenerator() = default;
+    virtual ~SoundPlayer() = default;
 
     virtual void fillBuffer(float* buffer, int32_t numFrames) = 0;
 
@@ -29,4 +29,4 @@ private:
 };
 
 
-#endif //SOUND_GENERATOR_H
+#endif //SOUND_PLAYER_H

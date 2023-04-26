@@ -6,7 +6,7 @@
 #include "log.h"
 #endif
 
-AudioCallback::AudioCallback(unique_ptr<SoundGenerator> generator) {
+AudioCallback::AudioCallback(unique_ptr<SoundPlayer> generator) {
     mSoundGenerator = move(generator);
 }
 
