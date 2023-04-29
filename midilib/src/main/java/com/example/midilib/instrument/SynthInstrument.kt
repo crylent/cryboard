@@ -35,4 +35,10 @@ class SynthInstrument(
 
     private external fun externalAddOscillator(oscillator: Oscillator)
     private external fun externalRemoveOscillator(index: Int)
+
+    override fun clone() = SynthInstrument(attack, decay, sustain, release).also {
+        _oscillators.forEach { osc ->
+            it.addOscillator(osc)
+        }
+    }
 }

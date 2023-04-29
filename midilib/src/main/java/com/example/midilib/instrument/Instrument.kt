@@ -1,13 +1,12 @@
 package com.example.midilib.instrument
 
-import com.example.midilib.AudioEngine
-
+@Suppress("unused")
 abstract class Instrument(
     attack: Float,
     decay: Float,
     sustain: Float,
     release: Float
-) {
+): Cloneable {
     var attack = attack
         set(value) {
             field = value
@@ -52,6 +51,8 @@ abstract class Instrument(
 
     fun asAssetInstrument() = this as AssetInstrument
     fun asSynthInstrument() = this as SynthInstrument
+
+    public abstract override fun clone(): Instrument
 
     companion object {
         const val NO_INDEX = -1
