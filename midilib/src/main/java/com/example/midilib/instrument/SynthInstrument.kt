@@ -1,6 +1,5 @@
 package com.example.midilib.instrument
 
-import com.example.midilib.AudioEngine
 import com.example.midilib.Oscillator
 
 class SynthInstrument(
@@ -21,21 +20,21 @@ class SynthInstrument(
         } else {
             TODO() // clone
         }
+        if (libIndex != NO_INDEX) externalAddOscillator(oscillator)
     }
 
     fun getOscillator(oscIndex: Int) = _oscillators[oscIndex]
 
     fun removeOscillator(oscillator: Oscillator) {
         _oscillators.remove(oscillator)
-        if (libIndex != null) {
-            AudioEngine.removeOscillator(libIndex!!, oscillator.oscIndex)
-        }
+        if (libIndex != NO_INDEX) externalRemoveOscillator(oscillator.oscIndex)
     }
 
     fun removeOscillator(oscIndex: Int) {
         _oscillators.removeAt(oscIndex)
-        if (libIndex != null) {
-            AudioEngine.removeOscillator(libIndex!!, oscIndex)
-        }
+        if (libIndex != NO_INDEX) externalRemoveOscillator(oscIndex)
     }
+
+    private external fun externalAddOscillator(oscillator: Oscillator)
+    private external fun externalRemoveOscillator(index: Int)
 }
