@@ -1,14 +1,12 @@
-#ifndef WAVE_INSTRUMENT_H
-#define WAVE_INSTRUMENT_H
+#ifndef INSTRUMENT_H
+#define INSTRUMENT_H
 
-#ifndef OBOE_H
 #include "oboe/Oboe.h"
-#endif
 
-class WaveInstrument {
+class Instrument {
 public:
-    WaveInstrument() {};
-    WaveInstrument(float attack, float decay, float sustain, float release);
+    Instrument() {};
+    Instrument(float attack, float decay, float sustain, float release);
 
     void setEnvelope(float attack, float decay, float sustain, float release);
     void setAttack(float attack);
@@ -16,10 +14,10 @@ public:
     void setSustain(float sustain);
     void setRelease(float release);
 
-    float eval(double time, float frequency, double timeReleased);
+    float eval(double time, int8_t note, double timeReleased);
 
 protected:
-    virtual float wave(double time, float frequency) = 0;
+    virtual float sample(double time, int8_t note) = 0;
 
 private:
     float envelope(double time, double timeReleased) const;
@@ -31,4 +29,4 @@ private:
 };
 
 
-#endif //WAVE_INSTRUMENT_H
+#endif //INSTRUMENT_H

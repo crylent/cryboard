@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
@@ -15,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
 import com.example.midicryboard.contract.TrackPropertiesContract
 import com.example.midilib.AudioEngine
+import com.example.midilib.Oscillator
+import com.example.midilib.instrument.Instrument
+import com.example.midilib.instrument.SynthInstrument
 import com.example.midilib.soundfx.Limiter
 import com.sdsmdg.harjot.crollerTest.Croller
 
@@ -88,7 +92,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //assets.open("wav/DRUM STICK.wav").readBytes()
+        //AudioEngine.setAssetManager(assets)
         Midi.start()
+        val synth = SynthInstrument().apply {
+            addOscillator(Oscillator(Oscillator.Shape.SINE))
+        }
+        AudioEngine.setInstrument(0, synth)
 
         Companion.resources = resources
 

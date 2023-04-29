@@ -2,23 +2,23 @@ package com.example.midilib.soundfx
 
 import com.example.midilib.AudioEngine
 
-abstract class SoundFX {
+abstract class SoundFX: Cloneable {
     abstract fun getId(): Int
     abstract fun getConfig(): Map<String, Float>
 
     fun getParameter(param: String): Float = getConfig()[param]!!
 
-    private var fxChannel: Byte? = null
-    private var fxPosition: Byte? = null
+    private var linkedChannel: Byte? = null
+    private var fxIndex: Byte? = null
 
     internal fun linkToChannel(channel: Byte, position: Byte) {
-        fxChannel = channel
-        fxPosition = position
+        linkedChannel = channel
+        fxIndex = position
     }
 
     protected fun updateParameter(param: String, value: Float) {
-        if (fxChannel != null && fxPosition != null) {
-            AudioEngine.editEffect(fxChannel!!, fxPosition!!, param, value)
+        if (linkedChannel != null && fxIndex != null) {
+            AudioEngine.editEffect(linkedChannel!!, fxIndex!!, param, value)
         }
     }
 

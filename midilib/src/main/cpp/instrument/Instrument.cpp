@@ -1,6 +1,6 @@
-#include "WaveInstrument.h"
+#include "Instrument.h"
 
-float WaveInstrument::envelope(double time, double timeReleased) const {
+float Instrument::envelope(double time, double timeReleased) const {
     if (time > timeReleased + mRelease) { // final phase
         return NAN;
     }
@@ -18,20 +18,20 @@ float WaveInstrument::envelope(double time, double timeReleased) const {
     return mSustain; // sustain phase
 }
 
-float WaveInstrument::eval(double time, float frequency, double timeReleased) {
+float Instrument::eval(double time, int8_t note, double timeReleased) {
     float env = envelope(time, timeReleased);
-    return wave(time, frequency) * env;
+    return sample(time, note) * env;
 }
 
 /**
- * Constructs new WaveInstrument with provided parameters for ADSR envelope generator.
+ * Constructs new Instrument with provided parameters for ADSR envelope generator.
  * @param attack time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
  * @param decay time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
  * @param sustain level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
  * @param release time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
-WaveInstrument::WaveInstrument(float attack, float decay, float sustain, float release) {
+Instrument::Instrument(float attack, float decay, float sustain, float release) {
     setEnvelope(attack, decay, sustain, release);
 }
 
@@ -43,7 +43,7 @@ WaveInstrument::WaveInstrument(float attack, float decay, float sustain, float r
  * @param release time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
-void WaveInstrument::setEnvelope(float attack, float decay, float sustain, float release) {
+void Instrument::setEnvelope(float attack, float decay, float sustain, float release) {
     setAttack(attack);
     setDecay(decay);
     setSustain(sustain);
@@ -55,7 +55,7 @@ void WaveInstrument::setEnvelope(float attack, float decay, float sustain, float
  * @param attack time (in seconds) taken for initial run-up of level from nil to peak, beginning when the key is pressed
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
-void WaveInstrument::setAttack(float attack) {
+void Instrument::setAttack(float attack) {
     if (attack < 0) {
         throw std::invalid_argument("Attack value must not be negative");
     }
@@ -66,7 +66,7 @@ void WaveInstrument::setAttack(float attack) {
  * @param decay time (in seconds) taken for the subsequent run down from the attack level to the designated sustain level
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
-void WaveInstrument::setDecay(float decay) {
+void Instrument::setDecay(float decay) {
     if (decay < 0) {
         throw std::invalid_argument("Decay value must not be negative");
     }
@@ -78,7 +78,7 @@ void WaveInstrument::setDecay(float decay) {
  * @param sustain level (from 0.0 to 1.0) during the main sequence of the sound's duration, until the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
-void WaveInstrument::setSustain(float sustain) {
+void Instrument::setSustain(float sustain) {
     if (sustain < 0 || sustain > 1) {
         throw std::invalid_argument("Sustain value must be in the range of 0.0 to 1.0");
     }
@@ -90,7 +90,7 @@ void WaveInstrument::setSustain(float sustain) {
  * @param release time (in seconds) taken for the level to decay from the sustain level to zero after the key is released
  * @see <a href="https://en.wikipedia.org/wiki/Envelope_(music)">Envelope</a>
  */
-void WaveInstrument::setRelease(float release) {
+void Instrument::setRelease(float release) {
     if (release < 0) {
         throw std::invalid_argument("Release value must not be negative");
     }
