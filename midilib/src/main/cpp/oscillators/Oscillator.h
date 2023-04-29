@@ -21,8 +21,6 @@ public:
     void setPhase(float phase);
     void setFreqFactor(float freqFactor);
 
-    shared_ptr<float> a;
-
     Detune& setDetune(uint8_t unisonVoices, float detune);
     Detune& setDetune();
     Detune& getDetune();

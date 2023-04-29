@@ -1,21 +1,21 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#include "instrument/WaveInstrument.h"
+#include "instrument/Instrument.h"
 
 using namespace std;
 
 class Wave {
 public:
-    Wave(shared_ptr<WaveInstrument> instrument, float frequency, float amplitude);
+    Wave(shared_ptr<Instrument> instrument, int8_t note, float amplitude);
 
     float nextSample();
 
     void release();
 
 private:
-    shared_ptr<WaveInstrument> mInstrument;
-    float mFrequency;
+    shared_ptr<Instrument> mInstrument;
+    int8_t mNote;
     float mAmplitude;
     double mTimeIncrement;
 

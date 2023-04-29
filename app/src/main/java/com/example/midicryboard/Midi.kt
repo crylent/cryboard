@@ -39,7 +39,7 @@ object Midi {
         //driver.start()
         AudioEngine.apply {
             start()
-            addEffect(AudioEngine.MASTER, Limiter())
+            addEffect(MASTER, Limiter())
         }
     }
     fun stop() {

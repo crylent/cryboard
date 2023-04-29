@@ -2,7 +2,7 @@
 #include <utility>
 #include "NoteFrequency.h"
 
-shared_ptr<WaveInstrument> Channel::mDefaultInstrument = nullptr;
+shared_ptr<Instrument> Channel::mDefaultInstrument = nullptr;
 
 Channel::Channel() {
     mInstrument = mDefaultInstrument;
@@ -11,11 +11,11 @@ Channel::Channel() {
     }
 }
 
-void Channel::setInstrument(shared_ptr<WaveInstrument> instrument) {
+void Channel::setInstrument(shared_ptr<Instrument> instrument) {
     mInstrument = move(instrument);
 }
 
-void Channel::setDefaultInstrument(shared_ptr<WaveInstrument> instrument) {
+void Channel::setDefaultInstrument(shared_ptr<Instrument> instrument) {
     mDefaultInstrument = move(instrument);
 }
 
@@ -35,8 +35,7 @@ float Channel::nextSample() {
 
 void Channel::noteOn(int8_t note, float amplitude) {
     lock_guard<mutex> lockGuard(mLock);
-    float frequency = NoteFrequency::get(note);
-    auto wave = make_unique<Wave>(mInstrument, frequency, amplitude);
+    auto wave = make_unique<Wave>(mInstrument, note, amplitude);
     mWaves[note] = move(wave);
 }
 

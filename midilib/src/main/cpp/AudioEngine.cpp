@@ -1,8 +1,8 @@
 #include "AudioEngine.h"
 #include "log.h"
-#include "instrument/WaveSynth.h"
+#include "instrument/SynthInstrument.h"
+#include "instrument/AssetInstrument.h"
 #include "oscillators/SawtoothOscillator.h"
-#include "soundfx/Limiter.h"
 
 shared_ptr<oboe::AudioStream> AudioEngine::mStream;
 mutex AudioEngine::mLock;
@@ -33,12 +33,15 @@ Result AudioEngine::start(SharingMode sharingMode, int32_t sampleRate, int32_t b
  */
 Result AudioEngine::start() {
     lock_guard<mutex> lockGuard(mLock);
-    auto defaultSynth = make_shared<WaveSynth>();
+    auto defaultSynth = make_shared<SynthInstrument>();
     defaultSynth->setEnvelope(0.25, 5, 0.1, 0.25);
     defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
     defaultSynth->getOscillatorByIndex(0).setDetune();
 
-    Channel::setDefaultInstrument(defaultSynth);
+    //auto drum = make_shared<AssetInstrument>();
+    //drum->loadAsset(57, "DRUM STICK.wav");
+
+    Channel::setDefaultInstrument(move(defaultSynth));
     initChannels();
     auto generator = make_unique<WavePlayer>();
     mMasterEffects = generator->getEffects();
@@ -160,7 +163,7 @@ void AudioEngine::initChannels() {
 /**
  * @return Number of channels. It's always 16.
  */
-int8_t AudioEngine::getNumChannels() {
+uint8_t AudioEngine::getNumChannels() {
     return mNumChannels;
 }
 

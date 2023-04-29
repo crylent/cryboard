@@ -26,7 +26,7 @@ public:
     static FXList& getMasterFX();
 
     static vector<unique_ptr<Channel>>& getChannels();
-    static int8_t getNumChannels();
+    static uint8_t getNumChannels();
 
     static void noteOn(int8_t channel, int8_t note, float amplitude);
     static void noteOff(int8_t channel, int8_t note);
@@ -42,7 +42,7 @@ private:
 
     static shared_ptr<FXList> mMasterEffects;
 
-    static const int8_t mNumChannels = 16;
+    static const uint8_t mNumChannels = 16;
     static vector<unique_ptr<Channel>> mChannels;
 };
 

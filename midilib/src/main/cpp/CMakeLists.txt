@@ -10,6 +10,7 @@ cmake_minimum_required(VERSION 3.19)
 
 project("midilib")
 
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -33,6 +34,7 @@ add_library(
         instrument/Instrument.cpp
         instrument/SynthInstrument.cpp
         instrument/AssetInstrument.cpp
+        instrument/InstrumentLib.cpp
         Channel.cpp
         NoteFrequency.cpp
         oscillators/Oscillator.cpp
@@ -91,18 +93,10 @@ add_subdirectory (${OBOE_DIR} ./oboe)
 # to see public Oboe headers, in order to access its API.
 include_directories (${OBOE_DIR}/include)
 
-target_link_libraries(midilib log oboe) # You may have other libraries here such as `log`.
+target_link_libraries(midilib log oboe android) # You may have other libraries here such as `log`.
 
-
-set (LIBFAR_DIR ${PROJECT_SOURCE_DIR}/libfar)
-add_subdirectory(${LIBFAR_DIR} ./libfar)
-include_directories(${LIBFAR_DIR}/include)
-target_link_libraries(midilib libfar)
-#include(FetchContent)    #Note this
-#FetchContent_Declare(
-#        libfar                   #name of repository
-#        GIT_REPOSITORY https://github.com/djeedai/libfar.git
-#        GIT_TAG djeedai-patch-1
-#)
-#FetchContent_MakeAvailable(libfar)
-#target_link_libraries(midilib libfar)
+# Include libsamplerate
+set (LIBSR_DIR ${PROJECT_SOURCE_DIR}/libsamplerate)
+add_subdirectory(${LIBSR_DIR} ./libsamplerate)
+include_directories(${LIBSR_DIR}/include)
+target_link_libraries(midilib samplerate)

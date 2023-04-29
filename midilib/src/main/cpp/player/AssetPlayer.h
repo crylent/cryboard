@@ -2,6 +2,7 @@
 #define ASSET_PLAYER_H
 
 #include "SoundPlayer.h"
+#include "../third_party/AudioFile.h"
 
 class AssetPlayer : public SoundPlayer {
 public:
