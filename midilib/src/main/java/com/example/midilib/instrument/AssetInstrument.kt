@@ -9,4 +9,6 @@ class AssetInstrument(
     fun loadAsset() {
 
     }
+
+    override fun clone() = AssetInstrument(attack, decay, sustain, release)
 }
