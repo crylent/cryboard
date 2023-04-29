@@ -1,5 +1,6 @@
 package com.example.midilib
 
+import com.example.midilib.instrument.Instrument
 import com.example.midilib.instrument.SynthInstrument
 
 class Oscillator(
@@ -12,45 +13,40 @@ class Oscillator(
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
-                AudioEngine.setOscillatorShape(it, oscIndex, value)
+                externalSetShape(value.ordinal)
             }
         }
+
     var amplitude = amplitude
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
-                AudioEngine.setOscillatorAmplitude(it, oscIndex, value)
+                externalSetAmplitude(value)
             }
-            //updateParameter(AMPLITUDE, value)
         }
+
     var phase = phase
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
-                AudioEngine.setOscillatorPhase(it, oscIndex, value)
+                externalSetPhase(value)
             }
-            //updateParameter(PHASE, value)
         }
+
     var frequencyFactor = frequencyFactor
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
-                AudioEngine.setOscillatorFrequencyFactor(it, oscIndex, value)
+                externalSetFreqFactor(value)
             }
-            //updateParameter(FREQ_FACTOR, value)
         }
+
     var detune: Detune? = null
         private set
 
     internal var owner: SynthInstrument? = null
-    internal val oscIndex
+    val oscIndex
         get() = owner?.oscillators!!.indexOf(this)
-
-    /*private fun updateParameter(param: String, value: Float) {
-        ifOwnerIsLinkedToLib {
-            AudioEngine.editOscillator(it, oscIndex, param, value)
-        }
-    }*/
 
     enum class Shape {
         SINE, TRIANGLE, SQUARE, SAW, REVERSE_SAW
@@ -63,7 +59,7 @@ class Oscillator(
                 field = value
                 owner.apply {
                     ifOwnerIsLinkedToLib {
-                        AudioEngine.setUnisonVoices(it, oscIndex, value)
+                        externalSetUnisonVoices(value)
                     }
                 }
             }
@@ -73,7 +69,7 @@ class Oscillator(
                 field = value
                 owner.apply {
                     ifOwnerIsLinkedToLib {
-                        AudioEngine.setDetuneLevel(it, oscIndex, value)
+                        externalSetDetuneLevel(value)
                     }
                 }
             }
@@ -85,7 +81,7 @@ class Oscillator(
             _phases[voice] = phaseShift;
             owner.apply {
                 ifOwnerIsLinkedToLib {
-                    AudioEngine.setPhaseShift(it, oscIndex, voice, phaseShift)
+                    externalSetPhaseShift(voice, phaseShift)
                 }
             }
         }
@@ -96,23 +92,27 @@ class Oscillator(
     fun enableDetune(unisonVoices: Int, detuneLevel: Float) {
         detune = Detune(this, unisonVoices, detuneLevel)
         ifOwnerIsLinkedToLib {
-            AudioEngine.enableDetune(it, oscIndex, unisonVoices, detuneLevel)
+            externalEnableDetune(unisonVoices, detuneLevel)
         }
     }
     fun disableDetune() {
         detune = null
         ifOwnerIsLinkedToLib {
-            AudioEngine.disableDetune(it, oscIndex)
+            externalDisableDetune()
         }
     }
 
     private fun ifOwnerIsLinkedToLib(lambda: (libIndex: Int)->Unit) {
-        if (owner != null && owner!!.libIndex != null) lambda(owner!!.libIndex!!)
+        if (owner != null && owner!!.libIndex != Instrument.NO_INDEX) lambda(owner!!.libIndex)
     }
 
-    /*companion object {
-        const val AMPLITUDE = "amplitude"
-        const val PHASE = "phase"
-        const val FREQ_FACTOR = "frequencyFactor"
-    }*/
+    private external fun externalSetShape(shape: Int)
+    private external fun externalSetAmplitude(value: Float)
+    private external fun externalSetPhase(value: Float)
+    private external fun externalSetFreqFactor(value: Float)
+    private external fun externalEnableDetune(unisonVoices: Int, detuneLevel: Float)
+    private external fun externalDisableDetune()
+    private external fun externalSetUnisonVoices(value: Int)
+    private external fun externalSetDetuneLevel(value: Float)
+    private external fun externalSetPhaseShift(voice: Int, value: Float)
 }

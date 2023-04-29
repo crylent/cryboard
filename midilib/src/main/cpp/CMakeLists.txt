@@ -24,7 +24,11 @@ add_library(
         SHARED
 
         # Provides a relative path to your source file(s).
-        jni.cpp
+        jni/jni.cpp
+        jni/jni_instrument.cpp
+        jni/jni_instrument_functions.cpp
+        jni/jni_soundfx.cpp
+        jni/jni_soundfx_functions.cpp
         AudioEngine.cpp
         AudioCallback.cpp
         player/SoundPlayer.cpp
