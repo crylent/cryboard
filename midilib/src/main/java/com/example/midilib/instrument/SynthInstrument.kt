@@ -2,6 +2,7 @@ package com.example.midilib.instrument
 
 import com.example.midilib.Oscillator
 
+@Suppress("unused")
 class SynthInstrument(
     attack: Float = 0f,
     decay: Float = 5f,
@@ -14,12 +15,9 @@ class SynthInstrument(
         get() = _oscillators.toList()
 
     fun addOscillator(oscillator: Oscillator) {
-        if (oscillator.owner == null) {
-            _oscillators.add(oscillator)
-            oscillator.owner = this
-        } else {
-            TODO() // clone
-        }
+        val osc = if (oscillator.owner == null) oscillator else oscillator.clone()
+        _oscillators.add(osc)
+        osc.owner = this
         if (libIndex != NO_INDEX) externalAddOscillator(oscillator)
     }
 

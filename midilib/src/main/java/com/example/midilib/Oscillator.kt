@@ -3,12 +3,13 @@ package com.example.midilib
 import com.example.midilib.instrument.Instrument
 import com.example.midilib.instrument.SynthInstrument
 
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 class Oscillator(
     shape: Shape,
     amplitude: Float = 1f,
     phase: Float = 0f,
     frequencyFactor: Float = 1f
-) {
+): Cloneable {
     var shape = shape
         set(value) {
             field = value
@@ -78,7 +79,7 @@ class Oscillator(
         val phases = _phases.toList()
 
         fun setPhaseShift(voice: Int, phaseShift: Float) {
-            _phases[voice] = phaseShift;
+            _phases[voice] = phaseShift
             owner.apply {
                 ifOwnerIsLinkedToLib {
                     externalSetPhaseShift(voice, phaseShift)
@@ -115,4 +116,8 @@ class Oscillator(
     private external fun externalSetUnisonVoices(value: Int)
     private external fun externalSetDetuneLevel(value: Float)
     private external fun externalSetPhaseShift(voice: Int, value: Float)
+
+    public override fun clone() = Oscillator(shape, amplitude, phase, frequencyFactor).also {
+        if (detune != null) it.enableDetune(detune!!.unisonVoices, detune!!.detune)
+    }
 }
