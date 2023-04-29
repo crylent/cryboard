@@ -34,4 +34,6 @@ class Limiter(
         ATTACK to attack,
         RELEASE to release
     )
+
+    override fun clone() = Limiter(threshold, limit, attack, release)
 }

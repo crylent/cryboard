@@ -1,6 +1,6 @@
 package com.example.midilib.soundfx
 
-abstract class SoundFX {
+abstract class SoundFX: Cloneable {
     abstract fun getId(): Int
     abstract fun getConfig(): Map<String, Float>
 
@@ -31,4 +31,6 @@ abstract class SoundFX {
         const val ATTACK = "attack"
         const val RELEASE = "release"
     }
+
+    public abstract override fun clone(): SoundFX
 }
