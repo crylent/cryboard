@@ -3,7 +3,6 @@
 
 #include "Instrument.h"
 #include "../third_party/AudioFile.h"
-//#include <android/asset_manager.h>
 
 using namespace std;
 
@@ -11,17 +10,14 @@ class AssetInstrument : public Instrument {
 public:
     using Instrument::Instrument;
 
-    //void loadAsset(int8_t note, const string& filename);
-    void loadAsset(int8_t note, vector<uint8_t>& wavData);
+    void loadAsset(int8_t note, unique_ptr<vector<uint8_t>> wavData);
+    void setRepeatable(bool isRepeatable);
 
     float sample(double time, int8_t note) override;
 
-    //static void setAssetManager(AAssetManager* mgr);
-
 private:
-    vector<AudioFile<float>::AudioBuffer> mSamples = vector<AudioFile<float>::AudioBuffer>(128);
-
-    //static AAssetManager* mAssets;
+    vector<vector<float>> mSamples = vector<vector<float>>(SCHAR_MAX + 1);
+    bool mIsRepeatable = false;
 };
 
 
