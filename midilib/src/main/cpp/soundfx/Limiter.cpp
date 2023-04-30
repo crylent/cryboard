@@ -6,7 +6,7 @@ float Limiter::process(float sample) {
     if (sampleAbs > mThreshold) { // attack phase
         mReduction = fmin(mReduction + float(mTimeIncrement / mAttack) * (sampleAbs / mThreshold - 1), sampleAbs / mThreshold);
         mPeak = sampleAbs / mReduction;
-    } else { // release phase
+    } else if (mPeak > mThreshold) { // release phase
         mReduction = fmax(mReduction - float(mTimeIncrement / mRelease) * (mPeak - mThreshold), 1.0f);
     }
     return sample / mReduction * mGain;

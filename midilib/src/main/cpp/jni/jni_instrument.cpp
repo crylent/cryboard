@@ -9,7 +9,7 @@
 #include "../oscillators/SawtoothOscillator.h"
 #include "../oscillators/ReverseSawtoothOscillator.h"
 
-#define GET_SYNTH(instrument) (dynamic_cast<SynthInstrument&>(*InstrumentLib::getInstrument(instrument)))
+#define GET_SYNTH(index) (dynamic_cast<SynthInstrument&>(*InstrumentLib::getInstrument(index)))
 
 #define SYNTH_INSTRUMENT 0
 #define ASSET_INSTRUMENT 1
@@ -19,7 +19,7 @@ JNIEXPORT jint JNICALL
 Java_com_example_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobject thiz) {
     jclass instCls = env->GetObjectClass(thiz);
     jclass synthInstCls = env->FindClass("com/example/midilib/instrument/SynthInstrument");
-    //jclass assetInstCls = env->FindClass("com/example/midilib/instrument/AssetInstrument");
+    jclass assetInstCls = env->FindClass("com/example/midilib/instrument/AssetInstrument");
     uint8_t instType;
     if (env->IsInstanceOf(thiz, synthInstCls)) instType = SYNTH_INSTRUMENT;
     else instType = ASSET_INSTRUMENT;
@@ -36,7 +36,8 @@ Java_com_example_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobje
     uint32_t position;
 
     if (instType == SYNTH_INSTRUMENT) {
-        jmethodID idAsSynthInst = env->GetMethodID(instCls, "asSynthInstrument","()Lcom/example/midilib/instrument/SynthInstrument;");
+        jmethodID idAsSynthInst = env->GetMethodID(instCls, "asSynthInstrument",
+                                                   "()Lcom/example/midilib/instrument/SynthInstrument;");
         thiz = env->CallObjectMethod(thiz, idAsSynthInst);
         auto inst = make_shared<SynthInstrument>(attack, decay, sustain, release);
         jmethodID idOscillators = env->GetMethodID(
@@ -55,7 +56,13 @@ Java_com_example_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobje
         }
         position = InstrumentLib::addInstrument(inst);
     } else {
+        jmethodID idAsAssetInst = env->GetMethodID(instCls, "asAssetInstrument",
+                                                   "()Lcom/example/midilib/instrument/AssetInstrument;");
+        thiz = env->CallObjectMethod(thiz, idAsAssetInst);
         auto inst = make_shared<AssetInstrument>(attack, decay, sustain, release);
+        jfieldID idRepeatAssets = env->GetFieldID(assetInstCls, "repeatAssets", "Z");
+        bool repeatable = env->GetBooleanField(thiz, idRepeatAssets);
+        inst->setRepeatable(repeatable);
         position = InstrumentLib::addInstrument(inst);
     }
     return (jint) position;
@@ -183,8 +190,31 @@ Java_com_example_midilib_Oscillator_externalSetPhaseShift(JNIEnv *env, jobject t
 }
 
 #undef OSC_FUNCTION_BEGIN
-
 #undef GET_SYNTH
 #undef SYNTH_INSTRUMENT
+
+#define GET_AINST(index) (dynamic_cast<AssetInstrument&>(*InstrumentLib::getInstrument(index)))
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_instrument_AssetInstrument_externalLoadAsset(JNIEnv *env, jobject thiz,
+                                                                      jbyte note,
+                                                                      jbyteArray wav_data,
+                                                                      jint data_size) {
+    int32_t index = getLibIndex(env, thiz);
+    auto array = env->GetByteArrayElements(wav_data, nullptr);
+    auto data = make_unique<vector<uint8_t>>(array, array + data_size);
+    GET_AINST(index).loadAsset(note, move(data));
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_instrument_AssetInstrument_setRepeatable(JNIEnv *env, jobject thiz,
+                                                                  jboolean repeatable) {
+    int32_t index = getLibIndex(env, thiz);
+    GET_AINST(index).setRepeatable(repeatable);
+}
+
+#undef GET_AINST
 #undef ASSET_INSTRUMENT
 #undef NO_INDEX

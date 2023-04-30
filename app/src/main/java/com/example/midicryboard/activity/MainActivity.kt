@@ -17,6 +17,7 @@ import com.example.midicryboard.*
 import com.example.midicryboard.contract.TrackPropertiesContract
 import com.example.midilib.AudioEngine
 import com.example.midilib.Oscillator
+import com.example.midilib.instrument.AssetInstrument
 import com.example.midilib.instrument.Instrument
 import com.example.midilib.instrument.SynthInstrument
 import com.example.midilib.soundfx.Limiter
@@ -92,13 +93,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //assets.open("wav/DRUM STICK.wav").readBytes()
-        //AudioEngine.setAssetManager(assets)
         Midi.start()
         val synth = SynthInstrument().apply {
             addOscillator(Oscillator(Oscillator.Shape.SINE))
         }
-        AudioEngine.setInstrument(0, synth)
+
+        val inst = AssetInstrument().apply {
+            //loadAsset(this@MainActivity, 57, "DRUM STICK-001.wav")
+        }
+
+        AudioEngine.setInstrument(0, inst)
+        inst.loadAsset(this@MainActivity, 60, "AKWF_eguitar_0001.wav")
 
         Companion.resources = resources
 
