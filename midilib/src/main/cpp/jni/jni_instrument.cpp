@@ -200,19 +200,29 @@ JNIEXPORT void JNICALL
 Java_com_example_midilib_instrument_AssetInstrument_externalLoadAsset(JNIEnv *env, jobject thiz,
                                                                       jbyte note,
                                                                       jbyteArray wav_data,
-                                                                      jint data_size) {
+                                                                      jint data_size,
+                                                                      jboolean is_base_asset) {
     int32_t index = getLibIndex(env, thiz);
     auto array = env->GetByteArrayElements(wav_data, nullptr);
     auto data = make_unique<vector<uint8_t>>(array, array + data_size);
-    GET_AINST(index).loadAsset(note, move(data));
+    auto& inst = GET_AINST(index);
+    if (is_base_asset) inst.loadBaseAsset(note, move(data));
+    else inst.loadAsset(note, move(data));
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_AssetInstrument_setRepeatable(JNIEnv *env, jobject thiz,
-                                                                  jboolean repeatable) {
+Java_com_example_midilib_instrument_AssetInstrument_externalSetRepeatable(JNIEnv *env, jobject thiz,
+                                                                          jboolean repeatable) {
     int32_t index = getLibIndex(env, thiz);
     GET_AINST(index).setRepeatable(repeatable);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_instrument_AssetInstrument_00024Companion_externalSetResamplingQuality(
+        [[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jint quality) {
+    AssetInstrument::setResamplingQuality(quality);
 }
 
 #undef GET_AINST

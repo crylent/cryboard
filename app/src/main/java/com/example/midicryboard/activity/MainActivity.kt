@@ -98,12 +98,7 @@ class MainActivity : AppCompatActivity() {
             addOscillator(Oscillator(Oscillator.Shape.SINE))
         }
 
-        val inst = AssetInstrument().apply {
-            //loadAsset(this@MainActivity, 57, "DRUM STICK-001.wav")
-        }
-
-        AudioEngine.setInstrument(0, inst)
-        inst.loadAsset(this@MainActivity, 60, "AKWF_eguitar_0001.wav")
+        AudioEngine.setInstrument(0, synth)
 
         Companion.resources = resources
 
