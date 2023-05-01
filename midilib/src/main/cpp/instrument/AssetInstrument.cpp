@@ -20,13 +20,29 @@ float AssetInstrument::sample(double time, int8_t note) {
 }
 
 void AssetInstrument::loadAsset(int8_t note, unique_ptr<vector<uint8_t>> wavData) {
-    AudioFile<float> audioFile;
-    audioFile.loadFromMemory(*wavData);
-    if (AudioEngine::getSampleRate() != audioFile.getSampleRate()) {
-        double ratio = double(AudioEngine::getSampleRate()) / double(audioFile.getSampleRate());
-        resampleAndAssign(audioFile.samples[0], ratio, note);
+    vector<float> samples;
+    uint32_t sampleRate;
+    try { // Assume WAV file has float format
+        AudioFile<float> audioFile;
+        audioFile.loadFromMemory(*wavData);
+        samples = audioFile.samples[0];
+        sampleRate = audioFile.getSampleRate();
+    } catch (exception& e) { // Integer (PCM) format
+        AudioFile<int32_t> audioFile;
+        audioFile.loadFromMemory(*wavData);
+        size_t numSamples = audioFile.getNumSamplesPerChannel();
+        samples.reserve(numSamples);
+        auto sampleMax = (float) pow(2, audioFile.getBitDepth());
+        for (size_t i = 0; i < numSamples; i++) {
+            samples[i] = float(audioFile.samples[0][i]) / sampleMax;
+        }
+        sampleRate = audioFile.getSampleRate();
+    }
+    if (AudioEngine::getSampleRate() != sampleRate) {
+        double ratio = double(AudioEngine::getSampleRate()) / double(sampleRate);
+        resampleAndAssign(samples, ratio, note);
     } else {
-        mSamples[note] = audioFile.samples[0];
+        mSamples[note] = samples;
     }
 }
 
