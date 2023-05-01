@@ -37,8 +37,23 @@ abstract class Instrument(
     fun assignToChannel(channel: Byte) {
         if (libIndex == NO_INDEX) {
             libIndex = externalCreate()
+            onCreatedListeners.forEach {
+                it.onCreated(this)
+            }
+            onCreatedListeners.clear()
         }
         externalAssignToChannel(channel)
+    }
+
+    private val onCreatedListeners = ArrayList<OnCreatedListener>()
+
+    fun interface OnCreatedListener {
+        fun onCreated(instrument: Instrument)
+    }
+
+    fun addOnCreatedListener(listener: OnCreatedListener) {
+        if (libIndex == NO_INDEX) onCreatedListeners.add(listener)
+        else listener.onCreated(this) // already created
     }
 
     private external fun externalCreate(): Int
