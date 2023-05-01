@@ -19,10 +19,12 @@ open class AssetInstrument(
         }
 
     fun loadAsset(context: Context, note: Byte, filename: String, isBaseAsset: Boolean = false) {
-        val stream = context.assets.open(filename)
-        val bytes = stream.readBytes()
-        externalLoadAsset(note, bytes, bytes.size, isBaseAsset)
-        stream.close()
+        addOnCreatedListener {
+            val stream = context.assets.open(filename)
+            val bytes = stream.readBytes()
+            externalLoadAsset(note, bytes, bytes.size, isBaseAsset)
+            stream.close()
+        }
     }
 
     private external fun externalLoadAsset(note: Byte, wavData: ByteArray, dataSize: Int, isBaseAsset: Boolean)
