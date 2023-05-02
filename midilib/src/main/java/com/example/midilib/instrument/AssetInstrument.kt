@@ -8,9 +8,13 @@ open class AssetInstrument(
     decay: Number = 5f,
     sustain: Number = 0f,
     release: Number = 0f,
+    attackSharpness: Number = 1f,
+    decaySharpness: Number = 1f,
+    releaseSharpness: Number = 1f,
     var repeatAssets: Boolean = true
-): Instrument(attack, decay, sustain, release) {
-    class Drums : AssetInstrument(0f, 0f, 1f, Float.POSITIVE_INFINITY, false)
+): Instrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness) {
+    class Drums : AssetInstrument(0f, 0f, 1f, Float.POSITIVE_INFINITY,
+        1f, 1f, 1f,false)
 
     init {
         addOnCreatedListener {

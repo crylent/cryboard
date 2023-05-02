@@ -24,14 +24,18 @@ Java_com_example_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobje
     if (env->IsInstanceOf(thiz, synthInstCls)) instType = SYNTH_INSTRUMENT;
     else instType = ASSET_INSTRUMENT;
 
-    jfieldID idAttack = env->GetFieldID(instCls, "attack", "F");
-    jfloat attack = env->GetFloatField(thiz, idAttack);
-    jfieldID idDecay = env->GetFieldID(instCls, "decay", "F");
-    jfloat decay = env->GetFloatField(thiz, idDecay);
-    jfieldID idSustain = env->GetFieldID(instCls, "sustain", "F");
-    jfloat sustain = env->GetFloatField(thiz, idSustain);
-    jfieldID idRelease = env->GetFieldID(instCls, "release", "F");
-    jfloat release = env->GetFloatField(thiz, idRelease);
+#define GET_FIELD(field) jfieldID id_##field = env->GetFieldID(instCls, #field, "F"); \
+jfloat field = env->GetFloatField(thiz, id_##field)
+
+    GET_FIELD(attack);
+    GET_FIELD(decay);
+    GET_FIELD(sustain);
+    GET_FIELD(release);
+    GET_FIELD(attackSharpness);
+    GET_FIELD(decaySharpness);
+    GET_FIELD(releaseSharpness);
+
+#undef GET_FIELD
 
     uint32_t position;
 
@@ -39,7 +43,8 @@ Java_com_example_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobje
         jmethodID idAsSynthInst = env->GetMethodID(instCls, "asSynthInstrument",
                                                    "()Lcom/example/midilib/instrument/SynthInstrument;");
         thiz = env->CallObjectMethod(thiz, idAsSynthInst);
-        auto inst = make_shared<SynthInstrument>(attack, decay, sustain, release);
+        auto inst = make_shared<SynthInstrument>(
+                attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
         jmethodID idOscillators = env->GetMethodID(
                 synthInstCls, "getOscillators", "()Ljava/util/List;"
         );
@@ -59,7 +64,8 @@ Java_com_example_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobje
         jmethodID idAsAssetInst = env->GetMethodID(instCls, "asAssetInstrument",
                                                    "()Lcom/example/midilib/instrument/AssetInstrument;");
         thiz = env->CallObjectMethod(thiz, idAsAssetInst);
-        auto inst = make_shared<AssetInstrument>(attack, decay, sustain, release);
+        auto inst = make_shared<AssetInstrument>(
+                attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
         jfieldID idRepeatAssets = env->GetFieldID(assetInstCls, "repeatAssets", "Z");
         bool repeatable = env->GetBooleanField(thiz, idRepeatAssets);
         inst->setRepeatable(repeatable);
@@ -109,6 +115,9 @@ PARAM_SETTER(Attack)
 PARAM_SETTER(Decay)
 PARAM_SETTER(Sustain)
 PARAM_SETTER(Release)
+PARAM_SETTER(AttackSharpness)
+PARAM_SETTER(DecaySharpness)
+PARAM_SETTER(ReleaseSharpness)
 
 #undef PARAM_SETTER
 

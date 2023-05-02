@@ -2,14 +2,17 @@ package com.example.midilib.instrument
 
 import com.example.midilib.Oscillator
 
-@Suppress("unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class SynthInstrument(
     attack: Number = 0f,
     decay: Number = 5f,
     sustain: Number = 0f,
     release: Number = 0f,
+    attackSharpness: Number = 1f,
+    decaySharpness: Number = 1f,
+    releaseSharpness: Number = 1f,
     oscillators: List<Oscillator> = listOf()
-): Instrument(attack, decay, sustain, release) {
+): Instrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness) {
     private val _oscillators = oscillators.toMutableList()
     val oscillators
         get() = _oscillators.toList()
