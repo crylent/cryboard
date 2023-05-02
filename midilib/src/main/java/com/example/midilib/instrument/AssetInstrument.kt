@@ -4,19 +4,19 @@ import android.content.Context
 
 @Suppress("unused")
 open class AssetInstrument(
-    attack: Float = 0f,
-    decay: Float = 5f,
-    sustain: Float = 0f,
-    release: Float = 0f,
-    repeatAssets: Boolean = true
+    attack: Number = 0f,
+    decay: Number = 5f,
+    sustain: Number = 0f,
+    release: Number = 0f,
+    var repeatAssets: Boolean = true
 ): Instrument(attack, decay, sustain, release) {
     class Drums : AssetInstrument(0f, 0f, 1f, Float.POSITIVE_INFINITY, false)
 
-    var repeatAssets = repeatAssets
-        set(value) {
-            field = value
-            if (libIndex != NO_INDEX) externalSetRepeatable(value)
+    init {
+        addOnCreatedListener {
+            externalSetRepeatable((it as AssetInstrument).repeatAssets)
         }
+    }
 
     fun loadAsset(context: Context, note: Byte, filename: String, isBaseAsset: Boolean = false) {
         addOnCreatedListener {

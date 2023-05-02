@@ -23,7 +23,8 @@ class TrackPropertiesActivity : AppCompatActivity() {
     private var adapterInitialized = false
 
     private lateinit var inputBundle: Bundle
-    private fun getFromInput(key: String) = inputBundle.getByte(key)
+    private val trackId get() = inputBundle.getByte(TrackBundle.TRACK_ID)
+    private val instrumentInput get() = inputBundle.getString(TrackBundle.INSTRUMENT)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +40,10 @@ class TrackPropertiesActivity : AppCompatActivity() {
             onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     instrumentsView.adapter = InstrumentsRecyclerAdapter(
-                        position.toByte(),
-                        if (adapterInitialized) instrumentsAdapter.selectedInstrument
-                        else getFromInput(TrackBundle.INSTRUMENT).also { adapterInitialized = true }
+                        MidiInstruments.categories[position],
+                        (if (adapterInitialized) instrumentsAdapter.selectedInstrument
+                        else MidiInstruments.byName(instrumentInput!!))!!
+                            .also { adapterInitialized = true }
                     )
                 }
 
@@ -52,7 +54,9 @@ class TrackPropertiesActivity : AppCompatActivity() {
             categoriesSpinner.adapter = this
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        categoriesSpinner.setSelection(MidiInstruments.getCategoryId(getFromInput(TrackBundle.INSTRUMENT)).toInt())
+        categoriesSpinner.setSelection(MidiInstruments.getCategoryId(
+            MidiInstruments[instrumentInput!!]!!
+        ))
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -65,8 +69,8 @@ class TrackPropertiesActivity : AppCompatActivity() {
     private fun saveProperties() {
         setResult(RESULT_OK, Intent().apply {
             putExtra(TrackBundle.OUTPUT, Bundle().apply {
-                putByte(TrackBundle.TRACK_ID, getFromInput(TrackBundle.TRACK_ID))
-                putByte(TrackBundle.INSTRUMENT, instrumentsAdapter.selectedInstrument)
+                putByte(TrackBundle.TRACK_ID, trackId)
+                putString(TrackBundle.INSTRUMENT, instrumentsAdapter.selectedInstrument.name)
             })
         })
     }

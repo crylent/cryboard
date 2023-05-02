@@ -1,6 +1,6 @@
 package com.example.midicryboard
 
-import org.billthefarmer.mididriver.GeneralMidiConstants
+import com.example.midilib.instrument.Instrument
 
 const val TRACKS_NUMBER = 8
 
@@ -13,46 +13,46 @@ object TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
     }
 
     fun getTrackName(trackId: Byte) = this[trackId.toInt()].instrument.name
-    fun getInstrumentId(trackId: Byte) = this[trackId.toInt()].instrumentId
+    //fun getInstrumentId(trackId: Byte) = this[trackId.toInt()].instrumentId
 
     val namesList
         get() = this.map { it.instrument.name }
 
     init {
         // Tracks by default
-        addInstrument(GeneralMidiConstants.ACOUSTIC_GRAND_PIANO)
-        addInstrument(GeneralMidiConstants.VIBRAPHONE)
-        addInstrument(GeneralMidiConstants.ELECTRIC_GUITAR_CLEAN)
-        addInstrument(GeneralMidiConstants.ELECTRIC_BASS_FINGER)
-        addInstrument(GeneralMidiConstants.VIOLIN)
-        addInstrument(GeneralMidiConstants.TRUMPET)
-        addInstrument(GeneralMidiConstants.FLUTE)
-        addInstrument(GeneralMidiConstants.PAD_3_CHOIR)
+        /*addInstrument(MidiInstruments["Piano"]!!)
+        addInstrument(MidiInstruments["Bright Piano"]!!)
+        addInstrument(MidiInstruments["Electric Piano"]!!)
+        addInstrument(MidiInstruments["Bright Electric"]!!)
+        addInstrument(MidiInstruments["Clavinet"]!!)
+        addInstrument(MidiInstruments["Organ"]!!)
+        addInstrument(MidiInstruments["Electric Organ"]!!)*/
+        //addInstrument(8)
     }
 
-    private fun createTrackInfo(instrumentId: Byte) = TrackInfo(
-        instrumentId,
+    private fun createTrackInfo(instrument: Instrument) = TrackInfo(
+        instrument,
         TrackInfo.MAX_VOLUME
     )
 
-    private fun addInstrument(id: Byte) {
-        Midi.changeProgram(size.toByte(), id)
-        add(createTrackInfo(id))
+    fun addInstrument(instrument: Instrument) {
+        Midi.setInstrument(size.toByte(), instrument)
+        add(createTrackInfo(instrument))
     }
 
     fun setTrackInfo(
         trackId: Byte,
-        instrumentId: Byte = this[trackId.toInt()].instrumentId,
+        instrument: Instrument = this[trackId.toInt()].instrument,
         volume: Byte = this[trackId.toInt()].volume
     ) {
         setTrackInfo(
             trackId,
-            TrackInfo(instrumentId, volume)
+            TrackInfo(instrument, volume)
         )
     }
 
     fun setTrackInfo(trackId: Byte, trackInfo: TrackInfo) {
-        Midi.changeProgram(trackId, trackInfo.instrumentId)
+        Midi.setInstrument(trackId, trackInfo.instrument)
         this[trackId.toInt()] = trackInfo
         tracksRecyclerAdapter.updateItem(trackId, getTrackName(trackId))
     }

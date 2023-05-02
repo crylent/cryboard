@@ -4,10 +4,10 @@ import com.example.midilib.Oscillator
 
 @Suppress("unused")
 class SynthInstrument(
-    attack: Float = 0f,
-    decay: Float = 5f,
-    sustain: Float = 0f,
-    release: Float = 0f,
+    attack: Number = 0f,
+    decay: Number = 5f,
+    sustain: Number = 0f,
+    release: Number = 0f,
     oscillators: List<Oscillator> = listOf()
 ): Instrument(attack, decay, sustain, release) {
     private val _oscillators = oscillators.toMutableList()

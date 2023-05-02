@@ -1,13 +1,12 @@
 package com.example.midicryboard
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.activity.*
+import com.example.midicryboard.activity.MainActivity
 
 class TracksRecyclerAdapter(private val trackNameList: List<String> = listOf()): RecyclerView.Adapter<TracksRecyclerAdapter.TrackViewHolder>() {
 
@@ -20,7 +19,7 @@ class TracksRecyclerAdapter(private val trackNameList: List<String> = listOf()):
                 it.isSelected = true
                 Midi.allNotesOff(adapter.selectedTrack)
                 adapter.selectedTrack = adapterPosition.toByte()
-                Log.println(Log.DEBUG, "selectedTrack", adapter.selectedTrack.toString())
+                //Log.println(Log.DEBUG, "selectedTrack", adapter.selectedTrack.toString())
             }
         }
 
