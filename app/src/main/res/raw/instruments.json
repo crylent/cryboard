@@ -13,6 +13,7 @@
           ],
           "attack": 0,
           "decay": 5,
+          "decaySharpness": 4,
           "sustain": 0,
           "release": 0
         },
@@ -26,6 +27,7 @@
           ],
           "attack": 0,
           "decay": 5,
+          "decaySharpness": 4,
           "sustain": 0,
           "release": 0
         },
@@ -39,6 +41,7 @@
           ],
           "attack": 0,
           "decay": 5,
+          "decaySharpness": 4,
           "sustain": 0,
           "release": 0
         },
@@ -52,6 +55,7 @@
           ],
           "attack": 0,
           "decay": 5,
+          "decaySharpness": 4,
           "sustain": 0,
           "release": 0
         },
@@ -65,6 +69,7 @@
           ],
           "attack": 0,
           "decay": 5,
+          "decaySharpness": 4,
           "sustain": 0,
           "release": 0
         },

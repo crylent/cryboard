@@ -5,51 +5,42 @@ import com.example.midicryboard.TrackList.addInstrument
 import com.example.midilib.instrument.AssetInstrument
 import com.example.midilib.instrument.Instrument
 import com.example.midilib.instrument.SynthInstrument
+import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.charset.Charset
 
 class MidiInstruments private constructor(context: Context): HashMap<String, List<Instrument>>() {
-    //data class Instrument(val name: String, val id: Byte)
-
-    //private val res = MainActivity.resources
-    //private val categories = mutableListOf<String>()
-
     init {
-        val jsonCategories = JSONObject(
+        JSONObject(
             context.resources.openRawResource(R.raw.instruments).readBytes().toString(Charset.defaultCharset())
-        ).getJSONArray("categories")
-        for (c in 0 until jsonCategories.length()) {
-            val category = jsonCategories.getJSONObject(c)
-            this[category.getString("name")] = mutableListOf<Instrument>().apply {
-                val jsonInstruments = category.getJSONArray("instruments")
-                for (i in 0 until jsonInstruments.length()) {
-                    val instrument = jsonInstruments.getJSONObject(i)
-                    val attack = instrument.getDouble("attack")
-                    val decay = instrument.getDouble("decay")
-                    val sustain = instrument.getDouble("sustain")
-                    val release = instrument.getDouble("release")
-                    add((if (instrument.getBoolean("synth"))
-                        SynthInstrument(attack, decay, sustain, release).apply {
-                            TODO("oscillators")
-                        }
-                        else AssetInstrument(attack, decay, sustain, release).apply {
-                            loadAsset(
-                                context,
-                                instrument.getInt("base_note").toByte(),
-                                "wav/${instrument.getJSONArray("samples").getString(0)}.wav",
-                                true
-                            )
-                            repeatAssets = true
-                        })
-                        .also {
-                            it.name = instrument.getString("name")
-                            if (instrument.getBoolean("default")) {
-                                addInstrument(it)
-                            }
-                        }
+        ).getJSONArray("categories").forEach { category ->
+            val catList = mutableListOf<Instrument>()
+            category.getJSONArray("instruments").forEach {
+                val attack = it.getDoubleOrDefault("attack", 0)
+                val attackSharpness = it.getDoubleOrDefault( "attackSharpness", 1)
+                val decay = it.getDoubleOrDefault("decay", 5)
+                val decaySharpness = it.getDoubleOrDefault("decaySharpness", 1)
+                val sustain = it.getDoubleOrDefault("sustain", 0)
+                val release = it.getDoubleOrDefault("release", 0)
+                val releaseSharpness = it.getDoubleOrDefault("releaseSharpness", 1)
+                val instrument = if (it.getBoolean("synth"))
+                    SynthInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
+                        TODO("oscillators")
+                    }
+                else AssetInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
+                    loadAsset(
+                        context,
+                        it.getInt("base_note").toByte(),
+                        "wav/${it.getJSONArray("samples").getString(0)}.wav",
+                        true
                     )
+                    repeatAssets = true
                 }
-            }.toList()
+                instrument.name = it.getString("name")
+                if (it.getBoolean("default")) addInstrument(instrument)
+                catList.add(instrument)
+            }
+            this[category.getString("name")] = catList.toList()
         }
     }
 
@@ -58,26 +49,6 @@ class MidiInstruments private constructor(context: Context): HashMap<String, Lis
     private val all = buildMap<String, Instrument> {
         forEach { put(it.value.name, it.value) }
     }
-
-    /*fun categoryById(id: Byte): ArrayList<Instrument> = instruments.values.elementAt(id.toInt())
-
-    private fun findSomethingByInstrumentId(id: Byte, returnLambda: (instrument: Instrument, category: ArrayList<Instrument>) -> Any): Any {
-        if (id < 0) throw IllegalArgumentException()
-        instruments.values.forEach { category ->
-            category.forEach { instrument ->
-                if (instrument.id == id) return returnLambda(instrument, category)
-            }
-        }
-        throw RuntimeException()
-    }
-
-    fun findInstrumentById(id: Byte): Instrument {
-        return findSomethingByInstrumentId(id) { instrument, _ -> instrument } as Instrument
-    }
-
-    fun getCategoryId(instrumentId: Byte): Byte {
-        return findSomethingByInstrumentId(instrumentId) { _, category -> instruments.values.indexOf(category).toByte() } as Byte
-    }*/
 
     fun byName(name: String) = all[name]
 
@@ -109,3 +80,12 @@ class MidiInstruments private constructor(context: Context): HashMap<String, Lis
         fun getCategoryId(instrument: Instrument) = instance.getCategoryId(instrument)
     }
 }
+
+private fun JSONArray.forEach(function: (JSONObject) -> Unit) {
+    for (i in 0 until length()) {
+        function(getJSONObject(i))
+    }
+}
+
+private fun JSONObject.getDoubleOrDefault(name: String, default: Number) =
+    if (has(name)) getDouble(name) else default.toDouble()

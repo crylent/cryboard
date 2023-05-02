@@ -6,6 +6,9 @@ abstract class Instrument(
     decay: Number,
     sustain: Number,
     release: Number,
+    attackSharpness: Number,
+    decaySharpness: Number,
+    releaseSharpness: Number
 ): Cloneable {
     var name = "" // optional - not used in library, but can be assigned for convenience
 
@@ -31,6 +34,24 @@ abstract class Instrument(
         set(value) {
             field = value
             externalSetRelease(value)
+        }
+
+    var attackSharpness = attackSharpness.toFloat()
+        set(value) {
+            field = value
+            externalSetAttackSharpness(value)
+        }
+
+    var decaySharpness = decaySharpness.toFloat()
+        set(value) {
+            field = value
+            externalSetDecaySharpness(value)
+        }
+
+    var releaseSharpness = releaseSharpness.toFloat()
+        set(value) {
+            field = value
+            externalSetReleaseSharpness(value)
         }
 
     internal var libIndex: Int = NO_INDEX
@@ -65,6 +86,9 @@ abstract class Instrument(
     private external fun externalSetDecay(value: Float)
     private external fun externalSetSustain(value: Float)
     private external fun externalSetRelease(value: Float)
+    private external fun externalSetAttackSharpness(value: Float)
+    private external fun externalSetDecaySharpness(value: Float)
+    private external fun externalSetReleaseSharpness(value: Float)
 
     fun asAssetInstrument() = this as AssetInstrument
     fun asSynthInstrument() = this as SynthInstrument
