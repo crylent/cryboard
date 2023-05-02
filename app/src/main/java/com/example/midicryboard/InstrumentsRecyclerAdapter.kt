@@ -5,9 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import com.example.midilib.instrument.Instrument
 
-class InstrumentsRecyclerAdapter(selectedCategory: Byte, selectedInstrument: Byte): RecyclerView.Adapter<InstrumentsRecyclerAdapter.InstrumentViewHolder>() {
-    private val instruments = MidiInstruments.categoryById(selectedCategory)
+class InstrumentsRecyclerAdapter(selectedCategory: String, selectedInstrument: Instrument): RecyclerView.Adapter<InstrumentsRecyclerAdapter.InstrumentViewHolder>() {
+    private val instruments = MidiInstruments.instance[selectedCategory]
 
     class InstrumentViewHolder(itemView: View, adapter: InstrumentsRecyclerAdapter): RecyclerView.ViewHolder(itemView) {
         val instrumentButton: Button = itemView.findViewById<Button?>(R.id.instrumentButton).apply {
@@ -16,16 +17,16 @@ class InstrumentsRecyclerAdapter(selectedCategory: Byte, selectedInstrument: Byt
                     holder.instrumentButton.isSelected = false
                 }
                 it.isSelected = true
-                adapter.selectedInstrument = instrumentId
+                adapter.selectedInstrument = instrument
             }
         }
 
-        var instrumentId: Byte = 0
+        lateinit var instrument: Instrument
     }
 
     private val holders = arrayListOf<InstrumentViewHolder>()
 
-    var selectedInstrument: Byte = selectedInstrument
+    var selectedInstrument: Instrument = selectedInstrument
         private set
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = InstrumentViewHolder(
@@ -37,11 +38,11 @@ class InstrumentsRecyclerAdapter(selectedCategory: Byte, selectedInstrument: Byt
 
     override fun onBindViewHolder(holder: InstrumentViewHolder, position: Int) {
         holder.apply {
-            instrumentButton.text = instruments[position].name
-            instrumentId = instruments[position].id
-            if (instrumentId == selectedInstrument) instrumentButton.isSelected = true
+            instrument = instruments!![position]
+            instrumentButton.text = instrument!!.name
+            if (instrument == selectedInstrument) instrumentButton.isSelected = true
         }
     }
 
-    override fun getItemCount() = instruments.size
+    override fun getItemCount() = instruments!!.size
 }

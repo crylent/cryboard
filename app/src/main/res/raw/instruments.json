@@ -1,0 +1,130 @@
+{
+  "categories": [
+    {
+      "name": "Keyboard",
+      "instruments": [
+        {
+          "name": "Piano",
+          "default": true,
+          "synth": false,
+          "base_note": 50,
+          "samples": [
+            "AKWF_piano_0005"
+          ],
+          "attack": 0,
+          "decay": 5,
+          "sustain": 0,
+          "release": 0
+        },
+        {
+          "name": "Bright Piano",
+          "default": true,
+          "synth": false,
+          "base_note": 50,
+          "samples": [
+            "AKWF_piano_0007"
+          ],
+          "attack": 0,
+          "decay": 5,
+          "sustain": 0,
+          "release": 0
+        },
+        {
+          "name": "Electric Piano",
+          "default": true,
+          "synth": false,
+          "base_note": 50,
+          "samples": [
+            "AKWF_epiano_0022"
+          ],
+          "attack": 0,
+          "decay": 5,
+          "sustain": 0,
+          "release": 0
+        },
+        {
+          "name": "Bright Electric",
+          "default": true,
+          "synth": false,
+          "base_note": 50,
+          "samples": [
+            "AKWF_epiano_0008"
+          ],
+          "attack": 0,
+          "decay": 5,
+          "sustain": 0,
+          "release": 0
+        },
+        {
+          "name": "Clavinet",
+          "default": true,
+          "synth": false,
+          "base_note": 50,
+          "samples": [
+            "AKWF_clavinet_0009"
+          ],
+          "attack": 0,
+          "decay": 5,
+          "sustain": 0,
+          "release": 0
+        },
+        {
+          "name": "Organ",
+          "default": true,
+          "synth": false,
+          "base_note": 50,
+          "samples": [
+            "AKWF_eorgan_0031"
+          ],
+          "attack": 0.05,
+          "decay": 20,
+          "sustain": 0,
+          "release": 0.2
+        },
+        {
+          "name": "Electric Organ",
+          "default": true,
+          "synth": false,
+          "base_note": 50,
+          "samples": [
+            "AKWF_eorgan_0027"
+          ],
+          "attack": 0.05,
+          "decay": 20,
+          "sustain": 0,
+          "release": 0.2
+        }
+      ]
+    },
+    {
+      "name": "Strings",
+      "instruments": [
+
+      ]
+    },
+    {
+      "name": "Brass",
+      "instruments": [
+
+      ]
+    },
+    {
+      "name": "Woodwind",
+      "instruments": [
+
+      ]
+    },
+    {
+      "name": "Guitar",
+      "instruments": [
+
+      ]
+    },
+    {
+      "name": "Synth",
+      "instruments": [
+
+      ]
+    }
+  ]
+}

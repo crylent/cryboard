@@ -2,7 +2,6 @@ package com.example.midicryboard.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -14,8 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
 import com.example.midicryboard.contract.TrackPropertiesContract
-import com.example.midilib.AudioEngine
-import com.example.midilib.instrument.AssetInstrument
 import com.sdsmdg.harjot.crollerTest.Croller
 
 const val DEFAULT_MIDI_OFFSET = 60
@@ -23,10 +20,6 @@ const val MAX_OCTAVE_UP = 2
 const val MAX_OCTAVE_DOWN = -3
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        lateinit var resources: Resources
-    }
-
     private var octave = 0
     private val midiOffset
         get() = (DEFAULT_MIDI_OFFSET + octave * 12).toByte()
@@ -89,13 +82,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         Midi.start()
-        val guitar = AssetInstrument().apply {
-            loadAsset(this@MainActivity, 62, "AKWF_eguitar_0001.wav", true)
-        }
-        AudioEngine.setInstrument(0, guitar)
 
-        Companion.resources = resources
-
+        MidiInstruments.init(this)
         tracksAdapter = TracksRecyclerAdapter(TrackList.namesList)
         TrackList.linkRecyclerAdapter(tracksAdapter)
 
@@ -208,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                 val trackId = getByte(TrackBundle.TRACK_ID)
                 TrackList.setTrackInfo(
                     trackId,
-                    getByte(TrackBundle.INSTRUMENT)
+                    MidiInstruments.all[getString(TrackBundle.INSTRUMENT)]!!
                 )
             }
         }
@@ -273,7 +261,7 @@ class MainActivity : AppCompatActivity() {
     fun openTrackProperties(trackId: Byte) {
         trackPropertiesLauncher.launch(Bundle().apply {
             putByte(TrackBundle.TRACK_ID, trackId)
-            putByte(TrackBundle.INSTRUMENT, TrackList.getInstrumentId(trackId))
+            putString(TrackBundle.INSTRUMENT, TrackList.getTrackName(trackId))
         })
     }
 

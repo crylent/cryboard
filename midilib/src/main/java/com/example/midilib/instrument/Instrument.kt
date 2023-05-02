@@ -2,30 +2,32 @@ package com.example.midilib.instrument
 
 @Suppress("unused")
 abstract class Instrument(
-    attack: Float,
-    decay: Float,
-    sustain: Float,
-    release: Float
+    attack: Number,
+    decay: Number,
+    sustain: Number,
+    release: Number,
 ): Cloneable {
-    var attack = attack
+    var name = "" // optional - not used in library, but can be assigned for convenience
+
+    var attack = attack.toFloat()
         set(value) {
             field = value
             externalSetAttack(value)
         }
 
-    var decay = decay
+    var decay = decay.toFloat()
         set(value) {
             field = value
             externalSetDecay(value)
         }
 
-    var sustain = sustain
+    var sustain = sustain.toFloat()
         set(value) {
             field = value
             externalSetSustain(value)
         }
 
-    var release = release
+    var release = release.toFloat()
         set(value) {
             field = value
             externalSetRelease(value)
