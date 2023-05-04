@@ -5,10 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midilib.instrument.Instrument
 
-class InstrumentsRecyclerAdapter(selectedCategory: String, selectedInstrument: Instrument): RecyclerView.Adapter<InstrumentsRecyclerAdapter.InstrumentViewHolder>() {
-    private val instruments = MidiInstruments.instance[selectedCategory]
+class InstrumentsRecyclerAdapter(private val trackId: Byte, private val selectedCategory: Int): RecyclerView.Adapter<InstrumentsRecyclerAdapter.InstrumentViewHolder>() {
+    private val category = Instruments.instance[selectedCategory]
 
     class InstrumentViewHolder(itemView: View, adapter: InstrumentsRecyclerAdapter): RecyclerView.ViewHolder(itemView) {
         val instrumentButton: Button = itemView.findViewById<Button?>(R.id.instrumentButton).apply {
@@ -17,17 +16,14 @@ class InstrumentsRecyclerAdapter(selectedCategory: String, selectedInstrument: I
                     holder.instrumentButton.isSelected = false
                 }
                 it.isSelected = true
-                adapter.selectedInstrument = instrument
+                TrackList.setTrackInfo(adapter.trackId, adapter.category[instrumentIndex])
             }
         }
 
-        lateinit var instrument: Instrument
+        var instrumentIndex = 0
     }
 
     private val holders = arrayListOf<InstrumentViewHolder>()
-
-    var selectedInstrument: Instrument = selectedInstrument
-        private set
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = InstrumentViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.instrument, parent, false),
@@ -38,11 +34,12 @@ class InstrumentsRecyclerAdapter(selectedCategory: String, selectedInstrument: I
 
     override fun onBindViewHolder(holder: InstrumentViewHolder, position: Int) {
         holder.apply {
-            instrument = instruments!![position]
-            instrumentButton.text = instrument!!.name
-            if (instrument == selectedInstrument) instrumentButton.isSelected = true
+            instrumentIndex = position
+            instrumentButton.text = category[position].name
+            if (Instruments[selectedCategory][position] == TrackList[trackId.toInt()].instrument)
+                instrumentButton.isSelected = true
         }
     }
 
-    override fun getItemCount() = instruments!!.size
+    override fun getItemCount() = category.items.size
 }
