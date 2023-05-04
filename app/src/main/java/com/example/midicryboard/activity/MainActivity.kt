@@ -7,12 +7,10 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
-import com.example.midicryboard.contract.TrackPropertiesContract
 import com.sdsmdg.harjot.crollerTest.Croller
 
 const val DEFAULT_MIDI_OFFSET = 60
@@ -69,7 +67,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var tracksScrollView: HorizontalScrollView
         private set
 
-    private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
+    //private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
+    private lateinit var trackPropertiesIntent: Intent
 
     override fun onRestart() {
         super.onRestart()
@@ -83,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         Midi.start()
 
-        MidiInstruments.init(this)
+        Instruments.init(this)
         tracksAdapter = TracksRecyclerAdapter(TrackList.namesList)
         TrackList.linkRecyclerAdapter(tracksAdapter)
 
@@ -191,15 +190,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = tracksAdapter
         }
-        trackPropertiesLauncher = registerForActivityResult(TrackPropertiesContract()) { result ->
-            result!!.apply {
-                val trackId = getByte(TrackBundle.TRACK_ID)
-                TrackList.setTrackInfo(
-                    trackId,
-                    MidiInstruments.all[getString(TrackBundle.INSTRUMENT)]!!
-                )
-            }
-        }
+        trackPropertiesIntent = Intent(this, TrackPropertiesActivity::class.java)
         tracksCanvas = findViewById(R.id.tracksCanvas)
         tracksScrollView = findViewById(R.id.tracksScrollView)
 
@@ -259,10 +250,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openTrackProperties(trackId: Byte) {
-        trackPropertiesLauncher.launch(Bundle().apply {
-            putByte(TrackBundle.TRACK_ID, trackId)
-            putString(TrackBundle.INSTRUMENT, TrackList.getTrackName(trackId))
-        })
+        trackPropertiesIntent.apply {
+            putExtra(TrackParams.TRACK_ID, trackId)
+            startActivity(this)
+        }
     }
 
     private fun startRecording() {
