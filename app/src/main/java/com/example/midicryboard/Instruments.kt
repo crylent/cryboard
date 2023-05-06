@@ -28,7 +28,7 @@ class Instruments private constructor(context: Context): ArrayList<Instruments.C
                 val sustain = it.getDoubleOrDefault("sustain", 0)
                 val release = it.getDoubleOrDefault("release", 0)
                 val releaseSharpness = it.getDoubleOrDefault("releaseSharpness", 1)
-                val instrument = if (it.getBoolean("synth"))
+                val instrument = if (it.getBooleanOrFalse("synth"))
                     SynthInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
                         TODO("oscillators")
                     }
@@ -42,7 +42,7 @@ class Instruments private constructor(context: Context): ArrayList<Instruments.C
                     repeatAssets = true
                 }
                 instrument.name = it.getString("name")
-                if (it.getBoolean("default")) addInstrument(instrument)
+                if (it.getBooleanOrFalse("default")) addInstrument(instrument)
                 catList.add(instrument)
             }
             add(Category(category.getString("name"), catList.toList()))
@@ -78,3 +78,6 @@ private fun JSONArray.forEach(function: (JSONObject) -> Unit) {
 
 private fun JSONObject.getDoubleOrDefault(name: String, default: Number) =
     if (has(name)) getDouble(name) else default.toDouble()
+
+private fun JSONObject.getBooleanOrFalse(name: String) =
+    if (has(name)) getBoolean(name) else false
