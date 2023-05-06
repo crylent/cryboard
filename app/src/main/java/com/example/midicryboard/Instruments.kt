@@ -49,6 +49,8 @@ class Instruments private constructor(context: Context): ArrayList<Instruments.C
         }
     }
 
+    val categories = map { it.name }
+
     companion object {
         lateinit var instance: Instruments
             private set
@@ -67,6 +69,8 @@ class Instruments private constructor(context: Context): ArrayList<Instruments.C
             }
             return null
         }
+
+        val categories get() = instance.categories
     }
 }
 
