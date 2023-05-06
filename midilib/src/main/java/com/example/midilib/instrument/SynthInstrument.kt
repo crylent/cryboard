@@ -11,37 +11,34 @@ class SynthInstrument(
     attackSharpness: Number = 1f,
     decaySharpness: Number = 1f,
     releaseSharpness: Number = 1f,
-    oscillators: List<Oscillator> = listOf()
+    private val oscillators: MutableList<Oscillator> = mutableListOf()
 ): Instrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness) {
-    private val _oscillators = oscillators.toMutableList()
-    val oscillators
-        get() = _oscillators.toList()
 
     fun addOscillator(oscillator: Oscillator) {
         val osc = if (oscillator.owner == null) oscillator else oscillator.clone()
-        _oscillators.add(osc)
+        oscillators.add(osc)
         osc.owner = this
         if (libIndex != NO_INDEX) externalAddOscillator(oscillator)
     }
 
-    fun getOscillator(oscIndex: Int) = _oscillators[oscIndex]
+    fun getOscillator(oscIndex: Int) = oscillators[oscIndex]
 
     fun removeOscillator(oscillator: Oscillator) {
-        _oscillators.remove(oscillator)
-        if (libIndex != NO_INDEX) externalRemoveOscillator(oscillator.oscIndex)
+        oscillators.remove(oscillator)
+        if (libIndex != NO_INDEX) externalRemoveOscillator(oscillators.indexOf(oscillator))
     }
 
     fun removeOscillator(oscIndex: Int) {
-        _oscillators.removeAt(oscIndex)
+        oscillators.removeAt(oscIndex)
         if (libIndex != NO_INDEX) externalRemoveOscillator(oscIndex)
     }
 
     private external fun externalAddOscillator(oscillator: Oscillator)
     private external fun externalRemoveOscillator(index: Int)
 
-    override fun clone() = SynthInstrument(attack, decay, sustain, release).also {
-        _oscillators.forEach { osc ->
-            it.addOscillator(osc)
-        }
-    }
+    override fun clone() = SynthInstrument(
+        attack, decay, sustain, release,
+        attackSharpness, decaySharpness, releaseSharpness,
+        oscillators
+    )
 }

@@ -2,7 +2,6 @@ package com.example.midicryboard
 
 import com.example.midilib.AudioEngine
 import com.example.midilib.instrument.Instrument
-import com.example.midilib.soundfx.Limiter
 import com.leff.midi.MidiFile
 import com.leff.midi.MidiTrack
 import com.leff.midi.event.ChannelEvent
@@ -18,9 +17,10 @@ import com.leff.midi.event.meta.TimeSignature as TimeSignatureEvent
 object Midi {
     private val tracks = mutableListOf<MidiTrack>().apply {
         add(MidiTrack.createTempoTrack())
-        repeat(TRACKS_NUMBER) {
-            add(MidiTrack())
-        }
+        TrackList.linkCollection(
+            this,
+            { add(MidiTrack.createTempoTrack()) }
+        ) { add(MidiTrack()) }
     }
 
     var volume: Byte = 100
@@ -110,7 +110,7 @@ object Midi {
 
     fun processEvents(trackId: Byte, lambda: (Byte, MidiEvent) -> Unit) {
         if (trackId == ALL_TRACKS) {
-            for (currTrackId in 0 until TRACKS_NUMBER) processEventsOnTrack(currTrackId.toByte(), lambda)
+            for (currTrackId in 0 until tracks.size - 1) processEventsOnTrack(currTrackId.toByte(), lambda)
         }
         else processEventsOnTrack(trackId, lambda)
     }
@@ -160,7 +160,9 @@ object Midi {
         }
     }
 
-    private val notesOn = Array(TRACKS_NUMBER) { mutableSetOf<Byte>() }
+    private val notesOn = mutableListOf<MutableSet<Byte>>().apply {
+        TrackList.linkCollection(this) { add(mutableSetOf()) }
+    }
 
     fun noteOn(note: Byte, channel: Byte) {
         noteOn(note, channel, volume)
@@ -198,7 +200,7 @@ object Midi {
         notesOn[channel.toInt()].clear()
     }
     fun allNotesOff() { // all notes off on all channels
-        for (channel in 0 until TRACKS_NUMBER)
+        for (channel in 0 until notesOn.size)
             allNotesOff(channel.toByte())
     }
 

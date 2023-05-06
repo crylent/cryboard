@@ -1,9 +1,24 @@
 package com.example.midicryboard
 
+import android.content.Context
 import com.example.midilib.instrument.Instrument
+import org.json.JSONObject
 
-data class TrackInfo(var instrument: Instrument, var volume: Byte): java.io.Serializable {
+private const val INSTRUMENT = "instrument"
+private const val VOLUME = "volume"
+
+data class TrackInfo(var instrument: Instrument, var volume: Byte) {
     companion object {
         const val MAX_VOLUME: Byte = 127
+
+        fun fromJson(context: Context, json: JSONObject) = TrackInfo(
+            Instrument.fromJson(context, json.getJSONObject(INSTRUMENT)),
+            json.getInt(VOLUME).toByte()
+        )
+    }
+
+    fun toJson() = JSONObject().apply {
+        put(INSTRUMENT, instrument.toJson())
+        put(VOLUME, volume)
     }
 }

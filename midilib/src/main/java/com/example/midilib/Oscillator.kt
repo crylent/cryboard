@@ -46,8 +46,6 @@ class Oscillator(
         private set
 
     internal var owner: SynthInstrument? = null
-    val oscIndex
-        get() = owner?.oscillators!!.indexOf(this)
 
     enum class Shape {
         SINE, TRIANGLE, SQUARE, SAW, REVERSE_SAW

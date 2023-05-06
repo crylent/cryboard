@@ -10,7 +10,8 @@ abstract class Instrument(
     decaySharpness: Number,
     releaseSharpness: Number
 ): Cloneable {
-    var name = "" // optional - not used in library, but can be assigned for convenience
+    /** Optional - not used in library, but can be assigned for convenience **/
+    var name = ""
 
     var attack = attack.toFloat()
         set(value) {

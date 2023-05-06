@@ -8,7 +8,7 @@ import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.activity.MainActivity
 
-class TracksRecyclerAdapter(private val trackNameList: List<String> = listOf()): RecyclerView.Adapter<TracksRecyclerAdapter.TrackViewHolder>() {
+class TracksRecyclerAdapter: RecyclerView.Adapter<TracksRecyclerAdapter.TrackViewHolder>() {
 
     class TrackViewHolder(itemView: View, adapter: TracksRecyclerAdapter, trackId: Byte): RecyclerView.ViewHolder(itemView) {
         val useTrackButton: ImageButton = itemView.findViewById<ImageButton?>(R.id.useTrack).apply {
@@ -19,7 +19,6 @@ class TracksRecyclerAdapter(private val trackNameList: List<String> = listOf()):
                 it.isSelected = true
                 Midi.allNotesOff(adapter.selectedTrack)
                 adapter.selectedTrack = adapterPosition.toByte()
-                //Log.println(Log.DEBUG, "selectedTrack", adapter.selectedTrack.toString())
             }
         }
 
@@ -44,13 +43,19 @@ class TracksRecyclerAdapter(private val trackNameList: List<String> = listOf()):
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.useTrackButton.isSelected = (selectedTrack == position.toByte())
-        holder.trackNameButton.text = trackNameList[position]
+        holder.apply {
+            useTrackButton.isSelected = (selectedTrack == position.toByte())
+            trackNameButton.text = TrackList.namesList[position]
+        }
     }
 
-    override fun getItemCount() = trackNameList.size
+    override fun getItemCount() = TrackList.namesList.size
 
-    fun updateItem(trackId: Byte, newName: String) {
-        holders[trackId.toInt()].trackNameButton.text = newName
+    fun updateItem(trackId: Byte) {
+        notifyItemChanged(trackId.toInt())
+    }
+
+    fun resetItems() {
+        notifyItemRangeChanged(0, itemCount)
     }
 }

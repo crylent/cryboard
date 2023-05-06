@@ -13,7 +13,7 @@ import com.example.midicryboard.Filename
 import com.example.midicryboard.Midi
 import com.example.midicryboard.R
 import java.io.File
-import java.io.ObjectOutputStream
+import java.io.OutputStreamWriter
 
 class SaveProjectActivity : AppCompatActivity() {
     private lateinit var projectNameEdit: EditText
@@ -47,8 +47,8 @@ class SaveProjectActivity : AppCompatActivity() {
 
     private fun saveFile(projectName: String) {
         openFileOutput(Filename.metadata(projectName), Context.MODE_PRIVATE).use { file ->
-            ObjectOutputStream(file).use {
-                it.writeObject(CryboardProject())
+            OutputStreamWriter(file).use {
+                it.write(CryboardProject().toJson().toString())
             }
         }
         Midi.writeToFile(File(filesDir, Filename.midi(projectName)))

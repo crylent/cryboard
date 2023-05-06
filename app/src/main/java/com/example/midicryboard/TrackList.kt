@@ -2,9 +2,7 @@ package com.example.midicryboard
 
 import com.example.midilib.instrument.Instrument
 
-const val TRACKS_NUMBER = 8
-
-object TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
+object TrackList: ArrayList<TrackInfo>() {
 
     private lateinit var tracksRecyclerAdapter: TracksRecyclerAdapter
 
@@ -12,32 +10,42 @@ object TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
         tracksRecyclerAdapter = adapter
     }
 
-    fun getTrackName(trackId: Byte) = this[trackId.toInt()].instrument.name
-    //fun getInstrumentId(trackId: Byte) = this[trackId.toInt()].instrumentId
-
     val namesList
         get() = this.map { it.instrument.name }
-
-    init {
-        // Tracks by default
-        /*addInstrument(MidiInstruments["Piano"]!!)
-        addInstrument(MidiInstruments["Bright Piano"]!!)
-        addInstrument(MidiInstruments["Electric Piano"]!!)
-        addInstrument(MidiInstruments["Bright Electric"]!!)
-        addInstrument(MidiInstruments["Clavinet"]!!)
-        addInstrument(MidiInstruments["Organ"]!!)
-        addInstrument(MidiInstruments["Electric Organ"]!!)*/
-        //addInstrument(8)
-    }
 
     private fun createTrackInfo(instrument: Instrument) = TrackInfo(
         instrument,
         TrackInfo.MAX_VOLUME
     )
 
-    fun addInstrument(instrument: Instrument) {
-        Midi.setInstrument(size.toByte(), instrument)
-        add(createTrackInfo(instrument))
+    fun createTrack(instrument: Instrument) {
+        createTrack(createTrackInfo(instrument))
+    }
+
+    fun createTrack(trackInfo: TrackInfo) {
+        Midi.setInstrument(size.toByte(), trackInfo.instrument)
+        add(trackInfo)
+        listeners.forEach { it.onTrackCreated() }
+    }
+
+    private interface TracksListener {
+        fun onTrackCreated()
+        fun onTracksCleared()
+    }
+
+    private val listeners = mutableListOf<TracksListener>()
+
+    fun linkCollection(collection: MutableCollection<out Any>, onTracksClearedAction: (() -> Unit)? = null, onTrackCreatedAction: () -> Unit) {
+        listeners.add(object : TracksListener {
+            override fun onTrackCreated() {
+                onTrackCreatedAction()
+            }
+
+            override fun onTracksCleared() {
+                collection.clear()
+                onTracksClearedAction?.invoke()
+            }
+        })
     }
 
     fun setTrackInfo(
@@ -51,15 +59,18 @@ object TrackList: ArrayList<TrackInfo>(TRACKS_NUMBER) {
         )
     }
 
-    fun setTrackInfo(trackId: Byte, trackInfo: TrackInfo) {
+    private fun setTrackInfo(trackId: Byte, trackInfo: TrackInfo) {
         Midi.setInstrument(trackId, trackInfo.instrument)
         this[trackId.toInt()] = trackInfo
-        tracksRecyclerAdapter.updateItem(trackId, getTrackName(trackId))
+        tracksRecyclerAdapter.updateItem(trackId)
     }
 
-    fun openProject(project: CryboardProject) {
-        project.tracks.forEachIndexed { index, trackInfo ->
-            setTrackInfo(index.toByte(), trackInfo)
+    fun readTracksFromProject(project: CryboardProject) {
+        clear()
+        listeners.forEach { it.onTracksCleared() }
+        project.tracks.forEach {
+            createTrack(it)
         }
+        tracksRecyclerAdapter.resetItems()
     }
 }

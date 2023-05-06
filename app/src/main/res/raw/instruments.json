@@ -6,9 +6,12 @@
         {
           "name": "Piano",
           "default": true,
-          "base_note": 38,
-          "samples": [
-            "AKWF_piano_0005"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_piano_0005.wav",
+              "base": true
+            }
           ],
           "attack": 0,
           "decay": 5,
@@ -18,9 +21,12 @@
         },
         {
           "name": "Bright Piano",
-          "base_note": 38,
-          "samples": [
-            "AKWF_piano_0007"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_piano_0007.wav",
+              "base": true
+            }
           ],
           "attack": 0,
           "decay": 5,
@@ -30,9 +36,12 @@
         },
         {
           "name": "Electric Piano",
-          "base_note": 38,
-          "samples": [
-            "AKWF_epiano_0022"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_epiano_0022.wav",
+              "base": true
+            }
           ],
           "attack": 0,
           "decay": 5,
@@ -42,9 +51,12 @@
         },
         {
           "name": "Bright Electric",
-          "base_note": 38,
-          "samples": [
-            "AKWF_epiano_0008"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_epiano_0008.wav",
+              "base": true
+            }
           ],
           "attack": 0,
           "decay": 5,
@@ -54,9 +66,12 @@
         },
         {
           "name": "Clavinet",
-          "base_note": 38,
-          "samples": [
-            "AKWF_clavinet_0009"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_clavinet_0009.wav",
+              "base": true
+            }
           ],
           "attack": 0,
           "decay": 5,
@@ -67,9 +82,12 @@
         {
           "name": "Organ",
           "default": true,
-          "base_note": 38,
-          "samples": [
-            "AKWF_eorgan_0031"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_eorgan_0031.wav",
+              "base": true
+            }
           ],
           "attack": 0.05,
           "decay": 20,
@@ -78,9 +96,12 @@
         },
         {
           "name": "Electric Organ",
-          "base_note": 38,
-          "samples": [
-            "AKWF_eorgan_0027"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_eorgan_0027.wav",
+              "base": true
+            }
           ],
           "attack": 0.05,
           "decay": 20,
@@ -95,9 +116,12 @@
         {
           "name": "Violin",
           "default": true,
-          "base_note": 50,
-          "samples": [
-            "Violin"
+          "assets": [
+            {
+              "note": 50,
+              "sample": "wav/Violin.wav",
+              "base": true
+            }
           ],
           "attack": 1,
           "attackSharpness": 2,
@@ -107,9 +131,12 @@
         },
         {
           "name": "Pizzicato",
-          "base_note": 50,
-          "samples": [
-            "Violin"
+          "assets": [
+            {
+              "note": 50,
+              "sample": "wav/Violin.wav",
+              "base": true
+            }
           ],
           "attack": 0.05,
           "decay": 0.5,
@@ -119,9 +146,12 @@
         },
         {
           "name": "Viola",
-          "base_note": 50,
-          "samples": [
-            "Viola"
+          "assets": [
+            {
+              "note": 50,
+              "sample": "wav/Viola.wav",
+              "base": true
+            }
           ],
           "attack": 1,
           "attackSharpness": 2,
@@ -131,9 +161,12 @@
         },
         {
           "name": "Cello",
-          "base_note": 38,
-          "samples": [
-            "AKWF_cello_0003"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_cello_0003.wav",
+              "base": true
+            }
           ],
           "attack": 1,
           "attackSharpness": 2,
@@ -143,9 +176,12 @@
         },
         {
           "name": "Contrabass",
-          "base_note": 38,
-          "samples": [
-            "Contrabass"
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/Contrabass.wav",
+              "base": true
+            }
           ],
           "attack": 1,
           "attackSharpness": 2,
@@ -160,9 +196,12 @@
       "instruments": [
         {
           "name": "Trumpet",
-          "base_note": 60,
-          "samples": [
-            "Trumpet"
+          "assets": [
+            {
+              "note": 60,
+              "sample": "wav/Trumpet.wav",
+              "base": true
+            }
           ],
           "attack": 0.5,
           "decay": 2.5,
@@ -173,45 +212,55 @@
         {
           "name": "Trombone",
           "default": true,
-          "base_note": 53,
-          "samples": [
-            "Trombone"
+          "assets": [
+            {
+              "note": 53,
+              "sample": "wav/Trombone.wav",
+              "base": true
+            }
           ],
           "attack": 2.5,
-          "attackSharpness": 0.7,
+          "attackSharpness": 2,
           "decay": 10,
           "sustain": 0.3,
           "release": 0.5
         },
         {
           "name": "Tuba",
-          "base_note": 51,
-          "samples": [
-            "Tuba"
+          "assets": [
+            {
+              "note": 51,
+              "sample": "wav/Tuba.wav",
+              "base": true
+            }
           ],
           "attack": 2.5,
-          "attackSharpness": 0.7,
           "decay": 20,
           "sustain": 0.5,
           "release": 0.5
         },
         {
           "name": "French Horn",
-          "base_note": 68,
-          "samples": [
-            "French Horn"
+          "assets": [
+            {
+              "note": 68,
+              "sample": "wav/French Horn.wav",
+              "base": true
+            }
           ],
           "attack": 3.5,
-          "attackSharpness": 0.7,
           "decay": 20,
           "sustain": 0.3,
           "release": 0.5
         },
         {
           "name": "Synth Brass",
-          "base_note": 50,
-          "samples": [
-            "Synth Brass"
+          "assets": [
+            {
+              "note": 50,
+              "sample": "wav/Synth Brass.wav",
+              "base": true
+            }
           ],
           "attack": 2.5,
           "decay": 10,

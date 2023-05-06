@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         Midi.start()
 
         Instruments.init(this)
-        tracksAdapter = TracksRecyclerAdapter(TrackList.namesList)
+        tracksAdapter = TracksRecyclerAdapter()
         TrackList.linkRecyclerAdapter(tracksAdapter)
 
         // Set up volume slider

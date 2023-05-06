@@ -1,11 +1,8 @@
 package com.example.midicryboard
 
 import android.content.Context
-import com.example.midicryboard.TrackList.addInstrument
-import com.example.midilib.instrument.AssetInstrument
+import com.example.midicryboard.TrackList.createTrack
 import com.example.midilib.instrument.Instrument
-import com.example.midilib.instrument.SynthInstrument
-import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.charset.Charset
 
@@ -21,29 +18,10 @@ class Instruments private constructor(context: Context): ArrayList<Instruments.C
         ).getJSONArray("categories").forEach { category ->
             val catList = mutableListOf<Instrument>()
             category.getJSONArray("instruments").forEach {
-                val attack = it.getDoubleOrDefault("attack", 0)
-                val attackSharpness = it.getDoubleOrDefault( "attackSharpness", 1)
-                val decay = it.getDoubleOrDefault("decay", 5)
-                val decaySharpness = it.getDoubleOrDefault("decaySharpness", 1)
-                val sustain = it.getDoubleOrDefault("sustain", 0)
-                val release = it.getDoubleOrDefault("release", 0)
-                val releaseSharpness = it.getDoubleOrDefault("releaseSharpness", 1)
-                val instrument = if (it.getBooleanOrFalse("synth"))
-                    SynthInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
-                        TODO("oscillators")
-                    }
-                else AssetInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
-                    loadAsset(
-                        context,
-                        it.getInt("base_note").toByte(),
-                        "wav/${it.getJSONArray("samples").getString(0)}.wav",
-                        true
-                    )
-                    repeatAssets = true
+                Instrument.fromJson(context, it).apply {
+                    if (it.optBoolean("default")) createTrack(this)
+                    catList.add(this)
                 }
-                instrument.name = it.getString("name")
-                if (it.getBooleanOrFalse("default")) addInstrument(instrument)
-                catList.add(instrument)
             }
             add(Category(category.getString("name"), catList.toList()))
         }
@@ -73,15 +51,3 @@ class Instruments private constructor(context: Context): ArrayList<Instruments.C
         val categories get() = instance.categories
     }
 }
-
-private fun JSONArray.forEach(function: (JSONObject) -> Unit) {
-    for (i in 0 until length()) {
-        function(getJSONObject(i))
-    }
-}
-
-private fun JSONObject.getDoubleOrDefault(name: String, default: Number) =
-    if (has(name)) getDouble(name) else default.toDouble()
-
-private fun JSONObject.getBooleanOrFalse(name: String) =
-    if (has(name)) getBoolean(name) else false

@@ -40,7 +40,9 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
         fullRedraw = true
     }
 
-    private val regions = MutableList(TRACKS_NUMBER) { Region() }
+    private val regions = mutableListOf<Region>().apply {
+        TrackList.linkCollection(this) { add(Region()) }
+    }
 
     private var maxPointerPos = 0
 
@@ -48,6 +50,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
         canvas.apply {
             drawColor(backgroundColor)
             val selected = activity!!.selectedTrack
+            //while (TrackList.size > regions.size) regions.add(Region())
             regions[selected.toInt()].setEmpty()
             // Draw notes
             var notesOn = 0
@@ -114,7 +117,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
     }
 
     private val trackHeight
-        get() = height / TRACKS_NUMBER
+        get() = height / regions.size
 
     // Top and bottom of track
     private fun trackY(trackId: Byte) = Pair(
