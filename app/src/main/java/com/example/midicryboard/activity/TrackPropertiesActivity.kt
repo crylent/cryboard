@@ -32,11 +32,15 @@ class TrackPropertiesActivity : AppCompatActivity() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+
+            adapter = ArrayAdapter<String>(
+                this@TrackPropertiesActivity, android.R.layout.simple_spinner_item
+            ).apply {
+                addAll(Instruments.categories)
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
         }
-        ArrayAdapter.createFromResource(this, R.array.Categories, android.R.layout.simple_spinner_item).apply {
-            categoriesSpinner.adapter = this
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
+
         categoriesSpinner.setSelection(
             Instruments.getCategoryIndex(TrackList[trackId.toInt()].instrument)!!
         )
