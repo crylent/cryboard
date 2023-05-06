@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var tracksScrollView: HorizontalScrollView
         private set
 
-    //private lateinit var trackPropertiesLauncher: ActivityResultLauncher<Bundle>
     private lateinit var trackPropertiesIntent: Intent
 
     override fun onRestart() {

@@ -33,7 +33,6 @@ add_library(
         AudioCallback.cpp
         player/SoundPlayer.cpp
         player/WavePlayer.cpp
-        player/AssetPlayer.cpp
         Wave.cpp
         instrument/Instrument.cpp
         instrument/SynthInstrument.cpp

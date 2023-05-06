@@ -6,8 +6,7 @@
         {
           "name": "Piano",
           "default": true,
-          "synth": false,
-          "base_note": 50,
+          "base_note": 38,
           "samples": [
             "AKWF_piano_0005"
           ],
@@ -19,9 +18,7 @@
         },
         {
           "name": "Bright Piano",
-          "default": true,
-          "synth": false,
-          "base_note": 50,
+          "base_note": 38,
           "samples": [
             "AKWF_piano_0007"
           ],
@@ -33,9 +30,7 @@
         },
         {
           "name": "Electric Piano",
-          "default": true,
-          "synth": false,
-          "base_note": 50,
+          "base_note": 38,
           "samples": [
             "AKWF_epiano_0022"
           ],
@@ -47,9 +42,7 @@
         },
         {
           "name": "Bright Electric",
-          "default": true,
-          "synth": false,
-          "base_note": 50,
+          "base_note": 38,
           "samples": [
             "AKWF_epiano_0008"
           ],
@@ -61,9 +54,7 @@
         },
         {
           "name": "Clavinet",
-          "default": true,
-          "synth": false,
-          "base_note": 50,
+          "base_note": 38,
           "samples": [
             "AKWF_clavinet_0009"
           ],
@@ -76,8 +67,7 @@
         {
           "name": "Organ",
           "default": true,
-          "synth": false,
-          "base_note": 50,
+          "base_note": 38,
           "samples": [
             "AKWF_eorgan_0031"
           ],
@@ -88,9 +78,7 @@
         },
         {
           "name": "Electric Organ",
-          "default": true,
-          "synth": false,
-          "base_note": 50,
+          "base_note": 38,
           "samples": [
             "AKWF_eorgan_0027"
           ],
@@ -104,13 +92,132 @@
     {
       "name": "Strings",
       "instruments": [
-
+        {
+          "name": "Violin",
+          "default": true,
+          "base_note": 50,
+          "samples": [
+            "Violin"
+          ],
+          "attack": 1,
+          "attackSharpness": 2,
+          "decay": 10,
+          "sustain": 0.8,
+          "release": 0.4
+        },
+        {
+          "name": "Pizzicato",
+          "base_note": 50,
+          "samples": [
+            "Violin"
+          ],
+          "attack": 0.05,
+          "decay": 0.5,
+          "decaySharpness": 4,
+          "sustain": 0,
+          "release": 0.1
+        },
+        {
+          "name": "Viola",
+          "base_note": 50,
+          "samples": [
+            "Viola"
+          ],
+          "attack": 1,
+          "attackSharpness": 2,
+          "decay": 10,
+          "sustain": 0.8,
+          "release": 0.4
+        },
+        {
+          "name": "Cello",
+          "base_note": 38,
+          "samples": [
+            "AKWF_cello_0003"
+          ],
+          "attack": 1,
+          "attackSharpness": 2,
+          "decay": 10,
+          "sustain": 0.8,
+          "release": 0.4
+        },
+        {
+          "name": "Contrabass",
+          "base_note": 38,
+          "samples": [
+            "Contrabass"
+          ],
+          "attack": 1,
+          "attackSharpness": 2,
+          "decay": 10,
+          "sustain": 0.8,
+          "release": 0.4
+        }
       ]
     },
     {
       "name": "Brass",
       "instruments": [
-
+        {
+          "name": "Trumpet",
+          "base_note": 60,
+          "samples": [
+            "Trumpet"
+          ],
+          "attack": 0.5,
+          "decay": 2.5,
+          "decaySharpness": 2,
+          "sustain": 0.3,
+          "release": 0.3
+        },
+        {
+          "name": "Trombone",
+          "default": true,
+          "base_note": 53,
+          "samples": [
+            "Trombone"
+          ],
+          "attack": 2.5,
+          "attackSharpness": 0.7,
+          "decay": 10,
+          "sustain": 0.3,
+          "release": 0.5
+        },
+        {
+          "name": "Tuba",
+          "base_note": 51,
+          "samples": [
+            "Tuba"
+          ],
+          "attack": 2.5,
+          "attackSharpness": 0.7,
+          "decay": 20,
+          "sustain": 0.5,
+          "release": 0.5
+        },
+        {
+          "name": "French Horn",
+          "base_note": 68,
+          "samples": [
+            "French Horn"
+          ],
+          "attack": 3.5,
+          "attackSharpness": 0.7,
+          "decay": 20,
+          "sustain": 0.3,
+          "release": 0.5
+        },
+        {
+          "name": "Synth Brass",
+          "base_note": 50,
+          "samples": [
+            "Synth Brass"
+          ],
+          "attack": 2.5,
+          "decay": 10,
+          "sustain": 0.3,
+          "release": 0.5
+        }
       ]
     },
     {
