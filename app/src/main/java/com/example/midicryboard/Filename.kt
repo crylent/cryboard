@@ -1,7 +1,7 @@
 package com.example.midicryboard
 
 object Filename {
-    private const val METADATA_EXTENSION = ".project.json"
+    private const val METADATA_EXTENSION = ".json"
     private const val MIDI_EXTENSION = ".mid"
 
     private const val FIRST_CHAR = "\\p{Alnum}"
