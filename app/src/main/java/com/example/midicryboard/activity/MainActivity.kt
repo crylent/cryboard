@@ -261,7 +261,7 @@ class MainActivity : AppCompatActivity() {
         Midi.startRecording()
     }
 
-    fun updateTempoAndTimeSignature() {
+    private fun updateTempoAndTimeSignature() {
         editTempo.setText(Metronome.tempo.toString())
         editTimeSignature.setText(Metronome.signature.toString())
     }

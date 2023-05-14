@@ -10,7 +10,13 @@ import com.example.midicryboard.activity.MainActivity
 
 class TracksRecyclerAdapter: RecyclerView.Adapter<TracksRecyclerAdapter.TrackViewHolder>() {
 
-    class TrackViewHolder(itemView: View, adapter: TracksRecyclerAdapter, trackId: Byte): RecyclerView.ViewHolder(itemView) {
+    class TrackViewHolder(itemView: View, adapter: TracksRecyclerAdapter): RecyclerView.ViewHolder(itemView) {
+        var trackId: Byte = 0
+            set(value) {
+                field = value
+                trackNameButton.text = TrackList.namesList[trackId.toInt()]
+            }
+
         val useTrackButton: ImageButton = itemView.findViewById<ImageButton?>(R.id.useTrack).apply {
             setOnClickListener {
                 adapter.holders.forEach { holder ->
@@ -22,7 +28,7 @@ class TracksRecyclerAdapter: RecyclerView.Adapter<TracksRecyclerAdapter.TrackVie
             }
         }
 
-        val trackNameButton: Button = itemView.findViewById<Button?>(R.id.trackName).apply {
+        private val trackNameButton: Button = itemView.findViewById<Button?>(R.id.trackName).apply {
             setOnClickListener {
                 (it.context as MainActivity).openTrackProperties(trackId)
             }
@@ -36,22 +42,22 @@ class TracksRecyclerAdapter: RecyclerView.Adapter<TracksRecyclerAdapter.TrackVie
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TrackViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false),
-        this,
-        holders.size.toByte()
+        this
     ).apply {
         holders.add(this)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.apply {
-            useTrackButton.isSelected = (selectedTrack == position.toByte())
-            trackNameButton.text = TrackList.namesList[position]
+            trackId = position.toByte()
+            useTrackButton.isSelected = (selectedTrack == trackId)
         }
     }
 
     override fun getItemCount() = TrackList.namesList.size
 
     fun updateItem(trackId: Byte) {
+        //notifyItemRemoved(trackId.toInt())
         notifyItemChanged(trackId.toInt())
     }
 
