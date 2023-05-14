@@ -60,6 +60,22 @@ open class AssetInstrument(
         repeatAssets
     )
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AssetInstrument) return false
+
+        if (assets != other.assets) return false
+        if (repeatAssets != other.repeatAssets) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = assets.hashCode()
+        result = 31 * result + repeatAssets.hashCode()
+        return result
+    }
+
     enum class ResamplingQuality {
         SINC_BEST_QUALITY,
         SINC_MEDIUM_QUALITY,
