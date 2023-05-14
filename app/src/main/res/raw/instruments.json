@@ -13,9 +13,9 @@
               "base": true
             }
           ],
-          "attack": 0,
-          "decay": 5,
-          "decaySharpness": 4,
+          "attack": 0.05,
+          "decay": 10,
+          "decaySharpness": 6,
           "sustain": 0,
           "release": 0
         },
@@ -28,9 +28,9 @@
               "base": true
             }
           ],
-          "attack": 0,
-          "decay": 5,
-          "decaySharpness": 4,
+          "attack": 0.005,
+          "decay": 10,
+          "decaySharpness": 6,
           "sustain": 0,
           "release": 0
         },
@@ -43,9 +43,9 @@
               "base": true
             }
           ],
-          "attack": 0,
-          "decay": 5,
-          "decaySharpness": 4,
+          "attack": 0.005,
+          "decay": 10,
+          "decaySharpness": 6,
           "sustain": 0,
           "release": 0
         },
@@ -58,9 +58,9 @@
               "base": true
             }
           ],
-          "attack": 0,
-          "decay": 5,
-          "decaySharpness": 4,
+          "attack": 0.005,
+          "decay": 10,
+          "decaySharpness": 6,
           "sustain": 0,
           "release": 0
         },
@@ -73,7 +73,7 @@
               "base": true
             }
           ],
-          "attack": 0,
+          "attack": 0.005,
           "decay": 5,
           "decaySharpness": 4,
           "sustain": 0,
@@ -272,7 +272,77 @@
     {
       "name": "Woodwind",
       "instruments": [
-
+        {
+          "name": "Flute",
+          "default": true,
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_flute_0003.wav",
+              "base": true
+            }
+          ],
+          "attack": 1.5,
+          "decay": 6,
+          "sustain": 0.2,
+          "release": 0.5
+        },
+        {
+          "name": "Tenor Sax",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_altosax_0002.wav",
+              "base": true
+            }
+          ],
+          "attack": 1.5,
+          "decay": 8,
+          "sustain": 0.3,
+          "release": 0.4
+        },
+        {
+          "name": "Alto Sax",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_altosax_0010.wav",
+              "base": true
+            }
+          ],
+          "attack": 1.5,
+          "decay": 8,
+          "sustain": 0.3,
+          "release": 0.4
+        },
+        {
+          "name": "Oboe",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_oboe_0001.wav",
+              "base": true
+            }
+          ],
+          "attack": 1.5,
+          "decay": 8,
+          "sustain": 0.3,
+          "release": 0.4
+        },
+        {
+          "name": "Clarinet",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_clarinett_0004.wav",
+              "base": true
+            }
+          ],
+          "attack": 1.5,
+          "decay": 6,
+          "sustain": 0.2,
+          "release": 0.4
+        }
       ]
     },
     {
