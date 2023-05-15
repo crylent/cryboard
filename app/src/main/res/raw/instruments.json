@@ -349,6 +349,22 @@
       "name": "Guitar",
       "instruments": [
         {
+          "name": "Acoustic Guitar",
+          "default": true,
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_aguitar_0031.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.05,
+          "decay": 6,
+          "decaySharpness": 2.5,
+          "sustain": 0,
+          "release": 0.1
+        },
+        {
           "name": "Drive Guitar",
           "assets": [
             {
@@ -429,7 +445,119 @@
     {
       "name": "Synth",
       "instruments": [
-
+        {
+          "name": "Voice 1",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_hvoice_0019.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.5,
+          "decay": 10,
+          "sustain": 0.3,
+          "release": 0.3
+        },
+        {
+          "name": "Voice 2",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_hvoice_0046.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.5,
+          "decay": 10,
+          "sustain": 0.3,
+          "release": 0.3
+        },
+        {
+          "name": "FM Synth 1",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_fmsynth_0014.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.1,
+          "decay": 3,
+          "sustain": 0.5,
+          "release": 0.1
+        },
+        {
+          "name": "FM Synth 2",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_fmsynth_0040.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.1,
+          "decay": 3,
+          "sustain": 0.5,
+          "release": 0.1
+        },
+        {
+          "name": "Square",
+          "default": true,
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_squ_0001.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.5,
+          "decay": 5,
+          "sustain": 0.8,
+          "release": 0.5
+        },
+        {
+          "name": "Triangle",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_tri_0001.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.5,
+          "decay": 5,
+          "sustain": 0.8,
+          "release": 0.5
+        },
+        {
+          "name": "Sawtooth",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_R_sym_saw_10.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.5,
+          "decay": 5,
+          "sustain": 0.8,
+          "release": 0.5
+        },
+        {
+          "name": "Sawbright",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_bsaw_0001.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.5,
+          "decay": 5,
+          "sustain": 0.8,
+          "release": 0.5
+        }
       ]
     }
   ]
