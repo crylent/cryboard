@@ -348,7 +348,82 @@
     {
       "name": "Guitar",
       "instruments": [
-
+        {
+          "name": "Drive Guitar",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_eguitar_0005.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.05,
+          "decay": 10,
+          "decaySharpness": 1.5,
+          "sustain": 0,
+          "release": 0.1
+        },
+        {
+          "name": "Dist Guitar",
+          "default": true,
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_eguitar_0001.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.05,
+          "decay": 10,
+          "decaySharpness": 1.5,
+          "sustain": 0,
+          "release": 0.1
+        },
+        {
+          "name": "P.M. Guitar",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_eguitar_0022.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.05,
+          "decay": 0.25,
+          "sustain": 0.05,
+          "release": 0.1
+        },
+        {
+          "name": "Bass Guitar",
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_ebass_0001.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.05,
+          "decay": 10,
+          "decaySharpness": 1.5,
+          "sustain": 0,
+          "release": 0.1
+        },
+        {
+          "name": "Dist Bass",
+          "default": true,
+          "assets": [
+            {
+              "note": 38,
+              "sample": "wav/AKWF_ebass_0023.wav",
+              "base": true
+            }
+          ],
+          "attack": 0.05,
+          "decay": 10,
+          "decaySharpness": 1.5,
+          "sustain": 0,
+          "release": 0.1
+        }
       ]
     },
     {
