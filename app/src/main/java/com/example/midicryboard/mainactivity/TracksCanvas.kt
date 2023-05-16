@@ -1,4 +1,4 @@
-package com.example.midicryboard
+package com.example.midicryboard.mainactivity
 
 import android.content.Context
 import android.graphics.*
@@ -8,7 +8,10 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.plus
-import com.example.midicryboard.activity.MainActivity
+import com.example.midicryboard.Metronome
+import com.example.midicryboard.Midi
+import com.example.midicryboard.Theme
+import com.example.midicryboard.TrackList
 import com.leff.midi.event.NoteOff
 import com.leff.midi.event.NoteOn
 
@@ -17,10 +20,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
     private val markup = Paint().apply { color = Color.GRAY }
     private val staticPointer = Paint().apply { color = Color.RED }
     private val movingPointer = Paint().apply { color = Color.YELLOW }
-    private val backgroundColor = when(Theme.getTheme(context)) {
-        Theme.DARK -> Color.BLACK
-        Theme.LIGHT -> Color.WHITE
-    }
+    private val backgroundColor = Theme.switchOnTheme(context, Color.WHITE, Color.BLACK)
 
     private var minWidth = 0
 
@@ -63,8 +63,7 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
                 if (event is NoteOn) {
                     if (notesOn == 0) noteOnPos = eventPos
                     notesOn += 1
-                }
-                else if (event is NoteOff) {
+                } else if (event is NoteOff) {
                     notesOn -= 1
                     if (notesOn == 0) {
                         val y = trackY(trackId)

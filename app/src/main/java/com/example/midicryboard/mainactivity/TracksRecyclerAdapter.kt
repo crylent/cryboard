@@ -1,4 +1,4 @@
-package com.example.midicryboard
+package com.example.midicryboard.mainactivity
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.activity.MainActivity
+import com.example.midicryboard.Midi
+import com.example.midicryboard.R
+import com.example.midicryboard.TrackList
 
 class TracksRecyclerAdapter: RecyclerView.Adapter<TracksRecyclerAdapter.TrackViewHolder>() {
 

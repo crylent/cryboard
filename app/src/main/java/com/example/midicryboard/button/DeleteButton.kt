@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.app.AlertDialog
 import com.example.midicryboard.Filename
 import com.example.midicryboard.R
-import com.example.midicryboard.activity.OpenProjectActivity
+import com.example.midicryboard.projectactivities.OpenProjectActivity
 import java.io.File
 import java.io.IOException
 

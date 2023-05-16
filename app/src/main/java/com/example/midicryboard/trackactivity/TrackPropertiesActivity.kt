@@ -1,4 +1,4 @@
-package com.example.midicryboard.activity
+package com.example.midicryboard.trackactivity
 
 import android.os.Bundle
 import android.view.View
@@ -10,9 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
+import com.example.midilib.instrument.Instrument
 
 class TrackPropertiesActivity : AppCompatActivity() {
     private lateinit var instrumentsView: RecyclerView
+    private lateinit var envelopeCanvas: EnvelopeCanvas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +29,10 @@ class TrackPropertiesActivity : AppCompatActivity() {
         val categoriesSpinner = findViewById<Spinner>(R.id.categories).apply {
             onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    instrumentsView.adapter = InstrumentsRecyclerAdapter(trackId, position)
+                    instrumentsView.adapter = InstrumentsRecyclerAdapter(
+                        this@TrackPropertiesActivity,
+                        trackId, position
+                    )
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -41,8 +46,16 @@ class TrackPropertiesActivity : AppCompatActivity() {
             }
         }
 
+        val instrument = TrackList[trackId.toInt()].instrument
         categoriesSpinner.setSelection(
-            Instruments.getCategoryIndex(TrackList[trackId.toInt()].instrument)!!
+            Instruments.getCategoryIndex(instrument)!!
         )
+
+        envelopeCanvas = findViewById(R.id.envelopeCanvas)
+        viewInstrument(instrument)
+    }
+
+    fun viewInstrument(instrument: Instrument) {
+        envelopeCanvas.instrument = instrument
     }
 }

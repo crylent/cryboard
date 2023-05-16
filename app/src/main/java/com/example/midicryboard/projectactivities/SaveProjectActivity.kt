@@ -1,4 +1,4 @@
-package com.example.midicryboard.activity
+package com.example.midicryboard.projectactivities
 
 import android.content.Context
 import android.os.Bundle

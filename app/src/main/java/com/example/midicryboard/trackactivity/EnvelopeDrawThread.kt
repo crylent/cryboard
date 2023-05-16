@@ -1,14 +1,14 @@
-package com.example.midicryboard
+package com.example.midicryboard.trackactivity
 
-class TracksDrawThread(private val tracksCanvas: TracksCanvas): Thread() {
+class EnvelopeDrawThread(private val envelopeCanvas: EnvelopeCanvas): Thread() {
 
-    private val holder = tracksCanvas.holder
+    private val holder = envelopeCanvas.holder
 
     override fun run() {
         while (true) {
             holder.lockCanvas()?.let {
                 synchronized(holder) {
-                    tracksCanvas.redraw(it)
+                    envelopeCanvas.redraw(it)
                 }
                 holder.unlockCanvasAndPost(it)
             }

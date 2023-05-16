@@ -2,7 +2,7 @@ package com.example.midicryboard.button
 
 import android.content.Context
 import android.util.AttributeSet
-import com.example.midicryboard.activity.OpenProjectActivity
+import com.example.midicryboard.projectactivities.OpenProjectActivity
 
 class ShareButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context=".mainactivity.MainActivity">
 
 
     <!-- METRONOME PROPERTIES -->
@@ -167,7 +167,7 @@
                     android:layout_height="match_parent"
                     tools:listitem="@layout/track" />
 
-                <com.example.midicryboard.TracksCanvas
+                <com.example.midicryboard.mainactivity.TracksCanvas
                     android:id="@+id/tracksCanvas"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />

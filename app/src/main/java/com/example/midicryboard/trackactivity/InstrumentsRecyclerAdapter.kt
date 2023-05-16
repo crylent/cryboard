@@ -1,12 +1,19 @@
-package com.example.midicryboard
+package com.example.midicryboard.trackactivity
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
+import com.example.midicryboard.Instruments
+import com.example.midicryboard.R
+import com.example.midicryboard.TrackList
 
-class InstrumentsRecyclerAdapter(private val trackId: Byte, private val selectedCategory: Int): RecyclerView.Adapter<InstrumentsRecyclerAdapter.InstrumentViewHolder>() {
+class InstrumentsRecyclerAdapter(
+    private val activity: TrackPropertiesActivity,
+    private val trackId: Byte,
+    private val selectedCategory: Int
+): RecyclerView.Adapter<InstrumentsRecyclerAdapter.InstrumentViewHolder>() {
     private val category = Instruments.instance[selectedCategory]
 
     class InstrumentViewHolder(itemView: View, adapter: InstrumentsRecyclerAdapter): RecyclerView.ViewHolder(itemView) {
@@ -16,7 +23,9 @@ class InstrumentsRecyclerAdapter(private val trackId: Byte, private val selected
                     holder.instrumentButton.isSelected = false
                 }
                 it.isSelected = true
-                TrackList.setTrackInfo(adapter.trackId, adapter.category[instrumentIndex])
+                val instrument = adapter.category[instrumentIndex]
+                TrackList.setTrackInfo(adapter.trackId, instrument)
+                adapter.activity.viewInstrument(instrument)
             }
         }
 

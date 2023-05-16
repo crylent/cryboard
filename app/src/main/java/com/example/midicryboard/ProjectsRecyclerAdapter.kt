@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.activity.OpenProjectActivity
+import com.example.midicryboard.projectactivities.OpenProjectActivity
 import com.example.midicryboard.button.DeleteButton
 import com.example.midicryboard.button.FavouriteButton
 import java.io.File

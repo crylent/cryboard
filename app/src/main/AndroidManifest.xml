@@ -28,7 +28,7 @@
         </provider>
 
         <activity
-            android:name=".activity.OpenProjectActivity"
+            android:name=".projectactivities.OpenProjectActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:screenOrientation="landscape">
@@ -37,7 +37,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.SaveProjectActivity"
+            android:name=".projectactivities.SaveProjectActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:screenOrientation="landscape">
@@ -46,7 +46,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.TrackPropertiesActivity"
+            android:name=".trackactivity.TrackPropertiesActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:screenOrientation="landscape">
@@ -55,7 +55,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".mainactivity.MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true"
             android:screenOrientation="landscape">

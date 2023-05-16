@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.TrackPropertiesActivity"
+    tools:context=".trackactivity.TrackPropertiesActivity"
     android:baselineAligned="false" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,5 +37,13 @@
         android:layout_height="match_parent"
         android:layout_weight="0.67" >
 
+        <com.example.midicryboard.trackactivity.EnvelopeCanvas
+            android:id="@+id/envelopeCanvas"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

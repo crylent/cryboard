@@ -1,4 +1,4 @@
-package com.example.midicryboard.activity
+package com.example.midicryboard.mainactivity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.*
+import com.example.midicryboard.projectactivities.OpenProjectActivity
+import com.example.midicryboard.projectactivities.SaveProjectActivity
+import com.example.midicryboard.trackactivity.TrackPropertiesActivity
 import com.sdsmdg.harjot.crollerTest.Croller
 
 const val DEFAULT_MIDI_OFFSET = 60
