@@ -45,18 +45,14 @@ jfloat field = env->GetFloatField(thiz, id_##field)
         thiz = env->CallObjectMethod(thiz, idAsSynthInst);
         auto inst = make_shared<SynthInstrument>(
                 attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
-        jmethodID idOscillators = env->GetMethodID(
-                synthInstCls, "getOscillators", "()Ljava/util/List;"
-        );
-        jobject oscillators = env->CallObjectMethod(thiz, idOscillators);
+        jmethodID idOscCount = env->GetMethodID(synthInstCls, "getOscCount", "()I");
+        jint oscillatorsCount = env->CallIntMethod(thiz, idOscCount);
 
-        jclass listCls = env->FindClass("java/util/List");
-        jmethodID listGetId = env->GetMethodID(listCls, "get", "(I)Ljava/lang/Object;");
-        jmethodID listSizeId = env->GetMethodID(listCls, "size", "()I");
+        jmethodID idGetOscillator = env->GetMethodID(synthInstCls, "getOscillator",
+                                                     "(I)Lcom/example/midilib/Oscillator;");
 
-        auto oscillatorsCount = static_cast<int>(env->CallIntMethod(oscillators, listSizeId));
         for (int i = 0; i < oscillatorsCount; i++) {
-            jobject oscillator = env->CallObjectMethod(oscillators, listGetId, i);
+            jobject oscillator = env->CallObjectMethod(thiz, idGetOscillator, i);
             addOscillator(env, *inst, oscillator);
         }
         position = InstrumentLib::addInstrument(inst);
@@ -108,7 +104,9 @@ Java_com_example_midilib_instrument_Instrument_externalAssignToChannel(JNIEnv *e
 Java_com_example_midilib_instrument_Instrument_externalSet##param \
 (JNIEnv *env, jobject thiz, jfloat value) {\
     int32_t index = getLibIndex(env, thiz);\
-    if (index != NO_INDEX) GET_SYNTH(index).set##param(value);\
+    if (index != NO_INDEX) {\
+        InstrumentLib::getInstrument(index)->set##param(value);\
+    }\
 }
 
 PARAM_SETTER(Attack)

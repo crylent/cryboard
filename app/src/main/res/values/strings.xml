@@ -42,4 +42,8 @@
     <string name="favourite">Favourite</string>
     <string name="delete">Delete</string>
     <string name="open">Open Project</string>
+    <string name="attack">Attack</string>
+    <string name="decay">Decay</string>
+    <string name="release">Release</string>
+    <string name="sustain">Sustain</string>
 </resources>

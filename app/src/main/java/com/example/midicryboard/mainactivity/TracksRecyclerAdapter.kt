@@ -59,7 +59,6 @@ class TracksRecyclerAdapter: RecyclerView.Adapter<TracksRecyclerAdapter.TrackVie
     override fun getItemCount() = TrackList.namesList.size
 
     fun updateItem(trackId: Byte) {
-        //notifyItemRemoved(trackId.toInt())
         notifyItemChanged(trackId.toInt())
     }
 

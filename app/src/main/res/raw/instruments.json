@@ -350,7 +350,6 @@
       "instruments": [
         {
           "name": "Acoustic Guitar",
-          "default": true,
           "assets": [
             {
               "note": 38,

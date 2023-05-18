@@ -34,8 +34,8 @@ class EnvelopeCanvas(context: Context, attrs: AttributeSet): SurfaceView(context
     private var fullTime = 0f
 
     fun redraw(canvas: Canvas) {
-        canvas.apply {
-            drawColor(backgroundColor)
+        canvas.also {
+            it.drawColor(backgroundColor)
             if (instrument == null) return
             val a = instrument!!.attack
             val d = instrument!!.decay
@@ -44,15 +44,23 @@ class EnvelopeCanvas(context: Context, attrs: AttributeSet): SurfaceView(context
             val sTime = (a + d + r) * 0.5f
             fullTime = (a + d + sTime + r) * 1.1f
             time = 0f
-            drawFragment(canvas, paintA, a) { t ->
+            drawFragment(it, paintA, a) { t ->
                 (t / a).pow(1 / instrument!!.attackSharpness)
             }
-            drawFragment(canvas, paintD, a + d) { t ->
+            drawFragment(it, paintD, a + d) { t ->
                 ((a + d - t) / d).pow(instrument!!.decaySharpness) * (1 - s) + s
             }
-            drawFragment(canvas, paintS, a + d + sTime) { s }
-            drawFragment(canvas, paintR, a + d + sTime + r) { t ->
+            drawFragment(it, paintS, a + d + sTime) { s }
+            drawFragment(it, paintR, a + d + sTime + r) { t ->
                 ((a + d + sTime + r - t) / r).pow(instrument!!.releaseSharpness) * s
+            }
+
+            // early release
+            val d2 = d * 0.5f
+            time = a + d2
+            drawFragment(it, paintR, a + d2 + r) { t ->
+                ((a + d2 + r - t) / r).pow(instrument!!.releaseSharpness) *
+                        ((1 - d2 / d).pow(instrument!!.decaySharpness) * (1 - s) + s)
             }
         }
     }
@@ -60,16 +68,16 @@ class EnvelopeCanvas(context: Context, attrs: AttributeSet): SurfaceView(context
     private fun drawFragment(canvas: Canvas, paint: Paint, maxT: Float, f: (Float)->Float) {
         val path = Path()
         var firstPoint = true
-        while (time < maxT) {
+        while (time <= maxT) {
             val x = width * time / fullTime
-            val y = height * (1 - f(time))
+            val y = height * (1 - 0.9f * f(time))
             if (firstPoint) {
                 path.moveTo(x, y)
                 firstPoint = false
             } else {
                 path.lineTo(x, y)
             }
-            time += ENVELOPE_T_STEP
+            time += TIME_STEP
         }
         canvas.drawPath(path, paint)
     }
@@ -89,7 +97,7 @@ class EnvelopeCanvas(context: Context, attrs: AttributeSet): SurfaceView(context
     override fun surfaceDestroyed(holder: SurfaceHolder) {}
 
     companion object {
-        private const val ENVELOPE_T_STEP = 0.01f
+        private const val TIME_STEP = 0.005f
 
         private const val ATTACK_COLOR = Color.RED
         private const val DECAY_COLOR = Color.GREEN

@@ -23,6 +23,8 @@ class SynthInstrument(
 
     fun getOscillator(oscIndex: Int) = oscillators[oscIndex]
 
+    val oscCount get() = oscillators.size
+
     fun removeOscillator(oscillator: Oscillator) {
         oscillators.remove(oscillator)
         if (libIndex != NO_INDEX) externalRemoveOscillator(oscillators.indexOf(oscillator))
