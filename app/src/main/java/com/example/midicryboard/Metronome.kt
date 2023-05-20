@@ -1,6 +1,5 @@
 package com.example.midicryboard
 
-import android.util.Log
 import java.util.*
 import kotlin.concurrent.timerTask
 
@@ -20,11 +19,9 @@ data class TimeSignature(val num: Int = 4, val den: Int = 4) {
 }
 
 object Metronome {
-    private const val BEAT_DURATION: Long = 100
-
     const val METRONOME_CHANNEL: Byte = 9
     private const val METRONOME_DOWNBEAT: Byte = 35
-    private const val METRONOME_BEAT: Byte = 42
+    private const val METRONOME_BEAT: Byte = 37
 
     const val DEFAULT_TEMPO = 120
 
@@ -41,11 +38,15 @@ object Metronome {
     val period
         get() = (60e3 / tempo * 4 / signature.den).toLong()
 
+    init {
+        Midi.setInstrument(METRONOME_CHANNEL, Instruments["Metronome"]!!)
+    }
+
     fun run(timer: Timer, startTime: Long) {
-        beats = ((startTime % (period * signature.num) / period + 1) % signature.num).toInt() // first beat
+        beats = ((startTime % (period * signature.num) / period) % signature.num).toInt() // first beat
         timer.schedule(timerTask {
-            beat(timer)
-        }, period - startTime % period, period)
+            beat()
+        }, startTime * (startTime / period), period)
         running = true
     }
 
@@ -53,7 +54,7 @@ object Metronome {
         running = false
     }
 
-    private fun beat(timer: Timer) {
+    private fun beat() {
         val beat = if (beats == 0) METRONOME_DOWNBEAT else METRONOME_BEAT
         Midi.noteOn(
             beat,
@@ -61,8 +62,5 @@ object Metronome {
             volume
         )
         beats = (beats + 1) % signature.num
-        timer.schedule(timerTask {
-            Midi.noteOff(beat, METRONOME_CHANNEL)
-        }, BEAT_DURATION)
     }
 }
