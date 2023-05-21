@@ -5,7 +5,7 @@
 
 class WavePlayer : public SoundPlayer {
 public:
-    void fillBuffer(float* buffer, int32_t numFrames) override;
+    void fillBuffer(float* buffer, size_t numFrames) override;
 };
 
 

@@ -3,10 +3,9 @@ package com.example.midicryboard.button
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.app.AlertDialog
-import com.example.midicryboard.Filename
+import com.example.midicryboard.projectactivities.Files
 import com.example.midicryboard.R
 import com.example.midicryboard.projectactivities.OpenProjectActivity
-import java.io.File
 import java.io.IOException
 
 class DeleteButton @JvmOverloads constructor(
@@ -31,10 +30,7 @@ class DeleteButton @JvmOverloads constructor(
     private fun deleteProject() {
         if (name == null) return
         try {
-            File(context.filesDir, Filename.metadata(name!!)).delete()
-            File(context.filesDir, Filename.midi(name!!)).apply {
-                if (exists()) delete()
-            }
+            Files.prj(context, name!!).delete()
             (context as OpenProjectActivity).apply {
                 removeProjectFromList(name!!)
                 if (projectOnPreview == name) clearPreview()

@@ -24,7 +24,8 @@ add_library(
         SHARED
 
         # Provides a relative path to your source file(s).
-        jni/jni.cpp
+        jni/jni_engine.cpp
+        jni/jni_engine_functions.cpp
         jni/jni_instrument.cpp
         jni/jni_instrument_functions.cpp
         jni/jni_soundfx.cpp

@@ -2,8 +2,9 @@ package com.example.midilib
 
 import com.example.midilib.instrument.Instrument
 import com.example.midilib.soundfx.SoundFX
+import java.util.LinkedList
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 object AudioEngine {
     init {
         System.loadLibrary("midilib")
@@ -29,4 +30,29 @@ object AudioEngine {
     }
 
     external fun clearEffects(channel: Byte)
+
+    data class NoteEvent(val channel: Byte, val time: Long, val note: Byte, val amplitude: Float)
+
+    private class EventList(events: List<NoteEvent>) {
+        private val _events: LinkedList<NoteEvent>
+
+        init {
+            _events = LinkedList<NoteEvent>(events.sortedBy { it.time })
+        }
+
+        private val iterator = _events.listIterator()
+
+        fun hasNext() = iterator.hasNext()
+        fun next() = iterator.next()
+
+        fun getLength() = _events.last.time + TAIL
+
+        companion object {
+            private const val TAIL = 2000
+        }
+    }
+
+    fun renderWav(events: List<NoteEvent>) = renderWavExternal(EventList(events))
+
+    private external fun renderWavExternal(sortedEvents: EventList): ByteArray
 }

@@ -204,7 +204,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/save"
+            app:srcCompat="@drawable/save_enabled"
             tools:ignore="ContentDescription" />
 
         <ImageButton

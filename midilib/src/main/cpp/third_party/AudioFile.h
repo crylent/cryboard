@@ -108,6 +108,12 @@ public:
     bool loadFromMemory (std::vector<uint8_t>& fileData);
 
     //=============================================================
+    /** Saves an audio file to vector as raw data
+     * @Returns true if the file was successfully created
+     */
+    bool saveToMemory (std::vector<uint8_t>& fileData);
+
+    //=============================================================
     /** @Returns the sample rate */
     uint32_t getSampleRate() const;
 
@@ -190,6 +196,7 @@ private:
     bool decodeAiffFile (std::vector<uint8_t>& fileData);
 
     //=============================================================
+    bool createWaveData(std::vector<uint8_t>& fileData);
     bool saveToWaveFile (std::string filePath);
     bool saveToAiffFile (std::string filePath);
 
@@ -567,6 +574,12 @@ bool AudioFile<T>::loadFromMemory (std::vector<uint8_t>& fileData)
 
 //=============================================================
 template <class T>
+bool AudioFile<T>::saveToMemory (std::vector<uint8_t>& fileData) {
+    return createWaveData(fileData);
+}
+
+//=============================================================
+template <class T>
 bool AudioFile<T>::decodeWaveFile (std::vector<uint8_t>& fileData)
 {
     // -----------------------------------------------------------
@@ -932,11 +945,8 @@ bool AudioFile<T>::save (std::string filePath, AudioFileFormat format)
     return false;
 }
 
-//=============================================================
 template <class T>
-bool AudioFile<T>::saveToWaveFile (std::string filePath)
-{
-    std::vector<uint8_t> fileData;
+bool AudioFile<T>::createWaveData(std::vector<uint8_t>& fileData) {
 
     int32_t dataChunkSize = getNumSamplesPerChannel() * (getNumChannels() * bitDepth / 8);
     int16_t audioFormat = bitDepth == 32 && std::is_floating_point<T>() ? WavAudioFormat::IEEEFloat : WavAudioFormat::PCM;
@@ -1017,7 +1027,7 @@ bool AudioFile<T>::saveToWaveFile (std::string filePath)
                 if (audioFormat == WavAudioFormat::IEEEFloat)
                     sampleAsInt = (int32_t) reinterpret_cast<int32_t&> (samples[channel][i]);
                 else // assume PCM
-                sampleAsInt = AudioSampleConverter<T>::sampleToThirtyTwoBitInt (samples[channel][i]);
+                    sampleAsInt = AudioSampleConverter<T>::sampleToThirtyTwoBitInt (samples[channel][i]);
 
                 addInt32ToFileData (fileData, sampleAsInt, Endianness::LittleEndian);
             }
@@ -1041,9 +1051,19 @@ bool AudioFile<T>::saveToWaveFile (std::string filePath)
     // check that the various sizes we put in the metadata are correct
     if (fileSizeInBytes != static_cast<int32_t> (fileData.size() - 8) || dataChunkSize != (getNumSamplesPerChannel() * getNumChannels() * (bitDepth / 8)))
     {
-        reportError ("ERROR: couldn't save file to " + filePath);
+        reportError ("ERROR: couldn't save file");
         return false;
     }
+
+    return true;
+}
+
+//=============================================================
+template <class T>
+bool AudioFile<T>::saveToWaveFile (std::string filePath)
+{
+    std::vector<uint8_t> fileData;
+    createWaveData(&fileData);
 
     // try to write the file
     return writeDataToFile (fileData, filePath);

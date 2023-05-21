@@ -220,6 +220,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        tracksCanvas.callFullRedraw()
+    }
+
     private fun EditText.setEditListener(lambda: () -> Boolean) {
         setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_PREVIOUS) {

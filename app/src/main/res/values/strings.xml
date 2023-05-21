@@ -29,7 +29,7 @@
 
     <string name="project_name">Project Name</string>
     <string name="save">Save</string>
-    <string name="export_midi">Export MIDI</string>
+    <string name="export">Export</string>
 
     <string name="error_no_midi">MIDI is missing</string>
     <string name="error_no_midi_msg">MIDI file related to this project doesn\'t exists or can\'t be opened. Load metadata only?</string>

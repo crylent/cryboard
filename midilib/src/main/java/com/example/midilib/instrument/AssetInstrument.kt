@@ -13,10 +13,9 @@ open class AssetInstrument(
     releaseSharpness: Number = 1f,
     repeatAssets: Boolean = true
 ): Instrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness) {
-    class Drums : AssetInstrument(
+    class Single : AssetInstrument(
         0f, 0f, 1f, Float.POSITIVE_INFINITY,
-        1f, 1f, 1f,
-        false
+        repeatAssets = false
     )
 
     data class Asset(val note: Byte, val filename: String, val isBaseAsset: Boolean)

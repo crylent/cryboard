@@ -66,7 +66,7 @@ object TrackList: ArrayList<TrackInfo>() {
         tracksRecyclerAdapter.updateItem(trackId)
     }
 
-    fun readTracksFromProject(project: CryboardProject) {
+    fun readTracksFromProject(project: ProjectMetadata) {
         clear()
         listeners.forEach { it.onTracksCleared() }
         project.tracks.forEach {

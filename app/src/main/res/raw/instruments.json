@@ -558,6 +558,26 @@
           "release": 0.5
         }
       ]
+    },
+    {
+      "name": "Drums",
+      "hidden": true,
+      "instruments": [
+        {
+          "name": "Metronome",
+          "assets": [
+            {
+              "note": 35,
+              "sample": "wav/drums/Metronome-downbeat.wav"
+            },
+            {
+              "note": 37,
+              "sample": "wav/drums/Metronome-beat.wav"
+            }
+          ],
+          "single": true
+        }
+      ]
     }
   ]
 }

@@ -15,6 +15,7 @@ private const val SUSTAIN = "sustain"
 private const val RELEASE = "release"
 private const val RELEASE_SHARPNESS = "releaseSharpness"
 private const val IS_SYNTH = "synth"
+private const val IS_SINGLE = "single"
 private const val ASSETS = "assets"
 private const val NOTE = "note"
 private const val SAMPLE = "sample"
@@ -34,16 +35,18 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
             SynthInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
                 TODO("oscillators")
             }
-        else AssetInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
-            getJSONArray(ASSETS).forEach {
-                loadAsset(
-                    context,
-                    it.getInt(NOTE).toByte(),
-                    it.getString(SAMPLE),
-                    it.optBoolean(IS_BASE)
-                )
+        else {
+            (if (optBoolean(IS_SINGLE)) AssetInstrument.Single()
+            else AssetInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness)).apply {
+                getJSONArray(ASSETS).forEach {
+                    loadAsset(
+                        context,
+                        it.getInt(NOTE).toByte(),
+                        it.getString(SAMPLE),
+                        it.optBoolean(IS_BASE)
+                    )
+                }
             }
-            repeatAssets = true
         }
         instrument.name = getString(NAME)
         return instrument
@@ -53,14 +56,19 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
 fun Instrument.toJson() = JSONObject().apply {
     put(NAME, name)
     val isSynth = this@toJson is SynthInstrument
+    val isSingle = this@toJson is AssetInstrument.Single
     put(IS_SYNTH, isSynth)
-    put(ATTACK, attack)
-    put(ATTACK_SHARPNESS, attackSharpness)
-    put(DECAY, decay)
-    put(DECAY_SHARPNESS, decaySharpness)
-    put(SUSTAIN, sustain)
-    put(RELEASE, release)
-    put(RELEASE_SHARPNESS, releaseSharpness)
+    if (!isSingle) {
+        put(ATTACK, attack)
+        put(ATTACK_SHARPNESS, attackSharpness)
+        put(DECAY, decay)
+        put(DECAY_SHARPNESS, decaySharpness)
+        put(SUSTAIN, sustain)
+        put(RELEASE, release)
+        put(RELEASE_SHARPNESS, releaseSharpness)
+    } else {
+        put(IS_SINGLE, true)
+    }
     if (isSynth) {
         TODO()
     } else {

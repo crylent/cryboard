@@ -1,4 +1,4 @@
-package com.example.midicryboard
+package com.example.midicryboard.projectactivities
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.projectactivities.OpenProjectActivity
+import com.example.midicryboard.Favourites
+import com.example.midicryboard.R
 import com.example.midicryboard.button.DeleteButton
 import com.example.midicryboard.button.FavouriteButton
 import java.io.File
@@ -23,7 +24,7 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
                     holder.item.isSelected = false
                 }
                 it.isSelected = true
-                adapter.context.tryToPreviewProject(name.text as String)
+                adapter.context.previewProject(name.text as String)
             }
         }
 
@@ -48,7 +49,7 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
     private object ProjectFilter: FilenameFilter {
         var filter = ""
 
-        override fun accept(dir: File, name: String) = Filename.projectFilter(name, filter)
+        override fun accept(dir: File, name: String) = Files.projectFilter(name, filter)
     }
 
     private val holders = arrayListOf<ProjectViewHolder>()
@@ -58,7 +59,7 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
         holders.find { it.projectName == projectName }?.removeHolder()
     }
 
-    private val dir = context.filesDir
+    private val dir = context.projectsDir
     private val files
         get() = dir.listFiles(ProjectFilter)
 

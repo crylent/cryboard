@@ -15,6 +15,8 @@ class AudioEngine {
 public:
     static Result start(SharingMode sharingMode, int32_t sampleRate = AUTO_DEFINITION, int32_t bufferSize = AUTO_DEFINITION);
     static Result start();
+    static Result pause();
+    static Result resume();
     static Result stop();
 
     static void initChannels();

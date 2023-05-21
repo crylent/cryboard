@@ -11,7 +11,7 @@ class SoundPlayer {
 public:
     virtual ~SoundPlayer() = default;
 
-    virtual void fillBuffer(float* buffer, int32_t numFrames) = 0;
+    virtual void fillBuffer(float* buffer, size_t numFrames) = 0;
 
     float applyFX(float sample);
     shared_ptr<FXList> getEffects();

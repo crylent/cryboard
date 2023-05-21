@@ -14,6 +14,7 @@ import java.util.*
 import kotlin.concurrent.timerTask
 import com.leff.midi.event.meta.TimeSignature as TimeSignatureEvent
 
+@Suppress("unused")
 object Midi {
     private val tracks = mutableListOf<MidiTrack>().apply {
         add(MidiTrack.createTempoTrack())
@@ -212,14 +213,36 @@ object Midi {
         tracks[channel + 1] = MidiTrack()
     }
 
-    fun writeToFile(file: File) {
+    fun writeToFile(file: File): File {
         MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks).writeToFile(file)
+        return file
     }
 
     fun readFromFile(file: File) {
-        MidiFile(file).tracks.forEachIndexed { index, midiTrack ->
+        readFromBytes(file.readBytes())
+    }
+
+    fun readFromBytes(bytes: ByteArray) {
+        val stream = bytes.inputStream()
+        MidiFile(stream).tracks.forEachIndexed { index, midiTrack ->
             tracks[index] = midiTrack
         }
         readTempoAndSignature()
+    }
+
+    fun renderWav(): ByteArray {
+        val events = mutableListOf<AudioEngine.NoteEvent>()
+        processEvents(ALL_TRACKS) { trackId, event ->
+            val note = when (event) {
+                is NoteOn -> event.noteValue
+                is NoteOff -> event.noteValue
+                else -> return@processEvents
+            }.toByte()
+            val amplitude = (if (event is NoteOn) event.velocity else NOTE_OFF_VELOCITY).toFloat() / 127
+            events.add(
+                AudioEngine.NoteEvent(trackId, ticksToTime(event.tick), note, amplitude)
+            )
+        }
+        return AudioEngine.renderWav(events)
     }
 }

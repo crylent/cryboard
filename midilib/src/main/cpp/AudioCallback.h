@@ -10,10 +10,10 @@ class AudioCallback : public AudioStreamDataCallback {
 public:
     DataCallbackResult onAudioReady(AudioStream* audioStream, void* audioData, int32_t numFrames);
 
-    AudioCallback(unique_ptr<SoundPlayer> generator);
+    AudioCallback(unique_ptr<SoundPlayer> player);
 
 private:
-    shared_ptr<SoundPlayer> mSoundGenerator;
+    shared_ptr<SoundPlayer> mSoundPlayer;
 };
 
 

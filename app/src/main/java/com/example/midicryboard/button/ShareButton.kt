@@ -2,7 +2,6 @@ package com.example.midicryboard.button
 
 import android.content.Context
 import android.util.AttributeSet
-import com.example.midicryboard.projectactivities.OpenProjectActivity
 
 class ShareButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -12,7 +11,7 @@ class ShareButton @JvmOverloads constructor(
         isEnabled = true
         name = projectName
         setOnClickListener {
-            (context as OpenProjectActivity).shareMidi()
+            //ProjectExport.shareMidi(context)
         }
     }
 }

@@ -4,9 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import com.example.midicryboard.*
+import com.example.midicryboard.projectactivities.Files
 import org.json.JSONObject
-import java.io.File
-import java.io.InputStreamReader
+import java.io.FileInputStream
+import java.io.ObjectInputStream
 
 class OpenButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -23,12 +24,13 @@ class OpenButton @JvmOverloads constructor(
 
     private fun openFile() {
         if (name == null) return
-        context.openFileInput(Filename.metadata(name!!)).use { file ->
-            InputStreamReader(file).use {
-                val project = CryboardProject.fromJson(context, JSONObject(it.readText()))
-                TrackList.readTracksFromProject(project)
+        FileInputStream(Files.prj(context, name!!)).use { file ->
+            ObjectInputStream(file).use {
+                val project = it.readObject() as ProjectFile
+                val metadata = ProjectMetadata.fromJson(context, JSONObject(project.metadata))
+                TrackList.readTracksFromProject(metadata)
+                Midi.readFromBytes(project.midi)
             }
         }
-        Midi.readFromFile(File(context.filesDir, Filename.midi(name!!)))
     }
 }

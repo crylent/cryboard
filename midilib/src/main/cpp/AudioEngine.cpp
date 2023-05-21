@@ -38,14 +38,11 @@ Result AudioEngine::start() {
     defaultSynth->addOscillator(make_unique<SawtoothOscillator>(1, 0, 1));
     defaultSynth->getOscillatorByIndex(0).setDetune();
 
-    //auto drum = make_shared<AssetInstrument>();
-    //drum->loadAsset(57, "DRUM STICK.wav");
-
     Channel::setDefaultInstrument(move(defaultSynth));
     initChannels();
-    auto generator = make_unique<WavePlayer>();
-    mMasterEffects = generator->getEffects();
-    auto* callback = new AudioCallback(move(generator));
+    auto player = make_unique<WavePlayer>();
+    mMasterEffects = player->getEffects();
+    auto* callback = new AudioCallback(move(player));
 
     AudioStreamBuilder builder;
     builder.setPerformanceMode(PerformanceMode::LowLatency)
@@ -86,6 +83,34 @@ Result AudioEngine::start() {
 }
 
 /**
+ * Pauses audio stream.
+ * @return <code>Result::OK</code> if successful, <code>Result::{some_error}</code> otherwise.
+ */
+Result AudioEngine::pause() {
+    Result result = mStream->requestPause();
+    if (result == Result::OK) {
+        LOGI("Audio stream: paused");
+    } else {
+        LOGI("Error pausing audio stream: %s", convertToText(result));
+    }
+    return result;
+}
+
+/**
+ * Resumes audio stream.
+ * @return <code>Result::OK</code> if successful, <code>Result::{some_error}</code> otherwise.
+ */
+Result AudioEngine::resume() {
+    Result result = mStream->requestStart();
+    if (result == Result::OK) {
+        LOGI("Audio stream: resumed");
+    } else {
+        LOGI("Error resuming audio stream: %s", convertToText(result));
+    }
+    return result;
+}
+
+/**
  * Closes audio stream. Does nothing if stream is not open.
  * @return <code>Result::OK</code> if successful, <code>Result::{some_error}</code> otherwise.
  */
@@ -97,7 +122,7 @@ Result AudioEngine::stop() {
         mStream->close();
         mStream.reset();
         if (result == Result::OK) {
-            LOGI("Audio stream closed successfully");
+            LOGI("Audio stream: closed");
         } else {
             LOGE("Error closing audio stream: %s", convertToText(result));
         }

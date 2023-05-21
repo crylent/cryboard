@@ -27,37 +27,42 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text=""
-        android:visibility="invisible"
+        android:visibility="gone"
         android:textSize="20sp"
         android:textColor="#F44"
         app:layout_constraintEnd_toEndOf="@+id/projectName"
         app:layout_constraintStart_toStartOf="@+id/projectName"
         app:layout_constraintTop_toBottomOf="@+id/projectName" />
 
-    <Button
-        android:id="@+id/saveProject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:ems="8"
-        android:text="@string/save"
-        android:textSize="36sp"
-        android:enabled="false"
-        app:layout_constraintEnd_toEndOf="@+id/projectName"
+    <Spinner
+        android:id="@+id/saveProjectFormat"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
         app:layout_constraintStart_toStartOf="@+id/projectName"
-        app:layout_constraintTop_toBottomOf="@+id/saveProjectError" />
+        app:layout_constraintEnd_toStartOf="@id/saveProject"
+        app:layout_constraintTop_toBottomOf="@+id/saveProjectError"
+        app:layout_constraintBottom_toBottomOf="@id/saveProject"/>
 
-    <Button
-        android:id="@+id/exportMidi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:ems="8"
-        android:text="@string/export_midi"
-        android:textSize="32sp"
+    <ImageButton
+        android:id="@+id/saveProject"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:enabled="false"
+        android:src="@drawable/save"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/exportProject"
+        app:layout_constraintTop_toTopOf="@+id/exportProject"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/exportProject"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:enabled="false"
+        android:src="@drawable/share"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="@+id/projectName"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/projectName"
-        app:layout_constraintTop_toBottomOf="@+id/saveProject" />
+        app:layout_constraintTop_toBottomOf="@+id/saveProjectError"
+        tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>
