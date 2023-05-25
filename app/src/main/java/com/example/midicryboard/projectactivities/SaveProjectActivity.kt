@@ -10,6 +10,7 @@ import androidx.core.widget.addTextChangedListener
 import com.example.midicryboard.Midi
 import com.example.midicryboard.ProjectFile
 import com.example.midicryboard.R
+import com.example.midicryboard.mainactivity.MainActivity
 import java.io.File
 
 class SaveProjectActivity : AppCompatActivity(), OnItemSelectedListener {
@@ -92,6 +93,7 @@ class SaveProjectActivity : AppCompatActivity(), OnItemSelectedListener {
     }
 
     private fun saveProject(projectName: String, temp: Boolean = false): File {
+        MainActivity.projectUnsaved = false
         return ProjectFile.saveCurrentProject(this, projectName, temp)
     }
 

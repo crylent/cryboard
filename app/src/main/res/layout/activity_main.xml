@@ -190,7 +190,16 @@
         app:layout_constraintEnd_toEndOf="@id/tracksView">
 
         <ImageButton
-            android:id="@+id/openMidiButton"
+            android:id="@+id/newProjectButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/new_project"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/openProjectButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -199,7 +208,7 @@
             tools:ignore="ContentDescription" />
 
         <ImageButton
-            android:id="@+id/saveMidiButton"
+            android:id="@+id/saveProjectButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -207,14 +216,14 @@
             app:srcCompat="@drawable/save"
             tools:ignore="ContentDescription" />
 
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/editMidiButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/edit"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription" />-->
     </LinearLayout>
 
     <!-- WHITE KEYS -->

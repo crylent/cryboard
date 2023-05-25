@@ -46,11 +46,19 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     private var maxPointerPos = 0
 
-    fun redraw(canvas: Canvas) {
+    fun postCanvas() {
+        holder.lockCanvas()?.let {
+            synchronized(holder) {
+                redraw(it)
+                holder.unlockCanvasAndPost(it)
+            }
+        }
+    }
+
+    private fun redraw(canvas: Canvas) {
         canvas.apply {
             drawColor(backgroundColor)
             val selected = activity!!.selectedTrack
-            //while (TrackList.size > regions.size) regions.add(Region())
             regions[selected.toInt()].setEmpty()
             // Draw notes
             var notesOn = 0

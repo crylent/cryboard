@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.example.midicryboard.ProjectFile
 import com.example.midicryboard.R
+import com.example.midicryboard.mainactivity.MainActivity
 
 class OpenButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -21,5 +22,6 @@ class OpenButton @JvmOverloads constructor(
     private fun openFile() {
         if (name == null) return
         ProjectFile.readFile(context, name!!).loadProject(context)
+        MainActivity.projectUnsaved = false
     }
 }

@@ -215,6 +215,12 @@ object Midi {
         tracks[channel + 1] = MidiTrack()
     }
 
+    fun clearAll() {
+        for (i in tracks.indices) {
+            if (i != 0) tracks[i] = MidiTrack()
+        }
+    }
+
     fun writeToFile(file: File): File {
         MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks).writeToFile(file)
         return file

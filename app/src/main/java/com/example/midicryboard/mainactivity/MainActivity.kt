@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -175,13 +176,28 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Set up MIDI action buttons
-        findViewById<ImageButton>(R.id.saveMidiButton).apply {
+        // Set up project action buttons
+        findViewById<ImageButton>(R.id.newProjectButton).apply {
+            setOnClickListener {
+                if (projectUnsaved) {
+                    AlertDialog.Builder(this@MainActivity)
+                        .setTitle("New Project")
+                        .setMessage("Current project was not saved. Continue without saving?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            newProject()
+                        }
+                        .setNegativeButton("No") { _, _ -> }
+                        .show()
+                }
+                else newProject()
+            }
+        }
+        findViewById<ImageButton>(R.id.saveProjectButton).apply {
             setOnClickListener {
                 startActivity(Intent(context, SaveProjectActivity::class.java))
             }
         }
-        findViewById<ImageButton>(R.id.openMidiButton).apply {
+        findViewById<ImageButton>(R.id.openProjectButton).apply {
             setOnClickListener {
                 startActivity(Intent(context, OpenProjectActivity::class.java))
             }
@@ -225,6 +241,16 @@ class MainActivity : AppCompatActivity() {
         tracksCanvas.callFullRedraw()
     }
 
+    private fun newProject() {
+        Midi.clearAll()
+        tracksCanvas.apply {
+            callFullRedraw()
+            postCanvas()
+            //requestFocus()
+            //requestLayout()
+        }
+    }
+
     private fun EditText.setEditListener(lambda: () -> Boolean) {
         setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_PREVIOUS) {
@@ -264,6 +290,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startRecording() {
+        projectUnsaved = true
         startRecordingOnPlay = false // reset it
         Midi.clearTrack(selectedTrack)
         Midi.startRecording()
@@ -277,5 +304,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Midi.stop()
+    }
+
+    companion object {
+        var projectUnsaved = false
     }
 }
