@@ -46,7 +46,7 @@ object Metronome {
         beats = ((startTime % (period * signature.num) / period) % signature.num).toInt() // first beat
         timer.schedule(timerTask {
             beat()
-        }, startTime * (startTime / period), period)
+        }, startTime / period, period)
         running = true
     }
 
