@@ -1,4 +1,4 @@
-package com.example.midicryboard
+package com.example.midicryboard.projectactivities
 
 import android.content.Context
 import android.content.SharedPreferences

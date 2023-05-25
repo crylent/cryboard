@@ -2,11 +2,11 @@ package com.example.midicryboard.projectactivities
 
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.Favourites
 import com.example.midicryboard.R
 import com.example.midicryboard.button.*
 
@@ -36,6 +36,20 @@ class OpenProjectActivity : AppCompatActivity() {
                 projectsRecyclerAdapter.updateFilter(it.toString())
             }
         }
+
+        findViewById<ImageButton>(R.id.clearFilter).apply {
+            setOnClickListener {
+                nameFilter.setText("")
+                projectsRecyclerAdapter.updateFilter("")
+            }
+        }
+        findViewById<ImageButton>(R.id.onlyFavourites).apply {
+            setOnClickListener {
+                isActivated = !isActivated
+                projectsRecyclerAdapter.showFavouritesOnly(isActivated)
+            }
+        }
+
         favouriteButton = findViewById(R.id.favouriteProject)
         deleteButton = findViewById(R.id.deleteProject)
         openButton = findViewById(R.id.openProject)

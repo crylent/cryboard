@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.Favourites
 import com.example.midicryboard.R
 import com.example.midicryboard.button.DeleteButton
 import com.example.midicryboard.button.FavouriteButton
@@ -42,8 +41,24 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
         }
     }
 
+    private var showFavouritesOnly = false
+
+    private fun updateAndNotify(lambda: () -> Unit) {
+        notifyItemRangeRemoved(0, itemCount)
+        lambda()
+        notifyItemRangeInserted(0, itemCount)
+    }
+
+    fun showFavouritesOnly(enable: Boolean = true) {
+        updateAndNotify {
+            showFavouritesOnly = enable
+        }
+    }
+
     fun updateFilter(filter: String) {
-        ProjectFilter.filter = filter
+        updateAndNotify {
+            ProjectFilter.filter = filter
+        }
     }
 
     private object ProjectFilter: FilenameFilter {
@@ -61,7 +76,10 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
 
     private val dir = context.projectsDir
     private val files
-        get() = dir.listFiles(ProjectFilter)
+        get() = (dir.listFiles(ProjectFilter) ?: emptyArray()).filter {
+            if (showFavouritesOnly) favourites.contains(it.nameWithoutExtension)
+            else true
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ProjectViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.project, parent, false),
@@ -72,12 +90,12 @@ class ProjectsRecyclerAdapter(val context: OpenProjectActivity, private val favo
 
     override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
         holder.apply {
-            projectName = files!![position].nameWithoutExtension
+            projectName = files[position].nameWithoutExtension
             name.text = projectName
             favourite.enable(projectName, favourites)
             delete.enable(projectName)
         }
     }
 
-    override fun getItemCount() = files?.size ?: 0
+    override fun getItemCount() = files.size
 }

@@ -2,7 +2,7 @@ package com.example.midicryboard.button
 
 import android.content.Context
 import android.util.AttributeSet
-import com.example.midicryboard.Favourites
+import com.example.midicryboard.projectactivities.Favourites
 import com.example.midicryboard.R
 
 class FavouriteButton @JvmOverloads constructor(

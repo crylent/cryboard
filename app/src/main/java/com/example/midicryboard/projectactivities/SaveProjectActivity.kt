@@ -93,11 +93,6 @@ class SaveProjectActivity : AppCompatActivity(), OnItemSelectedListener {
 
     private fun saveProject(projectName: String, temp: Boolean = false): File {
         return ProjectFile.saveCurrentProject(this, projectName, temp)
-        /*val metadata = ProjectMetadata().toJson().toString()
-        val midiFile = saveMidi(projectName)
-        return ProjectFile(metadata, midiFile).save(this, projectName, temp).also {
-            midiFile.delete()
-        }*/
     }
 
     private fun updateButtons() {

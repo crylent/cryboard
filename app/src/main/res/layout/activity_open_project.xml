@@ -8,29 +8,58 @@
 
     <EditText
         android:id="@+id/projectNameFilter"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:ems="18"
         android:hint="@string/project_name"
         android:importantForAutofill="no"
         android:inputType="textFilter"
         android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/clearFilter"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/clearFilter"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/projectNameFilter"
+        app:layout_constraintEnd_toStartOf="@+id/onlyFavourites"
+        app:layout_constraintTop_toTopOf="@+id/projectNameFilter"
+        android:src="@drawable/clear"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/onlyFavourites"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/projectNameFilter"
+        app:layout_constraintEnd_toEndOf="@+id/projects"
+        app:layout_constraintTop_toTopOf="@+id/projectNameFilter"
+        android:src="@drawable/favourites"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        tools:ignore="ContentDescription" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/projects"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginVertical="15dp"
+        android:layout_marginEnd="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/projectNameFilter"
+        app:layout_constraintEnd_toStartOf="@+id/projectButtons"
         app:layout_constraintStart_toStartOf="@+id/projectNameFilter"
         app:layout_constraintTop_toBottomOf="@id/projectNameFilter"
         tools:listitem="@layout/project"/>
 
     <TableLayout
+        android:id="@+id/projectButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
