@@ -71,7 +71,7 @@
             android:layout_height="wrap_content">
 
             <FrameLayout>
-                <com.example.midicryboard.button.AudioButton
+                <com.example.midicryboard.projectactivities.button.AudioButton
                     android:id="@+id/shareWav"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -89,7 +89,7 @@
             </FrameLayout>
 
             <FrameLayout>
-                <com.example.midicryboard.button.MidiButton
+                <com.example.midicryboard.projectactivities.button.MidiButton
                     android:id="@+id/shareMidi"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -107,7 +107,7 @@
             </FrameLayout>
 
             <FrameLayout>
-                <com.example.midicryboard.button.ShareButton
+                <com.example.midicryboard.projectactivities.button.ShareButton
                     android:id="@+id/shareProject"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -131,7 +131,7 @@
             android:layout_height="wrap_content">
 
             <FrameLayout>
-                <com.example.midicryboard.button.FavouriteButton
+                <com.example.midicryboard.projectactivities.button.FavouriteButton
                     android:id="@+id/favouriteProject"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -149,7 +149,7 @@
             </FrameLayout>
 
             <FrameLayout>
-                <com.example.midicryboard.button.DeleteButton
+                <com.example.midicryboard.projectactivities.button.DeleteButton
                     android:id="@+id/deleteProject"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -167,7 +167,7 @@
             </FrameLayout>
 
             <FrameLayout>
-                <com.example.midicryboard.button.OpenButton
+                <com.example.midicryboard.projectactivities.button.OpenButton
                     android:id="@+id/openProject"
                     android:layout_width="100dp"
                     android:layout_height="100dp"

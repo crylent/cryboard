@@ -8,7 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.R
-import com.example.midicryboard.button.*
+import com.example.midicryboard.projectactivities.button.*
 
 class OpenProjectActivity : AppCompatActivity() {
     private lateinit var nameFilter: EditText

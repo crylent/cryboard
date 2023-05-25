@@ -7,8 +7,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.R
-import com.example.midicryboard.button.DeleteButton
-import com.example.midicryboard.button.FavouriteButton
+import com.example.midicryboard.projectactivities.button.DeleteButton
+import com.example.midicryboard.projectactivities.button.FavouriteButton
 import java.io.File
 import java.io.FilenameFilter
 

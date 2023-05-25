@@ -1,4 +1,4 @@
-package com.example.midicryboard.button
+package com.example.midicryboard.projectactivities.button
 
 import android.content.Context
 import android.util.AttributeSet
