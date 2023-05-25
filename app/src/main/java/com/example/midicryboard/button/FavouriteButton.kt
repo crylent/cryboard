@@ -3,10 +3,11 @@ package com.example.midicryboard.button
 import android.content.Context
 import android.util.AttributeSet
 import com.example.midicryboard.Favourites
+import com.example.midicryboard.R
 
 class FavouriteButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : ProjectActionButton(context, attrs) {
+) : ProjectActionButton(context, attrs, R.drawable.favourite_mark) {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         buttons.add(this)
@@ -17,10 +18,9 @@ class FavouriteButton @JvmOverloads constructor(
         buttons.remove(this)
     }
 
-    fun init(projectName: String, favourites: Favourites) {
-        isEnabled = true
+    fun enable(projectName: String, favourites: Favourites) {
         isActivated = favourites.contains(projectName)
-        name = projectName
+        super.enable(projectName)
         setOnClickListener {
             if (name == null) return@setOnClickListener
             buttons.forEach {

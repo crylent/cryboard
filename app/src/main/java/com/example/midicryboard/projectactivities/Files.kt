@@ -12,11 +12,11 @@ object Files {
     private const val CHARACTERS = "\\p{Alnum} _-"
 
     fun prj(context: Context, projectName: String, temp: Boolean = false) = File(
-        if (temp) context.tempDir else context.projectsDir,
+        if (temp) context.cacheDir else context.projectsDir,
         "$projectName$PROJECT_EXTENSION"
     )
-    fun midi(context: Context, projectName: String) = File(context.tempDir, "$projectName$MIDI_EXTENSION")
-    fun wav(context: Context, projectName: String) = File(context.tempDir, "$projectName$WAV_EXTENSION")
+    fun midi(context: Context, projectName: String) = File(context.cacheDir, "$projectName$MIDI_EXTENSION")
+    fun wav(context: Context, projectName: String) = File(context.cacheDir, "$projectName$WAV_EXTENSION")
 
     fun nameCheck(projectName: String) =
         projectName.matches(Regex("$FIRST_CHAR[$CHARACTERS]*"))
@@ -31,4 +31,3 @@ private fun File.checkExistence(): File {
 }
 
 val Context.projectsDir get() = File(filesDir, "projects/").checkExistence()
-val Context.tempDir get() = File(filesDir, "temp/").checkExistence()

@@ -195,7 +195,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/open_enabled"
+            app:srcCompat="@drawable/open"
             tools:ignore="ContentDescription" />
 
         <ImageButton
@@ -204,7 +204,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/save_enabled"
+            app:srcCompat="@drawable/save"
             tools:ignore="ContentDescription" />
 
         <ImageButton

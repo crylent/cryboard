@@ -42,11 +42,39 @@
             android:layout_height="wrap_content">
 
             <FrameLayout>
+                <com.example.midicryboard.button.AudioButton
+                    android:id="@+id/shareWav"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingBottom="15dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    tools:ignore="ContentDescription" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/export_audio"/>
             </FrameLayout>
 
             <FrameLayout>
+                <com.example.midicryboard.button.MidiButton
+                    android:id="@+id/shareMidi"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingBottom="15dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    tools:ignore="ContentDescription" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/export_midi"/>
             </FrameLayout>
 
             <FrameLayout>
@@ -58,14 +86,13 @@
                     android:paddingBottom="15dp"
                     android:background="@null"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/share"
                     tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|bottom"
-                    android:text="@string/share_or_export"/>
+                    android:text="@string/export_project"/>
             </FrameLayout>
 
         </TableRow>
@@ -83,7 +110,6 @@
                     android:paddingBottom="15dp"
                     android:background="@null"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/favourite_mark"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -102,7 +128,6 @@
                     android:paddingBottom="15dp"
                     android:background="@null"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/delete"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -121,7 +146,6 @@
                     android:paddingBottom="15dp"
                     android:background="@null"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/open"
                     tools:ignore="ContentDescription" />
 
                 <TextView

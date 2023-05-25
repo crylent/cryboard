@@ -29,7 +29,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/favourite_mark"
         tools:ignore="ContentDescription" />
 
     <com.example.midicryboard.button.DeleteButton
@@ -42,6 +41,5 @@
         app:layout_constraintTop_toTopOf="parent"
         android:scaleType="fitCenter"
         android:background="@null"
-        app:srcCompat="@drawable/delete_enabled"
         tools:ignore="ContentDescription" />
 </LinearLayout>

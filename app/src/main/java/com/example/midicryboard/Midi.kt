@@ -1,5 +1,7 @@
 package com.example.midicryboard
 
+import android.content.Context
+import com.example.midicryboard.projectactivities.Files
 import com.example.midilib.AudioEngine
 import com.example.midilib.instrument.Instrument
 import com.leff.midi.MidiFile
@@ -217,6 +219,8 @@ object Midi {
         MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks).writeToFile(file)
         return file
     }
+
+    fun writeToFile(context: Context, projectName: String) = writeToFile(Files.midi(context, projectName))
 
     fun readFromFile(file: File) {
         readFromBytes(file.readBytes())

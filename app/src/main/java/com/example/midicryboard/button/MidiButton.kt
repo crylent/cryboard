@@ -2,23 +2,26 @@ package com.example.midicryboard.button
 
 import android.content.Context
 import android.util.AttributeSet
-import com.example.midicryboard.R
+import com.example.midicryboard.*
 import com.example.midicryboard.projectactivities.Files
 import com.example.midicryboard.projectactivities.ProjectExport
 
-class ShareButton @JvmOverloads constructor(
+class MidiButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : ProjectActionButton(context, attrs, R.drawable.share) {
+) : ProjectActionButton(context, attrs, R.drawable.midi) {
 
     override fun enable(projectName: String) {
         super.enable(projectName)
         setOnClickListener {
-            shareProject()
+            shareMidi()
         }
     }
 
-    private fun shareProject() {
+    private fun shareMidi() {
         if (name == null) return
-        ProjectExport.shareProject(context, Files.prj(context, name!!))
+        val midiFile = Files.midi(context, name!!).apply {
+            writeBytes(ProjectFile.readFile(context, this@MidiButton.name!!).midi)
+        }
+        ProjectExport.shareMidi(context, midiFile)
     }
 }

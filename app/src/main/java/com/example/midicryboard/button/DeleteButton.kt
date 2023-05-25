@@ -10,11 +10,10 @@ import java.io.IOException
 
 class DeleteButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : ProjectActionButton(context, attrs) {
+) : ProjectActionButton(context, attrs, R.drawable.delete) {
 
-    fun init(projectName: String) {
-        isEnabled = true
-        name = projectName
+    override fun enable(projectName: String) {
+        super.enable(projectName)
         setOnClickListener {
             AlertDialog.Builder(context)
                 .setTitle("${context.getString(R.string.delete_project)} $projectName?")

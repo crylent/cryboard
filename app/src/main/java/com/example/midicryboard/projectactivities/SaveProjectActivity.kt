@@ -7,13 +7,10 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
-import com.example.midicryboard.ProjectMetadata
 import com.example.midicryboard.Midi
 import com.example.midicryboard.ProjectFile
 import com.example.midicryboard.R
 import java.io.File
-import java.io.FileOutputStream
-import java.io.ObjectOutputStream
 
 class SaveProjectActivity : AppCompatActivity(), OnItemSelectedListener {
     private lateinit var projectNameEdit: EditText
@@ -71,13 +68,11 @@ class SaveProjectActivity : AppCompatActivity(), OnItemSelectedListener {
             setOnClickListener {
                 when (ExportFormat.values()[formatSpinner.selectedItemPosition]) {
                     ExportFormat.PROJECT -> {
-                        val projectFile = saveProject(projectName, true).apply {
-                            deleteOnExit()
-                        }
+                        val projectFile = saveProject(projectName, true)
                         ProjectExport.shareProject(this@SaveProjectActivity, projectFile)
                     }
                     ExportFormat.MIDI -> {
-                        val midiFile = saveMidi(projectName).apply {
+                        val midiFile = Midi.writeToFile(this@SaveProjectActivity, projectName).apply {
                             deleteOnExit()
                         }
                         ProjectExport.shareMidi(this@SaveProjectActivity, midiFile)
@@ -96,19 +91,13 @@ class SaveProjectActivity : AppCompatActivity(), OnItemSelectedListener {
         errorText = findViewById(R.id.saveProjectError)
     }
 
-    private fun saveMidi(projectName: String) = Midi.writeToFile(Files.midi(this, projectName))
-
     private fun saveProject(projectName: String, temp: Boolean = false): File {
-        val metadata = ProjectMetadata().toJson().toString()
+        return ProjectFile.saveCurrentProject(this, projectName, temp)
+        /*val metadata = ProjectMetadata().toJson().toString()
         val midiFile = saveMidi(projectName)
-        return Files.prj(this, projectName, temp).apply {
-            FileOutputStream(this).use { file ->
-                ObjectOutputStream(file).use {
-                    it.writeObject(ProjectFile(metadata, midiFile))
-                }
-            }
+        return ProjectFile(metadata, midiFile).save(this, projectName, temp).also {
             midiFile.delete()
-        }
+        }*/
     }
 
     private fun updateButtons() {

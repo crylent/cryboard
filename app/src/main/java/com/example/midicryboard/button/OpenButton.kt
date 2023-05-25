@@ -3,19 +3,15 @@ package com.example.midicryboard.button
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
-import com.example.midicryboard.*
-import com.example.midicryboard.projectactivities.Files
-import org.json.JSONObject
-import java.io.FileInputStream
-import java.io.ObjectInputStream
+import com.example.midicryboard.ProjectFile
+import com.example.midicryboard.R
 
 class OpenButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : ProjectActionButton(context, attrs) {
+) : ProjectActionButton(context, attrs, R.drawable.open) {
 
-    fun init(projectName: String) {
-        isEnabled = true
-        name = projectName
+    override fun enable(projectName: String) {
+        super.enable(projectName)
         setOnClickListener {
             openFile()
             (context as Activity).finish()
@@ -24,13 +20,6 @@ class OpenButton @JvmOverloads constructor(
 
     private fun openFile() {
         if (name == null) return
-        FileInputStream(Files.prj(context, name!!)).use { file ->
-            ObjectInputStream(file).use {
-                val project = it.readObject() as ProjectFile
-                val metadata = ProjectMetadata.fromJson(context, JSONObject(project.metadata))
-                TrackList.readTracksFromProject(metadata)
-                Midi.readFromBytes(project.midi)
-            }
-        }
+        ProjectFile.readFile(context, name!!).loadProject(context)
     }
 }

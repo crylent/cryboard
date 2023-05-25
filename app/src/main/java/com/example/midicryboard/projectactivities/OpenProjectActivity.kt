@@ -8,10 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.Favourites
 import com.example.midicryboard.R
-import com.example.midicryboard.button.DeleteButton
-import com.example.midicryboard.button.FavouriteButton
-import com.example.midicryboard.button.OpenButton
-import com.example.midicryboard.button.ShareButton
+import com.example.midicryboard.button.*
 
 class OpenProjectActivity : AppCompatActivity() {
     private lateinit var nameFilter: EditText
@@ -19,6 +16,8 @@ class OpenProjectActivity : AppCompatActivity() {
     private lateinit var favouriteButton: FavouriteButton
     private lateinit var deleteButton: DeleteButton
     private lateinit var openButton: OpenButton
+    private lateinit var audioButton: AudioButton
+    private lateinit var midiButton: MidiButton
     private lateinit var shareButton: ShareButton
 
     private lateinit var favourites: Favourites
@@ -40,21 +39,27 @@ class OpenProjectActivity : AppCompatActivity() {
         favouriteButton = findViewById(R.id.favouriteProject)
         deleteButton = findViewById(R.id.deleteProject)
         openButton = findViewById(R.id.openProject)
+        audioButton = findViewById(R.id.shareWav)
+        midiButton = findViewById(R.id.shareMidi)
         shareButton = findViewById(R.id.shareProject)
         disableButtons()
     }
 
     private fun enableButtons() {
-        favouriteButton.init(projectOnPreview!!, favourites)
-        deleteButton.init(projectOnPreview!!)
-        openButton.init(projectOnPreview!!)
-        shareButton.init(projectOnPreview!!)
+        favouriteButton.enable(projectOnPreview!!, favourites)
+        deleteButton.enable(projectOnPreview!!)
+        openButton.enable(projectOnPreview!!)
+        audioButton.enable(projectOnPreview!!)
+        midiButton.enable(projectOnPreview!!)
+        shareButton.enable(projectOnPreview!!)
     }
 
     private fun disableButtons() {
         favouriteButton.disable()
         deleteButton.disable()
         openButton.disable()
+        audioButton.disable()
+        midiButton.disable()
         shareButton.disable()
     }
 
