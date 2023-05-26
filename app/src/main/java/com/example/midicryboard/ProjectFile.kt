@@ -40,12 +40,16 @@ data class ProjectFile(val metadata: String, val midi: ByteArray): Serializable 
             return ProjectFile().save(context, name, temp)
         }
 
-        fun readFile(context: Context, name: String): ProjectFile {
-            FileInputStream(Files.prj(context, name)).use { file ->
+        fun readFromStream(stream: InputStream): ProjectFile {
+            stream.use { file ->
                 ObjectInputStream(file).use {
                     return it.readObject() as ProjectFile
                 }
             }
+        }
+
+        fun readFile(context: Context, name: String): ProjectFile {
+            return readFromStream(FileInputStream(Files.prj(context, name)))
         }
     }
 

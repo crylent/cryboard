@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.graphics.plus
+import androidx.core.view.isVisible
 import com.example.midicryboard.Metronome
 import com.example.midicryboard.Midi
 import com.example.midicryboard.Theme
@@ -38,6 +39,8 @@ class TracksCanvas(context: Context, attrs: AttributeSet): SurfaceView(context, 
 
     fun callFullRedraw() {
         fullRedraw = true
+        isVisible = false
+        isVisible = true
     }
 
     private val regions = mutableListOf<Region>().apply {

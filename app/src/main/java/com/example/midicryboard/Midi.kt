@@ -12,6 +12,7 @@ import com.leff.midi.event.NoteOff
 import com.leff.midi.event.NoteOn
 import com.leff.midi.event.meta.Tempo
 import java.io.File
+import java.io.InputStream
 import java.util.*
 import kotlin.concurrent.timerTask
 import com.leff.midi.event.meta.TimeSignature as TimeSignatureEvent
@@ -229,11 +230,14 @@ object Midi {
     fun writeToFile(context: Context, projectName: String) = writeToFile(Files.midi(context, projectName))
 
     fun readFromFile(file: File) {
-        readFromBytes(file.readBytes())
+        readFromStream(file.inputStream())
     }
 
     fun readFromBytes(bytes: ByteArray) {
-        val stream = bytes.inputStream()
+        readFromStream(bytes.inputStream())
+    }
+
+    fun readFromStream(stream: InputStream) {
         MidiFile(stream).tracks.forEachIndexed { index, midiTrack ->
             tracks[index] = midiTrack
         }

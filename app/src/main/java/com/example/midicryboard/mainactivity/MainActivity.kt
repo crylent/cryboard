@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
+import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import com.example.midicryboard.projectactivities.OpenProjectActivity
 import com.example.midicryboard.projectactivities.SaveProjectActivity
 import com.example.midicryboard.trackactivity.TrackPropertiesActivity
 import com.sdsmdg.harjot.crollerTest.Croller
+import java.io.BufferedInputStream
 
 const val DEFAULT_MIDI_OFFSET = 60
 const val MAX_OCTAVE_UP = 2
@@ -234,6 +236,23 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
+
+        // Load MIDI/project if started from intent
+        val intentData = intent.data
+        if (intentData != null) {
+            BufferedInputStream(contentResolver.openInputStream(intentData)).apply {
+                when (MimeTypeMap.getFileExtensionFromUrl(intentData.toString())) {
+                    "prj" -> {
+                        ProjectFile.readFromStream(this).loadProject(this@MainActivity)
+                        projectUnsaved = false
+                    }
+                    "mid" -> {
+                        Midi.readFromStream(this)
+                    }
+                }
+                close()
+            }
+        }
     }
 
     override fun onResume() {
@@ -243,12 +262,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun newProject() {
         Midi.clearAll()
-        tracksCanvas.apply {
-            callFullRedraw()
-            postCanvas()
-            //requestFocus()
-            //requestLayout()
-        }
+        tracksCanvas.callFullRedraw()
     }
 
     private fun EditText.setEditListener(lambda: () -> Boolean) {
