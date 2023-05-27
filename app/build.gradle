@@ -6,6 +6,10 @@ plugins {
 android {
     signingConfigs {
         release {
+            storeFile file(findProperty("SigningConfig_storeFile"))
+            storePassword findProperty("SigningConfig_storePassword")
+            keyAlias findProperty("SigningConfig_keyAlias")
+            keyPassword findProperty("SigningConfig_keyPassword")
         }
     }
     namespace 'com.example.midicryboard'
@@ -19,6 +23,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
@@ -35,11 +40,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildToolsVersion '33.0.0'
+    ndkVersion '25.2.9519653'
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
