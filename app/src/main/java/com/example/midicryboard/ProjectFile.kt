@@ -20,7 +20,7 @@ data class ProjectFile(val metadata: String, val midi: ByteArray): Serializable 
         return Files.prj(context, name, temp).apply {
             FileOutputStream(this).use { file ->
                 ObjectOutputStream(file).use {
-                    it.writeObject(this)
+                    it.writeObject(this@ProjectFile)
                 }
             }
         }
