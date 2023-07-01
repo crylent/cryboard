@@ -17,8 +17,8 @@ data class TrackInfo(var instrument: Instrument, var volume: Byte) {
         )
     }
 
-    fun toJson() = JSONObject().apply {
-        put(INSTRUMENT, instrument.toJson())
+    fun toJson(context: Context) = JSONObject().apply {
+        put(INSTRUMENT, instrument.toJson(context))
         put(VOLUME, volume)
     }
 }

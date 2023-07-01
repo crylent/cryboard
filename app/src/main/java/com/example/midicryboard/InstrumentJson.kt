@@ -1,6 +1,8 @@
 package com.example.midicryboard
 
 import android.content.Context
+import android.util.Log
+import com.example.midilib.instrument.ApplicationAsset
 import com.example.midilib.instrument.AssetInstrument
 import com.example.midilib.instrument.Instrument
 import com.example.midilib.instrument.SynthInstrument
@@ -18,7 +20,8 @@ private const val IS_SYNTH = "synth"
 private const val IS_SINGLE = "single"
 private const val ASSETS = "assets"
 private const val NOTE = "note"
-private const val SAMPLE = "sample"
+private const val SAMPLE_ASSET = "sample"
+private const val SAMPLE_BYTES = "sampleBytes"
 private const val IS_BASE = "base"
 private const val NAME = "name"
 
@@ -39,12 +42,21 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
             (if (optBoolean(IS_SINGLE)) AssetInstrument.Single()
             else AssetInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness)).apply {
                 getJSONArray(ASSETS).forEach {
-                    loadAsset(
-                        context,
-                        it.getInt(NOTE).toByte(),
-                        it.getString(SAMPLE),
-                        it.optBoolean(IS_BASE)
-                    )
+                    val note = it.getInt(NOTE).toByte()
+                    val isBase = it.optBoolean(IS_BASE)
+                    it.opt(SAMPLE_BYTES)?.let { it1 -> Log.d("json", it1.toString()) }
+                    val sampleBytes = it.optJSONArray(SAMPLE_BYTES)
+                    if (sampleBytes != null) {
+                        val bytes = ByteArray(sampleBytes.length())
+                        for (i in 0 until sampleBytes.length()) {
+                            bytes[i] = sampleBytes.getInt(i).toByte()
+                        }
+                        loadAsset(context, note, bytes, isBase)
+                    }
+                    else {
+                        val sampleAsset = it.getString(SAMPLE_ASSET)
+                        loadAsset(context, note, sampleAsset, isBase)
+                    }
                 }
             }
         }
@@ -53,7 +65,7 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
     }
 }
 
-fun Instrument.toJson() = JSONObject().apply {
+fun Instrument.toJson(context: Context) = JSONObject().apply {
     put(NAME, name)
     val isSynth = this@toJson is SynthInstrument
     val isSingle = this@toJson is AssetInstrument.Single
@@ -77,7 +89,10 @@ fun Instrument.toJson() = JSONObject().apply {
             instrument.assetsList.forEach {
                 put(JSONObject().apply {
                     put(NOTE, it.note)
-                    put(SAMPLE, it.filename)
+                    if (it is ApplicationAsset) put(SAMPLE_ASSET, it.filename)
+                    else {
+                        put(SAMPLE_BYTES, JSONArray(it.readBytes(context)))
+                    }
                     put(IS_BASE, it.isBaseAsset)
                 })
             }

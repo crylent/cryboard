@@ -7,7 +7,11 @@ import org.json.JSONObject
 import java.nio.charset.Charset
 
 class Instruments private constructor(context: Context): ArrayList<Instruments.Category>() {
-    data class Category(val name: String, val items: List<Instrument>, val hidden: Boolean = false) {
+    data class Category(
+        val name: String,
+        val items: MutableList<Instrument>,
+        val hidden: Boolean = false
+    ) {
         operator fun get(i: Int) = items[i]
         operator fun get(i: Byte) = items[i.toInt()]
     }
@@ -24,7 +28,7 @@ class Instruments private constructor(context: Context): ArrayList<Instruments.C
                 }
             }
             val hidden = category.optBoolean("hidden")
-            add(Category(category.getString("name"), items.toList(), hidden))
+            add(Category(category.getString("name"), items, hidden))
         }
     }
 

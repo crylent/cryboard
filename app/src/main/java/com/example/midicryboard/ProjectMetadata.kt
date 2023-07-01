@@ -9,10 +9,10 @@ private const val TRACKS = "tracks"
 data class ProjectMetadata(val tracks: ArrayList<TrackInfo>) {
     constructor(): this(TrackList as ArrayList<TrackInfo>)
 
-    fun toJson() = JSONObject().apply {
+    fun toJson(context: Context) = JSONObject().apply {
         put(TRACKS, JSONArray().apply {
             tracks.forEach {
-                put(it.toJson())
+                put(it.toJson(context))
             }
         })
     }

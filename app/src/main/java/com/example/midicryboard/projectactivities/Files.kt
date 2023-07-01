@@ -18,6 +18,11 @@ object Files {
     fun midi(context: Context, projectName: String) = File(context.cacheDir, "$projectName$MIDI_EXTENSION")
     fun wav(context: Context, projectName: String) = File(context.cacheDir, "$projectName$WAV_EXTENSION")
 
+    fun asset(context: Context) = File(
+        context.importedAssetsDir,
+        "${System.currentTimeMillis().hashCode()}$WAV_EXTENSION"
+    )
+
     fun nameCheck(projectName: String) =
         projectName.matches(Regex("$FIRST_CHAR[$CHARACTERS]*"))
 
@@ -30,4 +35,5 @@ private fun File.checkExistence(): File {
     return this
 }
 
+val Context.importedAssetsDir get() = File(filesDir, "assets/").checkExistence()
 val Context.projectsDir get() = File(filesDir, "projects/").checkExistence()

@@ -5,11 +5,15 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.midicryboard.*
+import com.example.midicryboard.Instruments
+import com.example.midicryboard.R
+import com.example.midicryboard.TrackList
+import com.example.midicryboard.TrackParams
 import com.example.midilib.instrument.Instrument
 import com.sdsmdg.harjot.crollerTest.Croller
 import kotlin.math.ceil
@@ -58,6 +62,16 @@ class TrackPropertiesActivity : AppCompatActivity() {
 
         envelopeCanvas = findViewById(R.id.envelopeCanvas)
         viewInstrument(instrument)
+
+        // Create custom instrument dialog
+        findViewById<Button>(R.id.createCustomButton).apply {
+            setOnClickListener {
+                CustomInstrumentDialogFragment(categoriesSpinner.selectedItemPosition).show(
+                    supportFragmentManager,
+                    CustomInstrumentDialogFragment.TAG
+                )
+            }
+        }
     }
 
     private fun setupCroller(id: Int, value: Float, power: Float, setter: (Float)->Unit) {

@@ -7,8 +7,8 @@ import java.io.*
 
 data class ProjectFile(val metadata: String, val midi: ByteArray): Serializable {
     //constructor(metadata: String, midi: File): this(metadata, midi.readBytes())
-    constructor() : this(
-        ProjectMetadata().toJson().toString(),
+    constructor(context: Context) : this(
+        ProjectMetadata().toJson(context).toString(),
         Midi.writeToFile(java.nio.file.Files.createTempFile("midi", ".mid").toFile()).run {
             readBytes().also {
                 delete()
@@ -37,7 +37,7 @@ data class ProjectFile(val metadata: String, val midi: ByteArray): Serializable 
         private const val serialVersionUID = -90000100L
 
         fun saveCurrentProject(context: Context, name: String, temp: Boolean = false): File {
-            return ProjectFile().save(context, name, temp)
+            return ProjectFile(context).save(context, name, temp)
         }
 
         fun readFromStream(stream: InputStream): ProjectFile {

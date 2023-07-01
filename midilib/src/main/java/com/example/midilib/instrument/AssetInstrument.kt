@@ -1,6 +1,8 @@
 package com.example.midilib.instrument
 
 import android.content.Context
+import android.net.Uri
+import java.io.File
 
 @Suppress("unused")
 open class AssetInstrument(
@@ -17,8 +19,6 @@ open class AssetInstrument(
         0f, 0f, 1f, Float.POSITIVE_INFINITY,
         repeatAssets = false
     )
-
-    data class Asset(val note: Byte, val filename: String, val isBaseAsset: Boolean)
 
     private val assets = mutableListOf<Asset>()
 
@@ -39,15 +39,37 @@ open class AssetInstrument(
     fun loadAsset(context: Context, asset: Asset) {
         assets.add(asset)
         addOnCreatedListener {
-            val stream = context.assets.open(asset.filename)
-            val bytes = stream.readBytes()
+            val bytes = asset.readBytes(context)
             externalLoadAsset(asset.note, bytes, bytes.size, asset.isBaseAsset)
-            stream.close()
         }
     }
 
+    /**
+     * Load asset from assets folder of application
+     */
     fun loadAsset(context: Context, note: Byte, filename: String, isBaseAsset: Boolean = false) {
-        loadAsset(context, Asset(note, filename, isBaseAsset))
+        loadAsset(context, ApplicationAsset(note, filename, isBaseAsset))
+    }
+
+    /**
+     * Load asset from URI using content resolver
+     */
+    fun loadAsset(context: Context, note: Byte, uri: Uri, isBaseAsset: Boolean = false) {
+        loadAsset(context, AssetFromUri(note, uri, isBaseAsset))
+    }
+
+    /**
+     * Load asset from file
+     */
+    fun loadAsset(context: Context, note: Byte, file: File, isBaseAsset: Boolean = false) {
+        loadAsset(context, AssetFromFile(note, file, isBaseAsset))
+    }
+
+    /**
+     * Load asset from byte array
+     */
+    fun loadAsset(context: Context, note: Byte, bytes: ByteArray, isBaseAsset: Boolean = false) {
+        loadAsset(context, AssetFromBytes(note, bytes, isBaseAsset))
     }
 
     private external fun externalLoadAsset(note: Byte, wavData: ByteArray, dataSize: Int, isBaseAsset: Boolean)

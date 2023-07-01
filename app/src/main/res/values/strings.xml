@@ -48,4 +48,11 @@
     <string name="decay">Decay</string>
     <string name="release">Release</string>
     <string name="sustain">Sustain</string>
+    <string name="create_custom">Create Custom</string>
+    <string name="instrument_name">Instrument name</string>
+    <string name="synth_instrument">Synth Instrument</string>
+    <string name="from_asset">From Asset</string>
+    <string name="no_asset_selected">No asset selected</string>
+    <string name="asset_selected">Selected asset: %1$s</string>
+    <string name="base_note">Base note:</string>
 </resources>
