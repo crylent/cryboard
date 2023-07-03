@@ -560,6 +560,9 @@
       ]
     },
     {
+      "name": "Other"
+    },
+    {
       "name": "Drums",
       "hidden": true,
       "instruments": [

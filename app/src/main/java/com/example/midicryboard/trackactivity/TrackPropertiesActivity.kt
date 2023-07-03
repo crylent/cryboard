@@ -50,7 +50,7 @@ class TrackPropertiesActivity : AppCompatActivity() {
             adapter = ArrayAdapter<String>(
                 this@TrackPropertiesActivity, android.R.layout.simple_spinner_item
             ).apply {
-                addAll(Instruments.categories)
+                addAll(Instruments.categoryNames)
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
         }
@@ -66,7 +66,18 @@ class TrackPropertiesActivity : AppCompatActivity() {
         // Create custom instrument dialog
         findViewById<Button>(R.id.createCustomButton).apply {
             setOnClickListener {
-                CustomInstrumentDialogFragment(categoriesSpinner.selectedItemPosition).show(
+                val categoryId = categoriesSpinner.selectedItemPosition
+                CustomInstrumentDialogFragment(categoryId) {
+                    // On created callback
+                    instrumentsView.apply {
+                        val instrumentIndex = Instruments.getCategoryById(categoryId).items.size - 1
+                        (adapter as InstrumentsRecyclerAdapter).apply {
+                            notifyItemInserted(instrumentIndex)
+                            selectInstrument(instrumentIndex)
+                        }
+                        scrollToPosition(instrumentIndex)
+                    }
+                }.show(
                     supportFragmentManager,
                     CustomInstrumentDialogFragment.TAG
                 )

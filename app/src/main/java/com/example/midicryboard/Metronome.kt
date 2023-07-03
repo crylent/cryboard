@@ -39,7 +39,7 @@ object Metronome {
         get() = (60e3 / tempo * 4 / signature.den).toLong()
 
     init {
-        Midi.setInstrument(METRONOME_CHANNEL, Instruments["Metronome"]!!)
+        Midi.setInstrument(METRONOME_CHANNEL, Instruments.findInstrument("Metronome")!!)
     }
 
     fun run(timer: Timer, startTime: Long) {

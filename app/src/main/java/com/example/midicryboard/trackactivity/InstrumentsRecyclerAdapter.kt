@@ -14,18 +14,12 @@ class InstrumentsRecyclerAdapter(
     private val trackId: Byte,
     private val selectedCategory: Int
 ): RecyclerView.Adapter<InstrumentsRecyclerAdapter.InstrumentViewHolder>() {
-    private val category = Instruments.instance[selectedCategory]
+    private val category = Instruments.getCategoryById(selectedCategory)
 
     class InstrumentViewHolder(itemView: View, adapter: InstrumentsRecyclerAdapter): RecyclerView.ViewHolder(itemView) {
         val instrumentButton: Button = itemView.findViewById<Button?>(R.id.instrumentButton).apply {
             setOnClickListener {
-                adapter.holders.forEach { holder ->
-                    holder.instrumentButton.isSelected = false
-                }
-                it.isSelected = true
-                val instrument = adapter.category[instrumentIndex]
-                TrackList.setTrackInfo(adapter.trackId, instrument)
-                adapter.activity.viewInstrument(instrument)
+                adapter.selectInstrument(instrumentIndex)
             }
         }
 
@@ -33,6 +27,15 @@ class InstrumentsRecyclerAdapter(
     }
 
     private val holders = arrayListOf<InstrumentViewHolder>()
+
+    fun selectInstrument(instrumentIndex: Int) {
+        for (i in holders.indices) {
+            holders[i].instrumentButton.isSelected = (i == instrumentIndex)
+        }
+        val instrument = category[instrumentIndex]
+        TrackList.setTrackInfo(trackId, instrument)
+        activity.viewInstrument(instrument)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = InstrumentViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.instrument, parent, false),
@@ -45,7 +48,7 @@ class InstrumentsRecyclerAdapter(
         holder.apply {
             instrumentIndex = position
             instrumentButton.text = category[position].name
-            if (Instruments[selectedCategory][position] == TrackList[trackId.toInt()].instrument)
+            if (Instruments.getCategoryById(selectedCategory)[position] == TrackList[trackId.toInt()].instrument)
                 instrumentButton.isSelected = true
         }
     }

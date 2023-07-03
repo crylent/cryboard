@@ -17,15 +17,19 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.example.midicryboard.Instruments
 import com.example.midicryboard.R
+import com.example.midicryboard.projectactivities.Files
+import com.example.midicryboard.toJson
 import com.example.midilib.instrument.AssetInstrument
 import com.example.midilib.instrument.SynthInstrument
+import java.io.FileOutputStream
 
 internal enum class CustomInstrumentType {
     NOT_SELECTED, SYNTH, FROM_ASSET
 }
 
 internal class CustomInstrumentDialogFragment(
-    private val categoryId: Int
+    private val categoryId: Int,
+    private val onCreatedCallback: () -> Unit
 ): DialogFragment() {
 
     private var typeSelected = CustomInstrumentType.NOT_SELECTED
@@ -50,11 +54,26 @@ internal class CustomInstrumentDialogFragment(
                 .setTitle("Custom Instrument")
                 .setView(R.layout.alertdialog_create_custom)
                 .setPositiveButton("Create") { _, _ ->
-                    val instrument = if (typeSelected == CustomInstrumentType.FROM_ASSET) {
+                    val instrument = (if (typeSelected == CustomInstrumentType.FROM_ASSET) {
                         createAssetInstrument()
-                    } else SynthInstrument()
-                    Instruments[categoryId].items.add(instrument)
-                    //onResult(typeSelected, assetSelected, nameTyped)
+                    } else SynthInstrument()).apply {
+                        name = nameTyped
+                    }
+                    val category = Instruments.getCategoryById(categoryId)
+                    category.items.add(instrument)
+                    requireContext().also { context ->
+                        FileOutputStream(
+                            Files.preset(context, category.name, instrument.name)
+                        ).use { stream ->
+                            stream.bufferedWriter().use { writer ->
+                                writer.write(
+                                    instrument.toJson(context).toString()
+                                )
+                            }
+                        }
+
+                    }
+                    onCreatedCallback()
                 }
                 .setNegativeButton("Cancel") { _, _ -> }
             builder.create().apply {
@@ -111,7 +130,6 @@ internal class CustomInstrumentDialogFragment(
     }
 
     private fun createAssetInstrument() = AssetInstrument().apply {
-        name = nameTyped
         requireContext().apply {
             contentResolver.openInputStream(assetSelected!!)!!.use {
                 loadAsset(
