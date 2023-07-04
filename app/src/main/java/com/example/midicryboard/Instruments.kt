@@ -7,7 +7,7 @@ import com.example.midilib.instrument.Instrument
 import org.json.JSONObject
 import java.nio.charset.Charset
 
-class Instruments private constructor(context: Context): HashMap<String, Instruments.Category>() {
+class Instruments private constructor(context: Context): LinkedHashMap<String, Instruments.Category>() {
     data class Category(
         val items: MutableList<Instrument>,
         val hidden: Boolean = false
