@@ -442,7 +442,7 @@
       ]
     },
     {
-      "name": "Synth",
+      "name": "Synth I",
       "instruments": [
         {
           "name": "Voice 1",
@@ -556,6 +556,38 @@
           "decay": 5,
           "sustain": 0.8,
           "release": 0.5
+        }
+      ]
+    },
+    {
+      "name": "Synth II",
+      "instruments": [
+        {
+          "name": "Example Synth",
+          "synth": true,
+          "oscillators": [
+            {
+              "shape": "triangle",
+              "amplitude": 1,
+              "freqFactor": 0.5,
+              "detune": {
+                "unisonVoices": 3,
+                "detuneLevel": 0.011
+              }
+            },
+            {
+              "shape": "sine",
+              "amplitude": 1
+            },
+            {
+              "shape": "sine",
+              "amplitude": 1,
+              "freqFactor": 6
+            }
+          ],
+          "attack": 0.001,
+          "sustain": 1.0,
+          "release": 0.02
         }
       ]
     },

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.midicryboard.projectactivities.Files
 import com.example.midilib.AudioEngine
 import com.example.midilib.instrument.Instrument
+import com.example.midilib.soundfx.Limiter
 import com.leff.midi.MidiFile
 import com.leff.midi.MidiTrack
 import com.leff.midi.event.ChannelEvent
@@ -38,7 +39,7 @@ object Midi {
     fun start() {
         AudioEngine.apply {
             start()
-            //addEffect(MASTER, Limiter())
+            addEffect(MASTER, Limiter())
         }
     }
     fun stop() {

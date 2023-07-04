@@ -6,9 +6,9 @@ import com.example.midilib.instrument.SynthInstrument
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class Oscillator(
     shape: Shape,
-    amplitude: Float = 1f,
-    phase: Float = 0f,
-    frequencyFactor: Float = 1f
+    amplitude: Number = 1f,
+    phase: Number = 0f,
+    frequencyFactor: Number = 1f
 ): Cloneable {
     var shape = shape
         set(value) {
@@ -18,7 +18,7 @@ class Oscillator(
             }
         }
 
-    var amplitude = amplitude
+    var amplitude = amplitude.toFloat()
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
@@ -26,7 +26,7 @@ class Oscillator(
             }
         }
 
-    var phase = phase
+    var phase = phase.toFloat()
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
@@ -34,7 +34,7 @@ class Oscillator(
             }
         }
 
-    var frequencyFactor = frequencyFactor
+    var frequencyFactor = frequencyFactor.toFloat()
         set(value) {
             field = value
             ifOwnerIsLinkedToLib {
@@ -88,10 +88,10 @@ class Oscillator(
         fun getPhaseShift(voice: Int) = _phases[voice]
     }
 
-    fun enableDetune(unisonVoices: Int, detuneLevel: Float) {
-        detune = Detune(this, unisonVoices, detuneLevel)
+    fun enableDetune(unisonVoices: Int, detuneLevel: Number) {
+        detune = Detune(this, unisonVoices, detuneLevel.toFloat())
         ifOwnerIsLinkedToLib {
-            externalEnableDetune(unisonVoices, detuneLevel)
+            externalEnableDetune(unisonVoices, detuneLevel.toFloat())
         }
     }
     fun disableDetune() {

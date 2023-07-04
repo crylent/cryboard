@@ -2,6 +2,7 @@ package com.example.midicryboard
 
 import android.content.Context
 import android.util.Log
+import com.example.midilib.Oscillator
 import com.example.midilib.instrument.ApplicationAsset
 import com.example.midilib.instrument.AssetInstrument
 import com.example.midilib.instrument.Instrument
@@ -24,6 +25,14 @@ private const val SAMPLE_ASSET = "sample"
 private const val SAMPLE_BYTES = "sampleBytes"
 private const val IS_BASE = "base"
 private const val NAME = "name"
+private const val OSCILLATORS = "oscillators"
+private const val SHAPE = "shape"
+private const val AMPLITUDE = "amplitude"
+private const val PHASE = "phase"
+private const val FREQ_FACTOR = "freqFactor"
+private const val DETUNE = "detune"
+private const val DETUNE_UNISON_VOICES = "unisonVoices"
+private const val DETUNE_LEVEL = "detuneLevel"
 
 fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrument {
     json.apply {
@@ -34,13 +43,34 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
         val sustain = optDouble(SUSTAIN, 0.0)
         val release = optDouble(RELEASE, 0.0)
         val releaseSharpness = optDouble(RELEASE_SHARPNESS, 1.0)
-        val instrument = if (optBoolean(IS_SYNTH))
-            SynthInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness).apply {
-                TODO("oscillators")
+        val instrument = if (optBoolean(IS_SYNTH)) {
+            SynthInstrument(
+                attack, decay, sustain, release,
+                attackSharpness, decaySharpness, releaseSharpness
+            ).apply {
+                val oscillators = getJSONArray(OSCILLATORS)
+                oscillators.forEach {
+                    val shape = it.getShape() ?: return@forEach
+                    val amplitude = it.optDouble(AMPLITUDE, 1.0)
+                    val phase = it.optDouble(PHASE, 0.0)
+                    val freqFactor = it.optDouble(FREQ_FACTOR, 1.0)
+                    addOscillator(
+                        Oscillator(shape, amplitude, phase, freqFactor).apply Detune@ {
+                            val detune = it.optJSONObject(DETUNE) ?: return@Detune
+                            val unisonVoices = detune.getInt(DETUNE_UNISON_VOICES)
+                            val level = detune.getDouble(DETUNE_LEVEL)
+                            enableDetune(unisonVoices, level)
+                        }
+                    )
+                }
             }
+        }
         else {
             (if (optBoolean(IS_SINGLE)) AssetInstrument.Single()
-            else AssetInstrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness)).apply {
+            else AssetInstrument(
+                attack, decay, sustain, release,
+                attackSharpness, decaySharpness, releaseSharpness
+            )).apply {
                 getJSONArray(ASSETS).forEach {
                     val note = it.getInt(NOTE).toByte()
                     val isBase = it.optBoolean(IS_BASE)
@@ -63,6 +93,15 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
         instrument.name = getString(NAME)
         return instrument
     }
+}
+
+private fun JSONObject.getShape() = when (getString(SHAPE)) {
+    "sine" -> Oscillator.Shape.SINE
+    "triangle" -> Oscillator.Shape.TRIANGLE
+    "square" -> Oscillator.Shape.SQUARE
+    "saw" -> Oscillator.Shape.SAW
+    "reserve_saw" -> Oscillator.Shape.REVERSE_SAW
+    else -> null
 }
 
 fun Instrument.toJson(context: Context) = JSONObject().apply {
