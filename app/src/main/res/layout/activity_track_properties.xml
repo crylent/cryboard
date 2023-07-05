@@ -75,25 +75,26 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <TextView
-                    android:text="@string/attack"
-                    android:gravity="center"
-                    android:layout_weight="1" />
 
                 <TextView
-                    android:text="@string/decay"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_weight="1" />
+                    android:text="@string/attack" />
 
                 <TextView
-                    android:text="@string/sustain"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_weight="1" />
+                    android:text="@string/decay" />
 
                 <TextView
-                    android:text="@string/release"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_weight="1" />
+                    android:text="@string/sustain" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/release" />
             </TableRow>
 
             <TableRow
@@ -102,46 +103,50 @@
 
                 <com.sdsmdg.harjot.crollerTest.Croller
                     android:id="@+id/attackSlider"
-                    android:layout_weight="1"
                     android:layout_height="60dp"
+                    android:layout_weight="1"
                     android:foregroundGravity="clip_horizontal"
+                    app:is_continuous="true"
+                    app:label=""
+                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
                     app:layout_constraintEnd_toStartOf="@+id/controls"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
-                    app:is_continuous="true"
                     app:progress_primary_stroke_width="10" />
 
                 <com.sdsmdg.harjot.crollerTest.Croller
                     android:id="@+id/decaySlider"
-                    android:layout_weight="1"
                     android:layout_height="60dp"
+                    android:layout_weight="1"
                     android:foregroundGravity="clip_horizontal"
+                    app:is_continuous="true"
+                    app:label=""
+                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
                     app:layout_constraintEnd_toStartOf="@+id/controls"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
-                    app:is_continuous="true"
                     app:progress_primary_stroke_width="10" />
 
                 <com.sdsmdg.harjot.crollerTest.Croller
                     android:id="@+id/sustainSlider"
-                    android:layout_weight="1"
                     android:layout_height="60dp"
+                    android:layout_weight="1"
                     android:foregroundGravity="clip_horizontal"
+                    app:is_continuous="true"
+                    app:label=""
+                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
                     app:layout_constraintEnd_toStartOf="@+id/controls"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
-                    app:is_continuous="true"
                     app:progress_primary_stroke_width="10" />
 
                 <com.sdsmdg.harjot.crollerTest.Croller
                     android:id="@+id/releaseSlider"
-                    android:layout_weight="1"
                     android:layout_height="60dp"
+                    android:layout_weight="1"
                     android:foregroundGravity="clip_horizontal"
+                    app:is_continuous="true"
+                    app:label=""
+                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
                     app:layout_constraintEnd_toStartOf="@+id/controls"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
-                    app:is_continuous="true"
                     app:progress_primary_stroke_width="10" />
             </TableRow>
 
@@ -151,40 +156,53 @@
 
                 <com.sdsmdg.harjot.crollerTest.Croller
                     android:id="@+id/attackFormSlider"
-                    android:layout_weight="1"
                     android:layout_height="60dp"
+                    android:layout_weight="1"
                     android:foregroundGravity="clip_horizontal"
+                    app:is_continuous="true"
+                    app:label=""
+                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
                     app:layout_constraintEnd_toStartOf="@+id/controls"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
-                    app:is_continuous="true"
                     app:progress_primary_stroke_width="10" />
 
                 <com.sdsmdg.harjot.crollerTest.Croller
                     android:id="@+id/decayFormSlider"
-                    android:layout_weight="1"
                     android:layout_height="60dp"
+                    android:layout_weight="1"
                     android:foregroundGravity="clip_horizontal"
+                    app:is_continuous="true"
+                    app:label=""
+                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
                     app:layout_constraintEnd_toStartOf="@+id/controls"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
-                    app:is_continuous="true"
                     app:progress_primary_stroke_width="10" />
 
-                <Space
-                    android:layout_weight="1"/>
+                <Space android:layout_weight="1" />
 
                 <com.sdsmdg.harjot.crollerTest.Croller
                     android:id="@+id/releaseFormSlider"
-                    android:layout_weight="1"
                     android:layout_height="60dp"
+                    android:layout_weight="1"
                     android:foregroundGravity="clip_horizontal"
+                    app:is_continuous="true"
+                    app:label=""
+                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
                     app:layout_constraintEnd_toStartOf="@+id/controls"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/octaveShift"
-                    app:is_continuous="true"
                     app:progress_primary_stroke_width="10" />
             </TableRow>
         </TableLayout>
+
+        <!--<androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/oscillators"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tableLayout"
+            app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+            tools:listitem="@layout/oscillator"/>-->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -63,7 +63,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
 
-    implementation 'com.github.harjot-oberai:Croller:v1.0.0' // Circular Slider
+    implementation 'cn.denghanxi:android-croller:1.1.2' // Circular Slider
     implementation 'com.github.LeffelMania:android-midi-lib:7cdd855c2b' // Midi Files Read & Write
 
     implementation project(":midilib")
