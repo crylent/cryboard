@@ -35,6 +35,12 @@ class SynthInstrument(
         if (libIndex != NO_INDEX) externalRemoveOscillator(oscIndex)
     }
 
+    fun forEachOscillator(function: (Oscillator) -> Unit) {
+        oscillators.forEach {
+            function(it)
+        }
+    }
+
     private external fun externalAddOscillator(oscillator: Oscillator)
     private external fun externalRemoveOscillator(index: Int)
 

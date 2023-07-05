@@ -50,7 +50,7 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
             ).apply {
                 val oscillators = getJSONArray(OSCILLATORS)
                 oscillators.forEach {
-                    val shape = it.getShape() ?: return@forEach
+                    val shape = shapes[it.getString(SHAPE)] ?: return@forEach
                     val amplitude = it.optDouble(AMPLITUDE, 1.0)
                     val phase = it.optDouble(PHASE, 0.0)
                     val freqFactor = it.optDouble(FREQ_FACTOR, 1.0)
@@ -95,14 +95,15 @@ fun Instrument.Companion.fromJson(context: Context, json: JSONObject): Instrumen
     }
 }
 
-private fun JSONObject.getShape() = when (getString(SHAPE)) {
-    "sine" -> Oscillator.Shape.SINE
-    "triangle" -> Oscillator.Shape.TRIANGLE
-    "square" -> Oscillator.Shape.SQUARE
-    "saw" -> Oscillator.Shape.SAW
-    "reserve_saw" -> Oscillator.Shape.REVERSE_SAW
-    else -> null
-}
+private val shapes = mapOf(
+    "sine" to Oscillator.Shape.SINE,
+    "triangle" to Oscillator.Shape.TRIANGLE,
+    "square" to Oscillator.Shape.SQUARE,
+    "saw" to Oscillator.Shape.SAW,
+    "reserve_saw" to Oscillator.Shape.REVERSE_SAW
+)
+
+private val shapesReversed = shapes.entries.associateBy({ it.value }) { it.key }
 
 fun Instrument.toJson(context: Context) = JSONObject().apply {
     put(NAME, name)
@@ -121,7 +122,25 @@ fun Instrument.toJson(context: Context) = JSONObject().apply {
         put(IS_SINGLE, true)
     }
     if (isSynth) {
-        TODO()
+        val instrument = (this@toJson as SynthInstrument)
+        put(OSCILLATORS, JSONArray().apply {
+            instrument.forEachOscillator {
+                put(JSONObject().apply {
+                    put(SHAPE, shapesReversed[it.shape])
+                    put(AMPLITUDE, it.amplitude)
+                    put(PHASE, it.phase)
+                    put(FREQ_FACTOR, it.frequencyFactor)
+                    it.detune.also { detune ->
+                        if (detune != null) {
+                            put(DETUNE, JSONObject().apply {
+                                put(DETUNE_LEVEL, detune.detune)
+                                put(DETUNE_UNISON_VOICES, detune.unisonVoices)
+                            })
+                        }
+                    }
+                })
+            }
+        })
     } else {
         val instrument = (this@toJson as AssetInstrument)
         put(ASSETS, JSONArray().apply {
