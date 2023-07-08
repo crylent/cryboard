@@ -16,6 +16,7 @@ import com.example.midicryboard.R
 import com.example.midicryboard.TrackList
 import com.example.midicryboard.TrackParams
 import com.example.midilib.instrument.Instrument
+import com.example.midilib.instrument.SynthInstrument
 import com.sdsmdg.harjot.crollerTest.Croller
 import java.text.DecimalFormat
 import kotlin.math.ceil
@@ -25,7 +26,7 @@ import kotlin.math.pow
 class TrackPropertiesActivity : AppCompatActivity() {
     private lateinit var instrumentsView: RecyclerView
     private lateinit var envelopeCanvas: EnvelopeCanvas
-    //private lateinit var oscillatorsView: RecyclerView
+    private lateinit var oscillatorsView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,9 +66,9 @@ class TrackPropertiesActivity : AppCompatActivity() {
         envelopeCanvas = findViewById(R.id.envelopeCanvas)
 
         // Oscillators for synth instrument
-        /*oscillatorsView = findViewById<RecyclerView>(R.id.oscillators).apply {
+        oscillatorsView = findViewById<RecyclerView>(R.id.oscillators).apply {
             layoutManager = LinearLayoutManager(this@TrackPropertiesActivity)
-        }*/
+        }
 
         viewInstrument(instrument)
 
@@ -133,7 +134,8 @@ class TrackPropertiesActivity : AppCompatActivity() {
             max = ADSR_POINTS_NUMBER
             label = value.toString()
             progress = crollerValueToProgress(value, power, firstStep)
-            setOnValueChangedListener { value, _ ->
+            setOnValueChangedListener { value, fromUser ->
+                if (!fromUser) return@setOnValueChangedListener
                 val time = minValue + crollerProgressToValue(value, power, firstStep)
                 label = decimalFormat.format(time)
                 Log.d("croller", time.toString())
@@ -185,28 +187,21 @@ class TrackPropertiesActivity : AppCompatActivity() {
                 CrollerMode.MID_POINT_DEFINED, 1f
             ) { releaseSharpness = it }
         }
-        /*oscillatorsView.apply {
-            adapter = OscillatorsRecyclerAdapter(this, instrument)
-        }*/
+        oscillatorsView.apply {
+            if (instrument is SynthInstrument)
+                adapter = OscillatorsRecyclerAdapter(instrument)
+        }
     }
 
     companion object {
         private const val ADSR_POINTS_NUMBER = 200
-        //private val ADSR_CENTRAL_POINT = if (ADSR_POINTS_NUMBER % 2 == 0) ADSR_POINTS_NUMBER / 2 else (ADSR_POINTS_NUMBER + 1) / 2
         private const val ADR_MIN_TIME = 0f
         private const val ADR_MAX_TIME = 50f
         private const val ADR_MIN_SHARPNESS = 0.1f
         private const val ADR_MAX_SHARPNESS = 10f
-        //private const val ADR_SHARPNESS_RANGE = ADR_MAX_SHARPNESS - ADR_MIN_SHARPNESS
         private const val MIN_SUSTAIN = 0f
         private const val MAX_SUSTAIN = 1f
         private const val ADR_TIME_FIRST_STEP = 0.0005f
-        //private const val SUSTAIN_FIRST_STEP = MAX_SUSTAIN / ADSR_POINTS_NUMBER
-        //private val ADR_TIME_POWER = log(ADR_MAX_TIME / ADR_TIME_FIRST_STEP, ADSR_POINTS_NUMBER - 1f)
-        //private val ADR_SHARPNESS_POWER = log(ADR_SHARPNESS_RANGE, (ADSR_POINTS_NUMBER - 1) / (ADSR_CENTRAL_POINT - 1f))
-        //private val ADR_SHARPNESS_FIRST_STEP = 1f / (ADSR_CENTRAL_POINT - 1f).pow(ADR_SHARPNESS_POWER)
         private const val SUSTAIN_POWER = 1f
-        //private const val ADSR_DECIMAL_DIGITS = 4
-        //private val ADSR_ROUNDING_FACTOR = 10f.pow(ADSR_DECIMAL_DIGITS)
     }
 }

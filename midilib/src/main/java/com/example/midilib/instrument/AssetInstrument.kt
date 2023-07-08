@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import java.io.File
 
-@Suppress("unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 open class AssetInstrument(
     attack: Number = 0f,
     decay: Number = 5f,

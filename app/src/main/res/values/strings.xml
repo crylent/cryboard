@@ -55,4 +55,7 @@
     <string name="no_asset_selected">No asset selected</string>
     <string name="asset_selected">Selected asset: %1$s</string>
     <string name="base_note">Base note:</string>
+    <string name="amplitude">Amplitude</string>
+    <string name="phase">Phase</string>
+    <string name="pitch">Pitch</string>
 </resources>

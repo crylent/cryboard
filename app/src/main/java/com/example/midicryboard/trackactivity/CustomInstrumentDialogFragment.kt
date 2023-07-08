@@ -23,11 +23,11 @@ import com.example.midilib.instrument.AssetInstrument
 import com.example.midilib.instrument.SynthInstrument
 import java.io.FileOutputStream
 
-internal enum class CustomInstrumentType {
+enum class CustomInstrumentType {
     NOT_SELECTED, SYNTH, FROM_ASSET
 }
 
-internal class CustomInstrumentDialogFragment(
+class CustomInstrumentDialogFragment(
     private val categoryId: Int,
     private val onCreatedCallback: () -> Unit
 ): DialogFragment() {
