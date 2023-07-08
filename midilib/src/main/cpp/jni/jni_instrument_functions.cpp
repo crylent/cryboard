@@ -37,7 +37,7 @@ static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator
                                        "Lcom/example/midilib/Oscillator$Shape;");
     jfieldID idAmplitude = env->GetFieldID(oscCls, "amplitude", "F");
     jfieldID idPhase = env->GetFieldID(oscCls, "phase", "F");
-    jfieldID idFreqFactor = env->GetFieldID(oscCls, "frequencyFactor", "F");
+    jmethodID idFreqFactor = env->GetMethodID(oscCls, "getFrequencyFactor", "()F");
     jfieldID idDetuneObj = env->GetFieldID(oscCls, "detune",
                                            "Lcom/example/midilib/Oscillator$Detune;");
 
@@ -54,7 +54,7 @@ static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator
     auto shapeOrdinal = static_cast<int>(env->CallIntMethod(shape, idShapeOrdinal));
     auto amplitude = static_cast<float>(env->GetFloatField(oscillator, idAmplitude));
     auto phase = static_cast<float>(env->GetFloatField(oscillator, idPhase));
-    auto freqFactor = static_cast<float>(env->GetFloatField(oscillator, idFreqFactor));
+    auto freqFactor = static_cast<float>(env->CallFloatMethod(oscillator, idFreqFactor));
 
     unique_ptr<Oscillator> osc = makeOscillator(shapeOrdinal, amplitude, phase, freqFactor);
     if (!enabled) osc->disable();

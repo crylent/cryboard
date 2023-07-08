@@ -2,6 +2,9 @@ package com.example.midilib
 
 import com.example.midilib.instrument.Instrument
 import com.example.midilib.instrument.SynthInstrument
+import kotlin.math.log2
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class Oscillator(
@@ -46,10 +49,24 @@ class Oscillator(
     var frequencyFactor = frequencyFactor.toFloat()
         set(value) {
             field = value
+            usePitch = false
             ifOwnerIsLinkedToLib {
                 externalSetFreqFactor(value)
             }
         }
+        get() = if (!usePitch) field else 2f.pow(pitch / 12f)
+
+    var pitch = 0
+        set(value) {
+            field = value
+            usePitch = true
+            ifOwnerIsLinkedToLib {
+                externalSetFreqFactor(frequencyFactor)
+            }
+        }
+        get() = if (usePitch) field else (12 * log2(frequencyFactor)).roundToInt()
+
+    private var usePitch = false
 
     var detune: Detune? = null
         private set
