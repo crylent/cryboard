@@ -10,6 +10,15 @@ class Oscillator(
     phase: Number = 0f,
     frequencyFactor: Number = 1f
 ): Cloneable {
+    var enabled = true
+        set(value) {
+            field = value
+            ifOwnerIsLinkedToLib {
+                if (value) it.enableOscillator(this)
+                else it.disableOscillator(this)
+            }
+        }
+
     var shape = shape
         set(value) {
             field = value
@@ -46,6 +55,8 @@ class Oscillator(
         private set
 
     internal var owner: SynthInstrument? = null
+    val ownerLibIndex get() = owner?.libIndex ?: -1
+    val oscIndex get() = owner?.getOscillatorIndex(this) ?: -1
 
     enum class Shape {
         SINE, TRIANGLE, SQUARE, SAW, REVERSE_SAW
@@ -101,8 +112,8 @@ class Oscillator(
         }
     }
 
-    private fun ifOwnerIsLinkedToLib(lambda: (libIndex: Int)->Unit) {
-        if (owner != null && owner!!.libIndex != Instrument.NO_INDEX) lambda(owner!!.libIndex)
+    private fun ifOwnerIsLinkedToLib(lambda: (owner: SynthInstrument)->Unit) {
+        if (owner != null && owner!!.libIndex != Instrument.NO_INDEX) lambda(owner!!)
     }
 
     private external fun externalSetShape(shape: Int)
@@ -116,6 +127,7 @@ class Oscillator(
     private external fun externalSetPhaseShift(voice: Int, value: Float)
 
     public override fun clone() = Oscillator(shape, amplitude, phase, frequencyFactor).also {
+        if (!enabled) it.enabled = false
         if (detune != null) it.enableDetune(detune!!.unisonVoices, detune!!.detune)
     }
 }

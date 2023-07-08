@@ -3,7 +3,7 @@
 
 /**
  * Constructs new Detune object.
- * @param oscillator shared pointer to oscillator object
+ * @param owner reference to oscillator object
  * @param unisonVoices number of unison voices, 2 or more
  * @param detune maximum divergence from the original frequency (from 0.0 <i>non-inclusive</i> to 1.0 <i>non-inclusive</i>)
  */
@@ -11,6 +11,17 @@ Detune::Detune(Oscillator& owner, uint8_t unisonVoices, float detune) : mOwner(o
     mPhases = vector<float>(mUnisonVoices);
     setUnisonVoices(unisonVoices);
     setDetune(detune);
+}
+
+/**
+ * Constructs new Detune object from other
+ * @param owner reference to oscillator object
+ * @param other other detune object
+ */
+Detune::Detune(Oscillator &owner, Detune &other) : mOwner(owner) {
+    mUnisonVoices = other.mUnisonVoices;
+    mDetune = other.mDetune;
+    mPhases = other.mPhases;
 }
 
 float Detune::process(double time, float frequency) {

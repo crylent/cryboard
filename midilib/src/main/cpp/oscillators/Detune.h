@@ -11,6 +11,7 @@ class Detune {
 public:
     Detune(Oscillator& owner) : mOwner(owner) {};
     Detune(Oscillator& owner, uint8_t unisonVoices, float detune);
+    Detune(Oscillator& owner, Detune& other);
 
     float process(double time, float frequency);
 

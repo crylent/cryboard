@@ -93,6 +93,24 @@ Java_com_example_midilib_instrument_SynthInstrument_externalRemoveOscillator(JNI
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_example_midilib_instrument_SynthInstrument_externalEnableOscillator(JNIEnv *env, jobject thiz,
+                                                                             jint index) {
+    int32_t instIndex = getLibIndex(env, thiz);
+    auto& inst = GET_SYNTH(instIndex);
+    inst.enableOscillator(index);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_midilib_instrument_SynthInstrument_externalDisableOscillator(JNIEnv *env, jobject thiz,
+                                                                              jint index) {
+    int32_t instIndex = getLibIndex(env, thiz);
+    auto& inst = GET_SYNTH(instIndex);
+    inst.disableOscillator(index);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_example_midilib_instrument_Instrument_externalAssignToChannel(JNIEnv *env, jobject thiz,
                                                                        jbyte channel) {
     AudioEngine::getChannels()[channel]->setInstrument(
@@ -119,16 +137,16 @@ PARAM_SETTER(ReleaseSharpness)
 
 #undef PARAM_SETTER
 
-#define OSC_FUNCTION_BEGIN(env, obj) jclass cls = (env)->GetObjectClass(obj);\
-int32_t instIndex = getLibIndex(env, obj);\
-int32_t oscIndex = getOscIndex(env, obj, cls);\
+#define OSC_FUNCTION_BEGIN(env, obj) \
+int32_t instIndex = getOwnerLibIndex(env, obj); \
+int32_t oscIndex = getOscIndex(env, obj); \
 auto& inst = GET_SYNTH(instIndex)
 
 #define OSC_PARAM_SETTER(param) extern "C" JNIEXPORT void JNICALL \
 Java_com_example_midilib_Oscillator_externalSet##param \
-(JNIEnv *env, jobject thiz, jfloat value) {\
-    OSC_FUNCTION_BEGIN(env, thiz);\
-    if (instIndex != NO_INDEX) inst.getOscillatorByIndex(oscIndex).set##param(value);\
+(JNIEnv *env, jobject thiz, jfloat value) { \
+    OSC_FUNCTION_BEGIN(env, thiz); \
+    if (instIndex != NO_INDEX) inst.getOscillatorByIndex(oscIndex).set##param(value); \
 }
 
 OSC_PARAM_SETTER(Amplitude)

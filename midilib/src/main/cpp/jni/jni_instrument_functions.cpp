@@ -32,6 +32,7 @@ static unique_ptr<Oscillator> makeOscillator(int shapeOrdinal, float amplitude, 
 static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator) {
     jclass oscCls = env->GetObjectClass(oscillator);
 
+    jfieldID idEnabled = env->GetFieldID(oscCls, "enabled", "Z");
     jfieldID idShape = env->GetFieldID(oscCls, "shape",
                                        "Lcom/example/midilib/Oscillator$Shape;");
     jfieldID idAmplitude = env->GetFieldID(oscCls, "amplitude", "F");
@@ -48,6 +49,7 @@ static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator
     jfieldID idDetuneValue = env->GetFieldID(detuneCls, "detune", "F");
     jmethodID idGetPhase = env->GetMethodID(detuneCls, "getPhaseShift", "(I)F");
 
+    auto enabled = static_cast<bool>(env->GetBooleanField(oscillator, idEnabled));
     jobject shape = env->GetObjectField(oscillator, idShape);
     auto shapeOrdinal = static_cast<int>(env->CallIntMethod(shape, idShapeOrdinal));
     auto amplitude = static_cast<float>(env->GetFloatField(oscillator, idAmplitude));
@@ -55,6 +57,7 @@ static void addOscillator(JNIEnv *env, SynthInstrument& inst, jobject oscillator
     auto freqFactor = static_cast<float>(env->GetFloatField(oscillator, idFreqFactor));
 
     unique_ptr<Oscillator> osc = makeOscillator(shapeOrdinal, amplitude, phase, freqFactor);
+    if (!enabled) osc->disable();
 
     jobject detuneObj = env->GetObjectField(oscillator, idDetuneObj);
     if (detuneObj) {
@@ -76,7 +79,14 @@ static int32_t getLibIndex(JNIEnv *env, jobject thiz) {
     return env->GetIntField(thiz, idLibIndex);
 }
 
-static int32_t getOscIndex(JNIEnv *env, jobject osc, jclass cls) {
+static int32_t getOwnerLibIndex(JNIEnv *env, jobject osc) {
+    jclass cls = env->FindClass("com/example/midilib/Oscillator");
+    jmethodID idOwnerLibIndex = env->GetMethodID(cls, "getOwnerLibIndex", "()I");
+    return env->CallIntMethod(osc, idOwnerLibIndex);
+}
+
+static int32_t getOscIndex(JNIEnv *env, jobject osc) {
+    jclass cls = env->FindClass("com/example/midilib/Oscillator");
     jmethodID idOscIndex = env->GetMethodID(cls, "getOscIndex", "()I");
     return env->CallIntMethod(osc, idOscIndex);
 }

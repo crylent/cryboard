@@ -13,7 +13,6 @@ class SynthInstrument(
     releaseSharpness: Number = 1f,
     private val oscillators: MutableList<Oscillator> = mutableListOf()
 ): Instrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness) {
-
     fun addOscillator(oscillator: Oscillator) {
         val osc = if (oscillator.owner == null) oscillator else oscillator.clone()
         oscillators.add(osc)
@@ -22,6 +21,8 @@ class SynthInstrument(
     }
 
     fun getOscillator(oscIndex: Int) = oscillators[oscIndex]
+
+    internal fun getOscillatorIndex(oscillator: Oscillator) = oscillators.indexOf(oscillator)
 
     val oscCount get() = oscillators.size
 
@@ -35,6 +36,24 @@ class SynthInstrument(
         if (libIndex != NO_INDEX) externalRemoveOscillator(oscIndex)
     }
 
+    fun enableOscillator(oscIndex: Int) {
+        oscillators[oscIndex].enabled = true
+        if (libIndex != NO_INDEX) externalEnableOscillator(oscIndex)
+    }
+
+    internal fun enableOscillator(oscillator: Oscillator) {
+        if (libIndex != NO_INDEX) externalEnableOscillator(oscillators.indexOf(oscillator))
+    }
+
+    fun disableOscillator(oscIndex: Int) {
+        oscillators[oscIndex].enabled = false
+        if (libIndex != NO_INDEX) externalDisableOscillator(oscIndex)
+    }
+
+    internal fun disableOscillator(oscillator: Oscillator) {
+        if (libIndex != NO_INDEX) externalDisableOscillator(oscillators.indexOf(oscillator))
+    }
+
     fun forEachOscillator(function: (Oscillator) -> Unit) {
         oscillators.forEach {
             function(it)
@@ -43,6 +62,8 @@ class SynthInstrument(
 
     private external fun externalAddOscillator(oscillator: Oscillator)
     private external fun externalRemoveOscillator(index: Int)
+    private external fun externalEnableOscillator(index: Int)
+    private external fun externalDisableOscillator(index: Int)
 
     override fun clone() = SynthInstrument(
         attack, decay, sustain, release,

@@ -4,3 +4,7 @@ float SawtoothOscillator::evalVoice(double time, float frequency, float extraPha
     float p = calcPhase(time, frequency, extraPhase);
     return float(p / M_PI);
 }
+
+SawtoothOscillator::SawtoothOscillator(Oscillator &other) {
+    copyFrom(other);
+}

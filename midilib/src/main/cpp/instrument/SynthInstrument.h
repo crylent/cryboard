@@ -16,8 +16,9 @@ public:
     void disableOscillator(uint8_t index);
     void removeOscillator(uint8_t index);
 
-    template<typename Shape> void setOscillatorShape(uint8_t index) {
-        mOscillators[index] = unique_ptr<Shape>(dynamic_cast<Shape*>(mOscillators[index].get()));
+    template<typename Shape>
+    requires(is_base_of<Oscillator, Shape>()) void setOscillatorShape(uint8_t index) {
+        mOscillators[index] = make_unique<Shape>(*mOscillators[index].release());
     }
 
     float sample(double time, int8_t note) override;
@@ -25,7 +26,5 @@ public:
 private:
     vector<unique_ptr<Oscillator>> mOscillators = vector<unique_ptr<Oscillator>>();
 };
-
-
 
 #endif //WAVE_SYNTH_H

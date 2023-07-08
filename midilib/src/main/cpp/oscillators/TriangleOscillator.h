@@ -7,6 +7,9 @@ class TriangleOscillator: public Oscillator {
     using Oscillator::Oscillator;
 
     float evalVoice(double time, float frequency, float extraPhase) override;
+
+public:
+    TriangleOscillator(Oscillator &other);
 };
 
 

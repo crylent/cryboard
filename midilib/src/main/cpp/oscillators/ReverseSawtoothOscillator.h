@@ -7,6 +7,9 @@ class ReverseSawtoothOscillator: public Oscillator {
     using Oscillator::Oscillator;
 
     float evalVoice(double time, float frequency, float extraPhase) override;
+
+public:
+    ReverseSawtoothOscillator(Oscillator &other);
 };
 
 

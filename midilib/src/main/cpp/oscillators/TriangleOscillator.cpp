@@ -4,3 +4,7 @@ float TriangleOscillator::evalVoice(double time, float frequency, float extraPha
     float p = calcPhase(time, frequency);
     return float((abs(p) - M_PI_2) / M_PI_2);
 }
+
+TriangleOscillator::TriangleOscillator(Oscillator &other) {
+    copyFrom(other);
+}
