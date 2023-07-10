@@ -79,7 +79,7 @@ class Oscillator(
         SINE, TRIANGLE, SQUARE, SAW, REVERSE_SAW
     }
 
-    class Detune(val owner: Oscillator, unisonVoices: Int, detune: Float) {
+    class Detune(private val owner: Oscillator, unisonVoices: Int, detune: Float) {
         var unisonVoices = unisonVoices
             set(value) {
                 _phases.addAll(List(value - field) { 0f })
