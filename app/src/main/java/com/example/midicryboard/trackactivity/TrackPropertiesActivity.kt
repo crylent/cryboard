@@ -188,8 +188,9 @@ class TrackPropertiesActivity : AppCompatActivity() {
             ) { releaseSharpness = it }
         }
         oscillatorsView.apply {
-            if (instrument is SynthInstrument)
-                adapter = OscillatorsRecyclerAdapter(instrument)
+            adapter = if (instrument is SynthInstrument)
+                OscillatorsRecyclerAdapter(instrument)
+            else null
         }
     }
 

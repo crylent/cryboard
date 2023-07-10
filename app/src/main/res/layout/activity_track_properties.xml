@@ -194,15 +194,27 @@
             </TableRow>
         </TableLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/oscillators"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
+            android:requiresFadingEdge="horizontal"
+            android:fadingEdgeLength="100dp"
+            android:overScrollMode="never"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tableLayout"
-            app:layout_constraintTop_toBottomOf="@+id/tableLayout"
-            tools:listitem="@layout/oscillator"/>
+            app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/oscillators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tableLayout"
+                app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+                tools:listitem="@layout/oscillator"/>
+
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
