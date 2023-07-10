@@ -51,6 +51,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:padding="15dp"
         android:layout_weight="0.67" >
 
 
@@ -68,7 +69,6 @@
             android:id="@+id/tableLayout"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -194,24 +194,34 @@
             </TableRow>
         </TableLayout>
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
+        <com.example.midicryboard.trackactivity.NumberPicker
+            android:id="@+id/oscillatorsNumber"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            app:layout_constraintStart_toStartOf="@+id/tableLayout"
+            app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+            app:labelText="@string/oscillators"
+            app:min="1"
+            app:max="6"
+            app:value="1"/>
+
+        <HorizontalScrollView
+            android:id="@+id/oscillatorsScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:requiresFadingEdge="horizontal"
             android:fadingEdgeLength="100dp"
             android:overScrollMode="never"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tableLayout"
-            app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+            app:layout_constraintStart_toStartOf="@+id/oscillatorsNumber"
+            app:layout_constraintTop_toBottomOf="@+id/oscillatorsNumber"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/oscillators"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tableLayout"
-                app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+                android:layout_height="match_parent"
+                tools:itemCount="3"
                 tools:listitem="@layout/oscillator"/>
 
         </HorizontalScrollView>

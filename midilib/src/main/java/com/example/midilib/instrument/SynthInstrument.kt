@@ -13,11 +13,17 @@ class SynthInstrument(
     releaseSharpness: Number = 1f,
     private val oscillators: MutableList<Oscillator> = mutableListOf()
 ): Instrument(attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness) {
-    fun addOscillator(oscillator: Oscillator) {
+
+    fun addDefaultOscillator(): Int {
+        return addOscillator(Oscillator(Oscillator.Shape.SINE))
+    }
+
+    fun addOscillator(oscillator: Oscillator): Int {
         val osc = if (oscillator.owner == null) oscillator else oscillator.clone()
         oscillators.add(osc)
         osc.owner = this
         if (libIndex != NO_INDEX) externalAddOscillator(oscillator)
+        return oscCount - 1
     }
 
     fun getOscillator(oscIndex: Int) = oscillators[oscIndex]
@@ -34,6 +40,12 @@ class SynthInstrument(
     fun removeOscillator(oscIndex: Int) {
         oscillators.removeAt(oscIndex)
         if (libIndex != NO_INDEX) externalRemoveOscillator(oscIndex)
+    }
+
+    fun removeLastOscillator(): Int {
+        val index = oscCount - 1
+        removeOscillator(oscCount - 1)
+        return index
     }
 
     fun enableOscillator(oscIndex: Int) {

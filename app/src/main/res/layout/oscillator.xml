@@ -3,19 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="80dp">
+    android:layout_height="wrap_content"
+    android:paddingVertical="5dp">
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/oscillatorEnabled"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="10dp" />
 
     <ImageButton
         android:id="@+id/shapeButton"
         android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_gravity="center_vertical"
         android:scaleType="fitCenter"
         android:background="@color/translucent"
         app:srcCompat="@drawable/sine"
@@ -25,7 +28,7 @@
         android:id="@+id/amplitudeSlider"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginVertical="10dp"
+        android:layout_gravity="center_vertical"
         android:foregroundGravity="clip_horizontal"
         app:label="@string/amplitude"
         app:min="0"
@@ -37,7 +40,7 @@
         android:id="@+id/phaseSlider"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginVertical="10dp"
+        android:layout_gravity="center_vertical"
         android:foregroundGravity="clip_horizontal"
         app:label="@string/phase"
         app:min="0"
@@ -45,102 +48,33 @@
         app:is_continuous="true"
         app:progress_primary_stroke_width="10" />
 
-    <ImageButton
-        android:id="@+id/pitchDownButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_gravity="center"
-        android:src="@drawable/decrease"
-        android:background="@color/translucent"
-        tools:ignore="ContentDescription" />
-
-    <LinearLayout
+    <com.example.midicryboard.trackactivity.NumberPicker
+        android:id="@+id/pitch"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-        <TextView
-            android:id="@+id/pitchText"
-            android:layout_width="48dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:textSize="28sp"
-            android:gravity="center" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="5dp"
+        app:labelText="@string/pitch"
+        app:min="-60"
+        app:max="60"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:text="@string/pitch" />
-
-    </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/pitchUpButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_gravity="center"
-        android:src="@drawable/increase"
-        android:background="@color/translucent"
-        tools:ignore="ContentDescription" />
-
-    <ImageButton
-        android:id="@+id/voicesDownButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_gravity="center"
-        android:src="@drawable/decrease"
-        android:background="@color/translucent"
-        tools:ignore="ContentDescription" />
-
-    <LinearLayout
+    <com.example.midicryboard.trackactivity.NumberPicker
+        android:id="@+id/detuneVoices"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-        <TextView
-            android:id="@+id/voicesText"
-            android:layout_width="48dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:textSize="28sp"
-            android:gravity="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:textSize="16sp"
-            android:gravity="clip_vertical"
-            android:text="@string/voices" />
-
-    </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/voicesUpButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_gravity="center"
-        android:src="@drawable/increase"
-        android:background="@color/translucent"
-        tools:ignore="ContentDescription" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="5dp"
+        app:labelText="@string/voices"
+        app:min="1"
+        app:max="8"
+        app:value="1"/>
 
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/detuneSlider"
         app:enabled="false"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginVertical="10dp"
+        android:layout_gravity="center_vertical"
         android:layout_marginEnd="10dp"
         android:foregroundGravity="clip_horizontal"
         app:label="@string/detune"

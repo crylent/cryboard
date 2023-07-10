@@ -60,4 +60,5 @@
     <string name="pitch">Pitch</string>
     <string name="voices">Voices</string>
     <string name="detune">Detune</string>
+    <string name="oscillators">Oscillators</string>
 </resources>

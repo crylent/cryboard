@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.midicryboard.Instruments
@@ -186,6 +187,23 @@ class TrackPropertiesActivity : AppCompatActivity() {
                 R.id.releaseFormSlider, releaseSharpness, ADR_MIN_SHARPNESS, ADR_MAX_SHARPNESS,
                 CrollerMode.MID_POINT_DEFINED, 1f
             ) { releaseSharpness = it }
+            findViewById<NumberPicker>(R.id.oscillatorsNumber).apply {
+                if (instrument is SynthInstrument) {
+                    instrument.apply {
+                        value = oscCount
+                        setOnValueChangedListener { _, delta ->
+                            val adapter = oscillatorsView.adapter!!
+                            if (delta > 0) {
+                                adapter.notifyItemInserted(addDefaultOscillator())
+                            }
+                            else {
+                                adapter.notifyItemRemoved(removeLastOscillator())
+                            }
+                        }
+                    }
+                }
+                isVisible = instrument is SynthInstrument
+            }
         }
         oscillatorsView.apply {
             adapter = if (instrument is SynthInstrument)
