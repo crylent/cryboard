@@ -146,7 +146,7 @@ auto& inst = GET_SYNTH(instIndex)
 Java_com_example_midilib_Oscillator_externalSet##param \
 (JNIEnv *env, jobject thiz, jfloat value) { \
     OSC_FUNCTION_BEGIN(env, thiz); \
-    if (instIndex != NO_INDEX) inst.getOscillatorByIndex(oscIndex).set##param(value); \
+    if (instIndex != NO_INDEX && oscIndex != NO_INDEX) inst.getOscillatorByIndex(oscIndex).set##param(value); \
 }
 
 OSC_PARAM_SETTER(Amplitude)

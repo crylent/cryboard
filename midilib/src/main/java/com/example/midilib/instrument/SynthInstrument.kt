@@ -20,8 +20,8 @@ class SynthInstrument(
 
     fun addOscillator(oscillator: Oscillator): Int {
         val osc = if (oscillator.owner == null) oscillator else oscillator.clone()
-        oscillators.add(osc)
         osc.owner = this
+        oscillators.add(osc)
         if (libIndex != NO_INDEX) externalAddOscillator(oscillator)
         return oscCount - 1
     }
@@ -44,7 +44,7 @@ class SynthInstrument(
 
     fun removeLastOscillator(): Int {
         val index = oscCount - 1
-        removeOscillator(oscCount - 1)
+        removeOscillator(index)
         return index
     }
 
