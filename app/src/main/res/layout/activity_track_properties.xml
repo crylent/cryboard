@@ -51,7 +51,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:padding="15dp"
+        android:paddingHorizontal="15dp"
+        android:paddingTop="15dp"
         android:layout_weight="0.67" >
 
 
@@ -221,6 +222,8 @@
                 android:id="@+id/oscillators"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:requiresFadingEdge="vertical"
+                android:fadingEdgeLength="40dp"
                 tools:itemCount="3"
                 tools:listitem="@layout/oscillator"/>
 
