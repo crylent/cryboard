@@ -128,7 +128,7 @@ class OscillatorsRecyclerAdapter(
         companion object {
             private const val AMPLITUDE_MP = 100f
             private const val PHASE_OFFSET = 180
-            private const val DETUNE_MP = 2000f // so max is 5%
+            private const val DETUNE_MP = 800f // so max is 2%
         }
     }
 
