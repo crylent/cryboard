@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".projectactivities.EnvelopeFragment"
+    android:stretchColumns="*">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:gravity="center"
+            android:layout_span="2"
+            android:textColor="#FF0000"
+            android:text="@string/attack" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_span="2"
+            android:textColor="#00FF00"
+            android:text="@string/decay" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_span="1"
+            android:textColor="#FFFF00"
+            android:text="@string/sustain" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_span="2"
+            android:textColor="#0000FF"
+            android:text="@string/release" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.sdsmdg.harjot.crollerTest.Croller
+            android:id="@+id/attackSlider"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:foregroundGravity="clip_horizontal"
+            app:is_continuous="true"
+            app:label=""
+            app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+            app:layout_constraintEnd_toStartOf="@+id/controls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progress_primary_stroke_width="10" />
+
+        <com.sdsmdg.harjot.crollerTest.Croller
+            android:id="@+id/attackFormSlider"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:foregroundGravity="clip_horizontal"
+            app:is_continuous="true"
+            app:label=""
+            app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+            app:layout_constraintEnd_toStartOf="@+id/controls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progress_primary_stroke_width="10" />
+
+        <Space/>
+
+        <com.sdsmdg.harjot.crollerTest.Croller
+            android:id="@+id/decaySlider"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:foregroundGravity="clip_horizontal"
+            app:is_continuous="true"
+            app:label=""
+            app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+            app:layout_constraintEnd_toStartOf="@+id/controls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progress_primary_stroke_width="10" />
+
+        <com.sdsmdg.harjot.crollerTest.Croller
+            android:id="@+id/decayFormSlider"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:foregroundGravity="clip_horizontal"
+            app:is_continuous="true"
+            app:label=""
+            app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+            app:layout_constraintEnd_toStartOf="@+id/controls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progress_primary_stroke_width="10" />
+
+        <Space/>
+
+        <com.sdsmdg.harjot.crollerTest.Croller
+            android:id="@+id/sustainSlider"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:foregroundGravity="clip_horizontal"
+            app:is_continuous="true"
+            app:label=""
+            app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+            app:layout_constraintEnd_toStartOf="@+id/controls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progress_primary_stroke_width="10" />
+
+        <Space/>
+
+        <com.sdsmdg.harjot.crollerTest.Croller
+            android:id="@+id/releaseSlider"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:foregroundGravity="clip_horizontal"
+            app:is_continuous="true"
+            app:label=""
+            app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+            app:layout_constraintEnd_toStartOf="@+id/controls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progress_primary_stroke_width="10" />
+
+        <com.sdsmdg.harjot.crollerTest.Croller
+            android:id="@+id/releaseFormSlider"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:foregroundGravity="clip_horizontal"
+            app:is_continuous="true"
+            app:label=""
+            app:layout_constraintBottom_toTopOf="@+id/octaveShift"
+            app:layout_constraintEnd_toStartOf="@+id/controls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:progress_primary_stroke_width="10" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_weight="1">
+        <com.example.midicryboard.trackactivity.EnvelopeCanvas
+            android:id="@+id/envelopeCanvas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_span="10"
+            android:layout_margin="10dp" />
+    </TableRow>
+</TableLayout>

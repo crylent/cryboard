@@ -1,7 +1,6 @@
 package com.example.midicryboard.trackactivity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -9,25 +8,23 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.midicryboard.Instruments
 import com.example.midicryboard.R
 import com.example.midicryboard.TrackList
 import com.example.midicryboard.TrackParams
+import com.example.midicryboard.projectactivities.InstrumentTabsAdapter
 import com.example.midilib.instrument.Instrument
-import com.example.midilib.instrument.SynthInstrument
-import com.sdsmdg.harjot.crollerTest.Croller
-import java.text.DecimalFormat
-import kotlin.math.ceil
-import kotlin.math.log
-import kotlin.math.pow
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class TrackPropertiesActivity : AppCompatActivity() {
     private lateinit var instrumentsView: RecyclerView
-    private lateinit var envelopeCanvas: EnvelopeCanvas
-    private lateinit var oscillatorsView: RecyclerView
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
+    private lateinit var tabsAdapter: InstrumentTabsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,14 +61,19 @@ class TrackPropertiesActivity : AppCompatActivity() {
             Instruments.getCategoryIndex(instrument)!!
         )
 
-        envelopeCanvas = findViewById(R.id.envelopeCanvas)
-
-        // Oscillators for synth instrument
-        oscillatorsView = findViewById<RecyclerView>(R.id.oscillators).apply {
-            layoutManager = LinearLayoutManager(this@TrackPropertiesActivity)
+        tabsAdapter = InstrumentTabsAdapter(instrument, supportFragmentManager, lifecycle)
+        viewPager = findViewById<ViewPager2>(R.id.viewPager).apply {
+            adapter = tabsAdapter
         }
-
-        viewInstrument(instrument)
+        tabLayout = findViewById(R.id.propertiesTabs)
+        val tabsArray = arrayOf(
+            getString(R.string.envelope),
+            getString(R.string.effects),
+            getString(R.string.oscillators)
+        )
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabsArray[position]
+        }.attach()
 
         // Custom instrument dialog
         findViewById<Button>(R.id.createCustomButton).apply {
@@ -95,132 +97,7 @@ class TrackPropertiesActivity : AppCompatActivity() {
         }
     }
 
-    private enum class CrollerMode {
-        POWER_DEFINED,
-        FIRST_STEP_DEFINED,
-        MID_POINT_DEFINED
-    }
-
-    private fun setupCroller(
-        id: Int,
-        value: Float,
-        minValue: Float, maxValue: Float,
-        crollerMode: CrollerMode,
-        crollerModeParam: Float,
-        setter: (Float)->Unit
-    ) {
-        findViewById<Croller>(id).apply {
-            val range = maxValue - minValue
-            val power: Float
-            val firstStep: Float
-            when (crollerMode) {
-                CrollerMode.POWER_DEFINED -> {
-                    power = crollerModeParam
-                    firstStep = range / (ADSR_POINTS_NUMBER - 1f).pow(power)
-                }
-                CrollerMode.FIRST_STEP_DEFINED -> {
-                    firstStep = crollerModeParam
-                    power = log(range / firstStep, ADSR_POINTS_NUMBER - 1f)
-                }
-                CrollerMode.MID_POINT_DEFINED -> {
-                    @Suppress("UnnecessaryVariable")
-                    val midPointValue = crollerModeParam
-                    val midPointNumber =
-                        if (ADSR_POINTS_NUMBER % 2 == 0) ADSR_POINTS_NUMBER / 2
-                        else (ADSR_POINTS_NUMBER + 1) / 2
-                    power = log(range / midPointValue, (ADSR_POINTS_NUMBER - 1) / (midPointNumber - 1f))
-                    firstStep = range / (ADSR_POINTS_NUMBER - 1f).pow(power)
-                }
-            }
-            max = ADSR_POINTS_NUMBER
-            label = value.toString()
-            progress = crollerValueToProgress(value, power, firstStep)
-            setOnValueChangedListener { value, fromUser ->
-                if (!fromUser) return@setOnValueChangedListener
-                val time = minValue + crollerProgressToValue(value, power, firstStep)
-                label = decimalFormat.format(time)
-                Log.d("croller", time.toString())
-                setter(time)
-            }
-        }
-    }
-
-    private val decimalFormat = DecimalFormat.getNumberInstance().apply {
-        maximumFractionDigits = 4
-    }
-
-    private fun crollerProgressToValue(progress: Int, power: Float, step: Float) =
-        (progress - 1f).pow(power) * step
-
-    private fun crollerValueToProgress(value: Float, power: Float, step: Float) = ceil(
-        (value / step).pow(1/power)
-    ).toInt()
-
     fun viewInstrument(instrument: Instrument) {
-        envelopeCanvas.instrument = instrument
-        instrument.apply {
-            setupCroller(
-                R.id.attackSlider, attack, ADR_MIN_TIME, ADR_MAX_TIME,
-                CrollerMode.FIRST_STEP_DEFINED, ADR_TIME_FIRST_STEP
-            ) { attack = it }
-            setupCroller(
-                R.id.decaySlider, decay, ADR_MIN_TIME, ADR_MAX_TIME,
-                CrollerMode.FIRST_STEP_DEFINED, ADR_TIME_FIRST_STEP
-            ) { decay = it }
-            setupCroller(
-                R.id.sustainSlider, sustain, MIN_SUSTAIN, MAX_SUSTAIN,
-                CrollerMode.POWER_DEFINED, SUSTAIN_POWER
-            ) { sustain = it }
-            setupCroller(
-                R.id.releaseSlider, release, ADR_MIN_TIME, ADR_MAX_TIME,
-                CrollerMode.FIRST_STEP_DEFINED, ADR_TIME_FIRST_STEP
-            ) { release = it }
-            setupCroller(
-                R.id.attackFormSlider, attackSharpness, ADR_MIN_SHARPNESS, ADR_MAX_SHARPNESS,
-                CrollerMode.MID_POINT_DEFINED, 1f
-            ) { attackSharpness = it }
-            setupCroller(
-                R.id.decayFormSlider, decaySharpness, ADR_MIN_SHARPNESS, ADR_MAX_SHARPNESS,
-                CrollerMode.MID_POINT_DEFINED, 1f
-            ) { decaySharpness = it }
-            setupCroller(
-                R.id.releaseFormSlider, releaseSharpness, ADR_MIN_SHARPNESS, ADR_MAX_SHARPNESS,
-                CrollerMode.MID_POINT_DEFINED, 1f
-            ) { releaseSharpness = it }
-            findViewById<NumberPicker>(R.id.oscillatorsNumber).apply {
-                if (instrument is SynthInstrument) {
-                    instrument.apply {
-                        value = oscCount
-                        setOnValueChangedListener { _, delta ->
-                            val adapter = oscillatorsView.adapter!!
-                            if (delta > 0) {
-                                adapter.notifyItemInserted(addDefaultOscillator())
-                            }
-                            else {
-                                adapter.notifyItemRemoved(removeLastOscillator())
-                            }
-                        }
-                    }
-                }
-                isVisible = instrument is SynthInstrument
-            }
-        }
-        oscillatorsView.apply {
-            adapter = if (instrument is SynthInstrument)
-                OscillatorsRecyclerAdapter(instrument)
-            else null
-        }
-    }
-
-    companion object {
-        private const val ADSR_POINTS_NUMBER = 200
-        private const val ADR_MIN_TIME = 0f
-        private const val ADR_MAX_TIME = 50f
-        private const val ADR_MIN_SHARPNESS = 0.1f
-        private const val ADR_MAX_SHARPNESS = 10f
-        private const val MIN_SUSTAIN = 0f
-        private const val MAX_SUSTAIN = 1f
-        private const val ADR_TIME_FIRST_STEP = 0.0005f
-        private const val SUSTAIN_POWER = 1f
+        tabsAdapter.updateFragments(instrument)
     }
 }

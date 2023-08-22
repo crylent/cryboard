@@ -61,4 +61,6 @@
     <string name="voices">Voices</string>
     <string name="detune">Detune</string>
     <string name="oscillators">Oscillators</string>
+    <string name="envelope">Envelope</string>
+    <string name="effects">Effects</string>
 </resources>

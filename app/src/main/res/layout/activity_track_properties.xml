@@ -55,8 +55,39 @@
         android:paddingTop="15dp"
         android:layout_weight="0.67" >
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/propertiesTabs"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp">
 
-        <com.example.midicryboard.trackactivity.EnvelopeCanvas
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/envelope" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/oscillators" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/effects" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/propertiesTabs"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!--<com.example.midicryboard.trackactivity.EnvelopeCanvas
             android:id="@+id/envelopeCanvas"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -227,7 +258,7 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/oscillator"/>
 
-        </HorizontalScrollView>
+        </HorizontalScrollView>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
