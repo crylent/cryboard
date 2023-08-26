@@ -48,7 +48,7 @@
         app:is_continuous="true"
         app:progress_primary_stroke_width="10" />
 
-    <com.example.midicryboard.trackactivity.NumberPicker
+    <com.crylent.midicryboard.trackactivity.NumberPicker
         android:id="@+id/pitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         app:min="-60"
         app:max="60"/>
 
-    <com.example.midicryboard.trackactivity.NumberPicker
+    <com.crylent.midicryboard.trackactivity.NumberPicker
         android:id="@+id/detuneVoices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

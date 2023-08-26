@@ -11,7 +11,7 @@
 
 extern "C"
 JNIEXPORT jbyte JNICALL
-Java_com_example_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jobject thiz,
                                                                  jbyte channel) {
     jclass fxCls = env->GetObjectClass(thiz);
     jmethodID idGetId = env->GetMethodID(fxCls, "getId", "()I");
@@ -52,7 +52,7 @@ Java_com_example_midilib_soundfx_SoundFX_externalAssignToChannel(JNIEnv *env, jo
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_soundfx_SoundFX_externalEditEffect(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_soundfx_SoundFX_externalEditEffect(JNIEnv *env, jobject thiz,
                                                             jstring param, jfloat value) {
     jclass cls = env->GetObjectClass(thiz);
     jfieldID idChannel = env->GetFieldID(cls, "linkedChannel", "B");
@@ -89,7 +89,7 @@ Java_com_example_midilib_soundfx_SoundFX_externalEditEffect(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_AudioEngine_clearEffects([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel) {
+Java_com_crylent_midilib_AudioEngine_clearEffects([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel) {
     FXList& fxList = getFXList(channel);
     fxList.clearEffects();
 }

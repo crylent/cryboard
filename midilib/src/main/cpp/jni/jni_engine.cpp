@@ -7,17 +7,17 @@
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_AudioEngine_start__([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
+Java_com_crylent_midilib_AudioEngine_start__([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
     AudioEngine::start();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_AudioEngine_stop([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
+Java_com_crylent_midilib_AudioEngine_stop([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz) {
     AudioEngine::stop();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_AudioEngine_start__ZI([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jboolean shared_mode,
+Java_com_crylent_midilib_AudioEngine_start__ZI([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jboolean shared_mode,
                                                jint sample_rate) {
     if (shared_mode) {
         AudioEngine::start(oboe::SharingMode::Shared, sample_rate);
@@ -27,25 +27,25 @@ Java_com_example_midilib_AudioEngine_start__ZI([[maybe_unused]] JNIEnv *env, [[m
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_AudioEngine_noteOn([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel, jbyte note, jfloat amplitude) {
+Java_com_crylent_midilib_AudioEngine_noteOn([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel, jbyte note, jfloat amplitude) {
     AudioEngine::noteOn(channel, note, amplitude);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_AudioEngine_noteOff([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel, jbyte note) {
+Java_com_crylent_midilib_AudioEngine_noteOff([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel, jbyte note) {
     AudioEngine::noteOff(channel, note);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_AudioEngine_allNotesOff([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel) {
+Java_com_crylent_midilib_AudioEngine_allNotesOff([[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jbyte channel) {
     AudioEngine::allNotesOff(channel);
 }
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_example_midilib_AudioEngine_renderWavExternal(JNIEnv *env, [[maybe_unused]] jobject thiz,
+Java_com_crylent_midilib_AudioEngine_renderWavExternal(JNIEnv *env, [[maybe_unused]] jobject thiz,
                                                        jobject sorted_events) {
     AudioEngine::pause();
 
@@ -53,9 +53,9 @@ Java_com_example_midilib_AudioEngine_renderWavExternal(JNIEnv *env, [[maybe_unus
     jmethodID idLength = env->GetMethodID(listCls, "getLength", "()J");
     jlong length = env->CallLongMethod(sorted_events, idLength);
     jmethodID idHasNext = env->GetMethodID(listCls, "hasNext", "()Z");
-    jmethodID idNext = env->GetMethodID(listCls, "next", "()Lcom/example/midilib/AudioEngine$NoteEvent;");
+    jmethodID idNext = env->GetMethodID(listCls, "next", "()Lcom/crylent/midilib/AudioEngine$NoteEvent;");
 
-    jclass eventCls = env->FindClass("com/example/midilib/AudioEngine$NoteEvent");
+    jclass eventCls = env->FindClass("com/crylent/midilib/AudioEngine$NoteEvent");
     jfieldID idChannel = env->GetFieldID(eventCls, "channel", "B");
     jfieldID idTime = env->GetFieldID(eventCls, "time", "J");
     jfieldID idNote = env->GetFieldID(eventCls, "note", "B");

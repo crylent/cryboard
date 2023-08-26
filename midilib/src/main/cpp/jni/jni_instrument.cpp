@@ -16,10 +16,10 @@
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_example_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobject thiz) {
+Java_com_crylent_midilib_instrument_Instrument_externalCreate(JNIEnv *env, jobject thiz) {
     jclass instCls = env->GetObjectClass(thiz);
-    jclass synthInstCls = env->FindClass("com/example/midilib/instrument/SynthInstrument");
-    jclass assetInstCls = env->FindClass("com/example/midilib/instrument/AssetInstrument");
+    jclass synthInstCls = env->FindClass("com/crylent/midilib/instrument/SynthInstrument");
+    jclass assetInstCls = env->FindClass("com/crylent/midilib/instrument/AssetInstrument");
     uint8_t instType;
     if (env->IsInstanceOf(thiz, synthInstCls)) instType = SYNTH_INSTRUMENT;
     else instType = ASSET_INSTRUMENT;
@@ -41,7 +41,7 @@ jfloat field = env->GetFloatField(thiz, id_##field)
 
     if (instType == SYNTH_INSTRUMENT) {
         jmethodID idAsSynthInst = env->GetMethodID(instCls, "asSynthInstrument",
-                                                   "()Lcom/example/midilib/instrument/SynthInstrument;");
+                                                   "()Lcom/crylent/midilib/instrument/SynthInstrument;");
         thiz = env->CallObjectMethod(thiz, idAsSynthInst);
         auto inst = make_shared<SynthInstrument>(
                 attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
@@ -49,7 +49,7 @@ jfloat field = env->GetFloatField(thiz, id_##field)
         jint oscillatorsCount = env->CallIntMethod(thiz, idOscCount);
 
         jmethodID idGetOscillator = env->GetMethodID(synthInstCls, "getOscillator",
-                                                     "(I)Lcom/example/midilib/Oscillator;");
+                                                     "(I)Lcom/crylent/midilib/Oscillator;");
 
         for (int i = 0; i < oscillatorsCount; i++) {
             jobject oscillator = env->CallObjectMethod(thiz, idGetOscillator, i);
@@ -58,7 +58,7 @@ jfloat field = env->GetFloatField(thiz, id_##field)
         position = InstrumentLib::addInstrument(inst);
     } else {
         jmethodID idAsAssetInst = env->GetMethodID(instCls, "asAssetInstrument",
-                                                   "()Lcom/example/midilib/instrument/AssetInstrument;");
+                                                   "()Lcom/crylent/midilib/instrument/AssetInstrument;");
         thiz = env->CallObjectMethod(thiz, idAsAssetInst);
         auto inst = make_shared<AssetInstrument>(
                 attack, decay, sustain, release, attackSharpness, decaySharpness, releaseSharpness);
@@ -74,7 +74,7 @@ jfloat field = env->GetFloatField(thiz, id_##field)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_SynthInstrument_externalAddOscillator(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_instrument_SynthInstrument_externalAddOscillator(JNIEnv *env, jobject thiz,
                                                                           jobject oscillator) {
     int32_t index = getLibIndex(env, thiz);
     auto& inst = GET_SYNTH(index);
@@ -83,7 +83,7 @@ Java_com_example_midilib_instrument_SynthInstrument_externalAddOscillator(JNIEnv
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_SynthInstrument_externalRemoveOscillator(JNIEnv *env,
+Java_com_crylent_midilib_instrument_SynthInstrument_externalRemoveOscillator(JNIEnv *env,
                                                                              jobject thiz,
                                                                              jint index) {
     int32_t instIndex = getLibIndex(env, thiz);
@@ -93,7 +93,7 @@ Java_com_example_midilib_instrument_SynthInstrument_externalRemoveOscillator(JNI
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_SynthInstrument_externalEnableOscillator(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_instrument_SynthInstrument_externalEnableOscillator(JNIEnv *env, jobject thiz,
                                                                              jint index) {
     int32_t instIndex = getLibIndex(env, thiz);
     auto& inst = GET_SYNTH(instIndex);
@@ -102,7 +102,7 @@ Java_com_example_midilib_instrument_SynthInstrument_externalEnableOscillator(JNI
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_SynthInstrument_externalDisableOscillator(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_instrument_SynthInstrument_externalDisableOscillator(JNIEnv *env, jobject thiz,
                                                                               jint index) {
     int32_t instIndex = getLibIndex(env, thiz);
     auto& inst = GET_SYNTH(instIndex);
@@ -111,7 +111,7 @@ Java_com_example_midilib_instrument_SynthInstrument_externalDisableOscillator(JN
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_Instrument_externalAssignToChannel(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_instrument_Instrument_externalAssignToChannel(JNIEnv *env, jobject thiz,
                                                                        jbyte channel) {
     AudioEngine::getChannels()[channel]->setInstrument(
             InstrumentLib::getInstrument(getLibIndex(env, thiz))
@@ -119,7 +119,7 @@ Java_com_example_midilib_instrument_Instrument_externalAssignToChannel(JNIEnv *e
 }
 
 #define PARAM_SETTER(param) extern "C" JNIEXPORT void JNICALL \
-Java_com_example_midilib_instrument_Instrument_externalSet##param \
+Java_com_crylent_midilib_instrument_Instrument_externalSet##param \
 (JNIEnv *env, jobject thiz, jfloat value) {\
     int32_t index = getLibIndex(env, thiz);\
     if (index != NO_INDEX) {\
@@ -143,7 +143,7 @@ int32_t oscIndex = getOscIndex(env, obj); \
 auto& inst = GET_SYNTH(instIndex)
 
 #define OSC_PARAM_SETTER(param) extern "C" JNIEXPORT void JNICALL \
-Java_com_example_midilib_Oscillator_externalSet##param \
+Java_com_crylent_midilib_Oscillator_externalSet##param \
 (JNIEnv *env, jobject thiz, jfloat value) { \
     OSC_FUNCTION_BEGIN(env, thiz); \
     if (instIndex != NO_INDEX && oscIndex != NO_INDEX) inst.getOscillatorByIndex(oscIndex).set##param(value); \
@@ -157,7 +157,7 @@ OSC_PARAM_SETTER(FreqFactor)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_Oscillator_externalSetShape(JNIEnv *env, jobject thiz, jint shape) {
+Java_com_crylent_midilib_Oscillator_externalSetShape(JNIEnv *env, jobject thiz, jint shape) {
     OSC_FUNCTION_BEGIN(env, thiz);
     switch (shape) {
         case SHAPE_SINE:
@@ -177,7 +177,7 @@ Java_com_example_midilib_Oscillator_externalSetShape(JNIEnv *env, jobject thiz, 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_Oscillator_externalEnableDetune(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_Oscillator_externalEnableDetune(JNIEnv *env, jobject thiz,
                                                          jint unison_voices, jfloat detune_level) {
     OSC_FUNCTION_BEGIN(env, thiz);
     inst.getOscillatorByIndex(oscIndex).setDetune(unison_voices, detune_level);
@@ -185,14 +185,14 @@ Java_com_example_midilib_Oscillator_externalEnableDetune(JNIEnv *env, jobject th
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_Oscillator_externalDisableDetune(JNIEnv *env, jobject thiz) {
+Java_com_crylent_midilib_Oscillator_externalDisableDetune(JNIEnv *env, jobject thiz) {
     OSC_FUNCTION_BEGIN(env, thiz);
     inst.getOscillatorByIndex(oscIndex).clearDetune();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_Oscillator_externalSetUnisonVoices(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_Oscillator_externalSetUnisonVoices(JNIEnv *env, jobject thiz,
                                                             jint value) {
     OSC_FUNCTION_BEGIN(env, thiz);
     inst.getOscillatorByIndex(oscIndex).getDetune().setUnisonVoices(value);
@@ -200,7 +200,7 @@ Java_com_example_midilib_Oscillator_externalSetUnisonVoices(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_Oscillator_externalSetDetuneLevel(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_Oscillator_externalSetDetuneLevel(JNIEnv *env, jobject thiz,
                                                            jfloat value) {
     OSC_FUNCTION_BEGIN(env, thiz);
     inst.getOscillatorByIndex(oscIndex).getDetune().setDetune(value);
@@ -208,7 +208,7 @@ Java_com_example_midilib_Oscillator_externalSetDetuneLevel(JNIEnv *env, jobject 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_Oscillator_externalSetPhaseShift(JNIEnv *env, jobject thiz, jint voice,
+Java_com_crylent_midilib_Oscillator_externalSetPhaseShift(JNIEnv *env, jobject thiz, jint voice,
                                                           jfloat value) {
     OSC_FUNCTION_BEGIN(env, thiz);
     inst.getOscillatorByIndex(oscIndex).getDetune().setPhaseShift(voice, value);
@@ -222,7 +222,7 @@ Java_com_example_midilib_Oscillator_externalSetPhaseShift(JNIEnv *env, jobject t
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_AssetInstrument_externalLoadAsset(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_instrument_AssetInstrument_externalLoadAsset(JNIEnv *env, jobject thiz,
                                                                       jbyte note,
                                                                       jbyteArray wav_data,
                                                                       jint data_size,
@@ -237,7 +237,7 @@ Java_com_example_midilib_instrument_AssetInstrument_externalLoadAsset(JNIEnv *en
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_AssetInstrument_externalSetRepeatable(JNIEnv *env, jobject thiz,
+Java_com_crylent_midilib_instrument_AssetInstrument_externalSetRepeatable(JNIEnv *env, jobject thiz,
                                                                           jboolean repeatable) {
     int32_t index = getLibIndex(env, thiz);
     GET_AINST(index).setRepeatable(repeatable);
@@ -245,7 +245,7 @@ Java_com_example_midilib_instrument_AssetInstrument_externalSetRepeatable(JNIEnv
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_midilib_instrument_AssetInstrument_00024Companion_externalSetResamplingQuality(
+Java_com_crylent_midilib_instrument_AssetInstrument_00024Companion_externalSetResamplingQuality(
         [[maybe_unused]] JNIEnv *env, [[maybe_unused]] jobject thiz, jint quality) {
     AssetInstrument::setResamplingQuality(quality);
 }

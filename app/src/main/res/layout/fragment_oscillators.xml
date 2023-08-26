@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.example.midicryboard.trackactivity.NumberPicker
+    <com.crylent.midicryboard.trackactivity.NumberPicker
         android:id="@+id/oscillatorsNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

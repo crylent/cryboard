@@ -12,7 +12,7 @@ android {
             keyPassword findProperty("SigningConfig_keyPassword")
         }
     }
-    namespace 'com.example.midilib'
+    namespace 'com.crylent.midilib'
     compileSdk 33
 
     defaultConfig {

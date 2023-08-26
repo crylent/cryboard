@@ -87,7 +87,7 @@
             app:layout_constraintTop_toBottomOf="@id/propertiesTabs"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <!--<com.example.midicryboard.trackactivity.EnvelopeCanvas
+        <!--<com.crylent.midicryboard.trackactivity.EnvelopeCanvas
             android:id="@+id/envelopeCanvas"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -226,7 +226,7 @@
             </TableRow>
         </TableLayout>
 
-        <com.example.midicryboard.trackactivity.NumberPicker
+        <com.crylent.midicryboard.trackactivity.NumberPicker
             android:id="@+id/oscillatorsNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

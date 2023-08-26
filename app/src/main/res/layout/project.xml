@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.midicryboard.projectactivities.button.FavouriteButton
+    <com.crylent.midicryboard.projectactivities.button.FavouriteButton
         android:id="@+id/favouriteButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <com.example.midicryboard.projectactivities.button.DeleteButton
+    <com.crylent.midicryboard.projectactivities.button.DeleteButton
         android:id="@+id/deleteButton"
         android:layout_width="40dp"
         android:layout_height="40dp"

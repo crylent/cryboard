@@ -12,11 +12,11 @@ android {
             keyPassword findProperty("SigningConfig_keyPassword")
         }
     }
-    namespace 'com.example.midicryboard'
+    namespace 'com.crylent.midicryboard'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.midicryboard"
+        applicationId "com.crylent.midicryboard"
         minSdk 26
         targetSdk 33
         versionCode 1
