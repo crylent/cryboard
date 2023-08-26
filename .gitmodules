@@ -1,0 +1,3 @@
+[submodule "midilib"]
+	path = midilib
+	url = https://github.com/crylent/midilib

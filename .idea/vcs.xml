@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/midilib" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/midilib/src/main/cpp/oboe" vcs="Git" />
   </component>
 </project>
